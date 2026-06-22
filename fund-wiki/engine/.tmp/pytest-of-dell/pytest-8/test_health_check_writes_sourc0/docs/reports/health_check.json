@@ -1,0 +1,38 @@
+{
+  "status": "warning",
+  "generated_at": "2026-06-05T15:29:52",
+  "issue_count": 2,
+  "high_count": 0,
+  "warning_count": 2,
+  "info_count": 0,
+  "profile_count": 0,
+  "index_record_count": 0,
+  "source_note_count": 0,
+  "issues": [
+    {
+      "severity": "warning",
+      "kind": "source_parse_failed",
+      "manager": "Alpha",
+      "product_name": "",
+      "detail": "Raw source failed parsing/OCR: encrypted or OCR unavailable",
+      "path": "F:\\Thomas\\QuantSystem\\.trae\\skills\\fund-wiki\\engine\\.tmp\\pytest-of-dell\\pytest-8\\test_health_check_writes_sourc0\\raw\\encrypted.pdf",
+      "evidence": [
+        "encrypted.pdf",
+        "encrypted or OCR unavailable"
+      ]
+    },
+    {
+      "severity": "warning",
+      "kind": "source_missing",
+      "manager": "Alpha",
+      "product_name": "",
+      "detail": "Raw source file no longer exists; derived source notes/profiles are retained until reviewed.",
+      "path": "F:\\Thomas\\QuantSystem\\.trae\\skills\\fund-wiki\\engine\\.tmp\\pytest-of-dell\\pytest-8\\test_health_check_writes_sourc0\\raw\\missing.pdf",
+      "evidence": [
+        "missing.pdf",
+        "F:\\Thomas\\QuantSystem\\.trae\\skills\\fund-wiki\\engine\\.tmp\\pytest-of-dell\\pytest-8\\test_health_check_writes_sourc0\\docs\\retained_note.md",
+        "source file no longer exists"
+      ]
+    }
+  ]
+}

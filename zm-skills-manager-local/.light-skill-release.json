@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "skillId": "zm-skills-manager",
+  "name": "ZM Skills Manager",
+  "version": "local",
+  "releaseId": "local",
+  "releaseNotes": "Packaged from local Skill source.",
+  "publishedAt": "2026-05-22T08:19:50.050Z",
+  "packagedAt": "2026-05-22T08:19:50.050Z",
+  "upstream": {
+    "kind": "local",
+    "repoUrl": "",
+    "ref": "",
+    "sourceSubdir": "",
+    "commit": "",
+    "repoCommit": "",
+    "uploadId": "",
+    "uploadedAt": ""
+  },
+  "update": {
+    "checkUrl": "http://10.168.30.147:5173/api/hub/skills/zm-skills-manager/version",
+    "downloadUrl": "http://10.168.30.147:5173/api/hub/skills/zm-skills-manager/download"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "skillId": "zmdata-data-api",
+  "name": "ZMData Data API",
+  "version": "git:3f92936",
+  "releaseId": "git:3f92936704f92fc588b4dba6b3f18a91cacac4c4",
+  "releaseNotes": "Packaged from upstream Git commit 3f92936.",
+  "publishedAt": "2026-05-26T00:30:57.791Z",
+  "packagedAt": "2026-05-26T00:30:57.791Z",
+  "upstream": {
+    "kind": "git",
+    "repoUrl": "http://10.168.30.12:8083/zm_ai/zm_skills.git",
+    "ref": "dev",
+    "sourceSubdir": "zmdata-data-api",
+    "commit": "3f92936704f92fc588b4dba6b3f18a91cacac4c4",
+    "repoCommit": "730216b30640fbe00a11888512970b5d5a1a0cb5",
+    "uploadId": "",
+    "uploadedAt": ""
+  },
+  "update": {
+    "checkUrl": "http://10.168.30.147:5173/api/hub/skills/zmdata-data-api/version",
+    "downloadUrl": "http://10.168.30.147:5173/api/hub/skills/zmdata-data-api/download"
+  }
+}

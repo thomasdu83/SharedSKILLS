@@ -1,0 +1,8 @@
+interface:
+  display_name: "Investment Research Replication"
+  short_description: "Replicate or audit investment research ideas before system build."
+  brand_color: "#18375F"
+  default_prompt: "Use $investment-paper-replication to turn this investment paper, report, memo, or strategy idea into a replication plan, report, and professional web prototype."
+
+policy:
+  allow_implicit_invocation: true

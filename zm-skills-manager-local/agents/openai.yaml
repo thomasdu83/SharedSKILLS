@@ -1,0 +1,8 @@
+interface:
+  display_name: "ZM Skills Manager"
+  short_description: "Find, install, update, and share Skills"
+  default_prompt: "Use $zm-skills-manager to find and install a Skill without opening the Hub web UI."
+
+policy:
+  allow_implicit_invocation: true
+

@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PM V2 风险配置接口覆盖检查</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #1f2a37;
+      --muted: #667085;
+      --line: #d8dee8;
+      --head: #eef3f8;
+      --accent: #1b6b77;
+      --accent-soft: #e7f3f4;
+      --ok: #0f7a55;
+      --ok-bg: #e9f8f0;
+      --warn: #a85b00;
+      --warn-bg: #fff3df;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 24px 32px 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    main {
+      padding: 24px 32px 40px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .metric span {
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    select,
+    input {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      padding: 0 10px;
+      min-width: 150px;
+      outline: none;
+    }
+
+    input {
+      min-width: 260px;
+      flex: 1;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1120px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--head);
+      font-weight: 650;
+    }
+
+    tbody tr:hover {
+      background: #f9fbfd;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      border-radius: 999px;
+      padding: 2px 9px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .tag.ok {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .tag.note {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .notes {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notes p {
+      margin: 6px 0;
+    }
+
+    @media (max-width: 900px) {
+      header,
+      main {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .summary {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      }
+
+      input {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PM V2 风险配置接口覆盖检查</h1>
+    <p class="subtitle">用于核对“风险配置”下四类策略及其配置 Tab 是否已被 zmdata API 覆盖。</p>
+  </header>
+
+  <main>
+    <section class="summary" aria-label="覆盖摘要">
+      <div class="metric"><strong>4</strong><span>策略 Tab</span></div>
+      <div class="metric"><strong>15</strong><span>策略配置组合</span></div>
+      <div class="metric"><strong>38</strong><span>图表/表格项</span></div>
+      <div class="metric"><strong>100%</strong><span>核心接口覆盖</span></div>
+    </section>
+
+    <section class="toolbar" aria-label="筛选">
+      <label for="strategyFilter">策略</label>
+      <select id="strategyFilter">
+        <option value="">全部策略</option>
+        <option value="股票多头">股票多头</option>
+        <option value="债券">债券</option>
+        <option value="CTA">CTA</option>
+        <option value="市场中性">市场中性</option>
+        <option value="通用">通用</option>
+      </select>
+
+      <label for="configFilter">配置</label>
+      <select id="configFilter">
+        <option value="">全部配置</option>
+        <option value="大类配置">大类配置</option>
+        <option value="风格配置">风格配置</option>
+        <option value="行业配置">行业配置</option>
+        <option value="久期配置">久期配置</option>
+        <option value="信用配置">信用配置</option>
+        <option value="因子暴露">因子暴露</option>
+        <option value="因子配置">因子配置</option>
+      </select>
+
+      <input id="searchInput" type="search" placeholder="搜索图表名称、原接口或 zmdata API" />
+    </section>
+
+    <section class="table-wrap" aria-label="覆盖明细">
+      <table id="coverageTable">
+        <thead>
+          <tr>
+            <th>策略</th>
+            <th>配置</th>
+            <th>图表名称</th>
+            <th>原接口</th>
+            <th>zmdata api 接口</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>股票多头</td><td>大类配置</td><td>资产配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_asset_exposure_timing</code></td><td><code>pm_risk_asset_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>大类配置</td><td>大类资产暴露统计表</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_fund</code></td><td><code>pm_risk_asset_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>大类配置</td><td>细分赛道暴露分析</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_race</code></td><td><code>pm_risk_asset_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>风格配置</td><td>风格配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_style_exposure_timing</code></td><td><code>pm_risk_style_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>风格配置</td><td>风格-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_style_by_fund</code></td><td><code>pm_risk_style_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>风格配置</td><td>风格-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_style_by_race</code></td><td><code>pm_risk_style_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>行业配置</td><td>行业配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_industry_exposure_timing</code></td><td><code>pm_risk_industry_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>行业配置</td><td>行业-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_industry_by_fund</code></td><td><code>pm_risk_industry_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>行业配置</td><td>行业-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_industry_by_race</code></td><td><code>pm_risk_industry_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>股票多头</td><td>因子暴露</td><td>因子暴露-基金</td><td><code>/api/zmpmapi/factor/risk_factor_exposure</code></td><td><code>pm_risk_factor_exposure</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+
+          <tr><td>债券</td><td>大类配置</td><td>资产配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_asset_exposure_timing</code></td><td><code>pm_risk_asset_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>大类配置</td><td>大类资产暴露统计表</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_fund</code></td><td><code>pm_risk_asset_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>大类配置</td><td>细分赛道暴露分析</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_race</code></td><td><code>pm_risk_asset_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>风格配置</td><td>风格配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_style_exposure_timing</code></td><td><code>pm_risk_style_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>风格配置</td><td>风格-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_style_by_fund</code></td><td><code>pm_risk_style_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>风格配置</td><td>风格-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_style_by_race</code></td><td><code>pm_risk_style_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>久期配置</td><td>久期配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_industry_exposure_timing</code></td><td><code>pm_risk_industry_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>久期配置</td><td>久期-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_industry_by_fund</code></td><td><code>pm_risk_industry_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>久期配置</td><td>久期-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_industry_by_race</code></td><td><code>pm_risk_industry_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>信用配置</td><td>信用配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_credit_exposure_timing</code></td><td><code>pm_risk_credit_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>信用配置</td><td>信用-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_credit_by_fund</code></td><td><code>pm_risk_credit_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>信用配置</td><td>信用-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_credit_by_race</code></td><td><code>pm_risk_credit_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>债券</td><td>因子暴露</td><td>因子暴露-基金</td><td><code>/api/zmpmapi/factor/risk_factor_exposure</code></td><td><code>pm_risk_factor_exposure</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+
+          <tr><td>CTA</td><td>大类配置</td><td>资产配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_asset_exposure_timing</code></td><td><code>pm_risk_asset_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>CTA</td><td>大类配置</td><td>大类资产暴露统计表</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_fund</code></td><td><code>pm_risk_asset_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>CTA</td><td>大类配置</td><td>细分赛道暴露分析</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_race</code></td><td><code>pm_risk_asset_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>CTA</td><td>因子配置</td><td>因子暴露-基金</td><td><code>/api/zmpmapi/factor/risk_factor_exposure</code></td><td><code>pm_risk_factor_exposure</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+
+          <tr><td>市场中性</td><td>大类配置</td><td>资产配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_asset_exposure_timing</code></td><td><code>pm_risk_asset_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>大类配置</td><td>大类资产暴露统计表</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_fund</code></td><td><code>pm_risk_asset_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>大类配置</td><td>细分赛道暴露分析</td><td><code>/api/zmpmapi/risk_control/risk_exposure_asset_by_race</code></td><td><code>pm_risk_asset_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>风格配置</td><td>风格配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_style_exposure_timing</code></td><td><code>pm_risk_style_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>风格配置</td><td>风格-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_style_by_fund</code></td><td><code>pm_risk_style_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>风格配置</td><td>风格-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_style_by_race</code></td><td><code>pm_risk_style_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>行业配置</td><td>行业配置序列图</td><td><code>/api/zmpmapi/fof_fund/calc_strategy_industry_exposure_timing</code></td><td><code>pm_risk_industry_exposure_trend</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>行业配置</td><td>行业-按基金暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_industry_by_fund</code></td><td><code>pm_risk_industry_exposure_by_fund</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>行业配置</td><td>行业-按赛道暴露</td><td><code>/api/zmpmapi/risk_control/risk_exposure_industry_by_race</code></td><td><code>pm_risk_industry_exposure_by_track</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+          <tr><td>市场中性</td><td>因子暴露</td><td>因子暴露-基金</td><td><code>/api/zmpmapi/factor/risk_factor_exposure</code></td><td><code>pm_risk_factor_exposure</code></td><td><span class="tag ok">已覆盖</span></td></tr>
+
+          <tr><td>通用</td><td>因子暴露/因子配置</td><td>因子敏感性-投顾</td><td><code>/api/zmpmapi/factor/adviser_factor_sensitivity</code></td><td><code>pm_adviser_factor_sensitivity</code></td><td><span class="tag note">补充接口</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="notes">
+      <p>说明：<code>pm_risk_industry_exposure_*</code> 在股票多头/市场中性中对应“行业配置”，在债券中对应“久期配置”。</p>
+      <p>说明：<code>pm_adviser_factor_sensitivity</code> 服务端实际使用 <code>pm_id</code> 和 <code>end_date</code>，不按 <code>strategy_type</code> 过滤。</p>
+    </section>
+  </main>
+
+  <script>
+    const strategyFilter = document.getElementById('strategyFilter');
+    const configFilter = document.getElementById('configFilter');
+    const searchInput = document.getElementById('searchInput');
+    const rows = Array.from(document.querySelectorAll('#coverageTable tbody tr'));
+
+    function applyFilters() {
+      const strategy = strategyFilter.value;
+      const config = configFilter.value;
+      const query = searchInput.value.trim().toLowerCase();
+
+      rows.forEach((row) => {
+        const cells = Array.from(row.cells).map((cell) => cell.innerText.trim());
+        const strategyMatch = !strategy || cells[0] === strategy;
+        const configMatch = !config || cells[1].includes(config);
+        const queryMatch = !query || cells.join(' ').toLowerCase().includes(query);
+        row.style.display = strategyMatch && configMatch && queryMatch ? '' : 'none';
+      });
+    }
+
+    strategyFilter.addEventListener('change', applyFilters);
+    configFilter.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+  </script>
+</body>
+</html>

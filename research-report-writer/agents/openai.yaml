@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Report Writer"
+  short_description: "Clear, restrained report writing"
+  default_prompt: "Draft or rewrite this research report with a clear thesis, logical structure, concise evidence, and restrained professional language."

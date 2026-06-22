@@ -1,0 +1,66 @@
+# Confirmed manager alias registry.
+#
+# This file is a governance override layer for names that deterministic suffix
+# stripping cannot safely infer. Keep entries conservative: aliases here are
+# treated as the same manager identity by product profile build, index, query,
+# and health checks.
+
+managers:
+  - canonical: 宏锡
+    identity_key: 宏锡
+    aliases:
+      - 宏锡基金
+      - 广东宏锡基金管理有限公司
+
+  - canonical: 半鞅
+    identity_key: 半鞅
+    aliases:
+      - 半鞅私募
+      - 半鞅私募基金
+      - 海南半鞅私募基金管理合伙企业
+      - 海南半鞅私募基金管理合伙企业（有限合伙）
+
+  - canonical: 添益
+    identity_key: 添益
+    aliases:
+      - 添益私募
+      - 添益私募基金
+      - 上海添益
+      - 上海添益私募
+      - 上海添益私募基金管理有限责任公司
+
+  - canonical: 山信
+    identity_key: 山信
+    aliases:
+      - 山信资本
+      - 山信私募
+      - 萧山山信
+      - 杭州萧山山信
+      - 杭州萧山山信私募基金管理有限公司
+
+  - canonical: 图灵私募基金管理（海南）有限公司
+    identity_key: 海南图灵
+    aliases:
+      - 海南图灵
+      - 海南图灵私募
+      - 图灵私募基金管理（海南）有限公司
+
+  - canonical: 深圳市图灵投资管理有限公司
+    identity_key: 深圳图灵
+    aliases:
+      - 深圳图灵
+      - 深圳市图灵
+      - 深圳市图灵投资管理有限公司
+
+  - canonical: 托特
+    identity_key: 托特
+    aliases:
+      - 托特私募
+      - 三亚托特私募
+      - 托特（三亚）私募基金管理有限公司
+
+  - canonical: 双隆
+    identity_key: 双隆
+    aliases:
+      - 双隆投资
+      - 上海双隆投资有限公司

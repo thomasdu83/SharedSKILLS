@@ -1,0 +1,276 @@
+:root {
+  --bg: #f5f7f8;
+  --paper: #ffffff;
+  --ink: #31373d;
+  --muted: #66707a;
+  --line: #d7dde2;
+  --navy: #2f5e88;
+  --steel: #5d7893;
+  --copper: #936846;
+  --gold: #a78346;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Amplitude, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 36px 24px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  max-width: 820px;
+  font-size: 34px;
+  line-height: 1.14;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.lede,
+.section-copy {
+  max-width: 760px;
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.eyebrow,
+.label {
+  margin-bottom: 7px;
+  color: var(--copper);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.meta span {
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  background: #fbfcfd;
+}
+
+main {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 24px 28px 40px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.8fr) repeat(3, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.summary-panel,
+.metric,
+.section {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.summary-panel {
+  padding: 20px;
+}
+
+.summary-panel p:last-child {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.metric {
+  min-height: 132px;
+  padding: 18px;
+}
+
+.metric span,
+.metric small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.metric strong {
+  display: block;
+  margin: 14px 0 8px;
+  color: var(--navy);
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 18px;
+}
+
+.side-nav {
+  position: sticky;
+  top: 14px;
+  align-self: start;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.side-nav a {
+  display: block;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.side-nav a:hover {
+  color: var(--copper);
+}
+
+.side-nav a:last-child {
+  border-bottom: 0;
+}
+
+.content {
+  display: grid;
+  gap: 18px;
+}
+
+.section {
+  padding: 22px;
+}
+
+.section-heading {
+  margin-bottom: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th,
+td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.chart-shell {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fbfcfd;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.matrix div {
+  border-left: 3px solid var(--steel);
+  background: #f8fafc;
+  padding: 14px;
+}
+
+.matrix span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.matrix strong {
+  color: var(--navy);
+}
+
+.matrix .warn {
+  color: var(--gold);
+}
+
+.matrix .bad {
+  color: #8c3a44;
+}
+
+.note {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 920px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 22px;
+  }
+
+  main {
+    padding: 18px;
+  }
+
+  .summary-grid,
+  .layout,
+  .matrix {
+    grid-template-columns: 1fr;
+  }
+
+  .side-nav {
+    position: static;
+  }
+}

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>投研复现原型</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">J.P. Morgan 风格投研原型</p>
+          <h1>策略复现结果与组合含义</h1>
+          <p class="lede">聚焦信号是否成立、实施摩擦来自哪里，以及当前阶段是否仍具配置价值。</p>
+        </div>
+        <div class="meta">
+          <span>样本区间：2000-2025</span>
+          <span>频率：月度</span>
+          <span>范围：发达市场股票</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary-grid" aria-label="核心摘要">
+        <article class="summary-panel">
+          <p class="label">核心结论</p>
+          <h2>方向基本复现，但近年有效性明显走弱</h2>
+          <p>核心信号能够复现原始文献中的排序方向，但扣除交易成本后的收益主要集中在早期阶段，最近五年表现显著弱化。</p>
+        </article>
+        <article class="metric">
+          <span>年化收益</span>
+          <strong>8.4%</strong>
+          <small>多空组合，毛收益</small>
+        </article>
+        <article class="metric">
+          <span>信息比率</span>
+          <strong>0.72</strong>
+          <small>月度调仓</small>
+        </article>
+        <article class="metric">
+          <span>换手率</span>
+          <strong>68%</strong>
+          <small>年化口径</small>
+        </article>
+      </section>
+
+      <section class="layout">
+        <nav class="side-nav" aria-label="内容导航">
+          <a href="#claim">原始定义</a>
+          <a href="#replication">复现结果</a>
+          <a href="#implementation">投资结论</a>
+        </nav>
+
+        <div class="content">
+          <section id="claim" class="section">
+            <div class="section-heading">
+              <p class="eyebrow">原始定义</p>
+              <h2>该信号旨在标准控制后捕捉持续性风险溢价</h2>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>维度</th>
+                  <th>原始定义</th>
+                  <th>当前映射</th>
+                  <th>风险</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>股票池</td>
+                  <td>发达市场股票</td>
+                  <td>流动性较好的大中盘代理池</td>
+                  <td>中</td>
+                </tr>
+                <tr>
+                  <td>信号</td>
+                  <td>滞后标准化特征</td>
+                  <td>月度 z-score 并滞后一期</td>
+                  <td>低</td>
+                </tr>
+                <tr>
+                  <td>组合</td>
+                  <td>最高分组减最低分组</td>
+                  <td>五分位等权组合</td>
+                  <td>低</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="replication" class="section">
+            <div class="section-heading">
+              <p class="eyebrow">复现结果</p>
+              <h2>成本前收益仍为正，但对最新子样本高度敏感</h2>
+              <p class="section-copy">页面只保留一个核心图表，用于直接回答策略是否仍然有效。</p>
+            </div>
+            <div class="chart-shell">
+              <canvas id="performanceChart" width="960" height="360" aria-label="累计收益曲线"></canvas>
+            </div>
+          </section>
+
+          <section id="implementation" class="section">
+            <div class="section-heading">
+              <p class="eyebrow">投资结论</p>
+              <h2>更适合作为研究候选信号与配置辅助，而非独立交易规则</h2>
+            </div>
+            <div class="matrix">
+              <div><span>月度毛收益</span><strong>通过</strong></div>
+              <div><span>月度 30bp 成本</span><strong class="warn">一般</strong></div>
+              <div><span>季度毛收益</span><strong>通过</strong></div>
+              <div><span>最近五年</span><strong class="bad">偏弱</strong></div>
+            </div>
+            <p class="note">下一步应优先验证实时数据时点、与现有组合的交互效果，以及近年衰减是否具有结构性。除核心结论外，不额外展示无关辅助功能。</p>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

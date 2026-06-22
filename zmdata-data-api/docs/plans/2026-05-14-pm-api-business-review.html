@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PMInfo 四个 Tab 接口清单 - 投研 Review</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #17202a;
+      --muted: #64748b;
+      --line: #d9e0ea;
+      --line-strong: #b7c2d0;
+      --primary: #145b7d;
+      --primary-soft: #e8f3f8;
+      --p0: #0f766e;
+      --p0-bg: #e6f7f5;
+      --p1: #9a5b00;
+      --p1-bg: #fff4dc;
+      --p2: #64748b;
+      --p2-bg: #eef2f7;
+      --ignore: #9f1239;
+      --ignore-bg: #ffe7ed;
+      --shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 24px 48px;
+    }
+
+    header {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #334155;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 20px;
+    }
+
+    .summary-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .priority {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .priority.p0 { color: var(--p0); background: var(--p0-bg); }
+    .priority.p1 { color: var(--p1); background: var(--p1-bg); }
+    .priority.p2 { color: var(--p2); background: var(--p2-bg); }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      padding: 10px 0;
+      background: rgba(246, 247, 249, 0.94);
+      backdrop-filter: blur(8px);
+      margin-bottom: 12px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border: 1px solid #c9e1ec;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin: 18px 0;
+      overflow: visible;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .counts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-content: flex-start;
+      justify-content: flex-end;
+      min-width: 220px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      overflow-y: visible;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 1180px;
+    }
+
+    th {
+      z-index: 2;
+      background: #eef4f8;
+      color: #223142;
+      text-align: left;
+      font-size: 12px;
+      line-height: 1.35;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line-strong);
+      white-space: nowrap;
+    }
+
+    td {
+      vertical-align: top;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    tr:nth-child(even) td { background: #fbfcfe; }
+    tr.ignored td { background: var(--ignore-bg); }
+
+    .module {
+      font-weight: 700;
+      color: #263442;
+      white-space: nowrap;
+    }
+
+    .function {
+      min-width: 260px;
+      font-weight: 600;
+    }
+
+    code {
+      display: inline-block;
+      max-width: 360px;
+      color: #1e3a5f;
+      background: #eef4fb;
+      border: 1px solid #d7e5f3;
+      border-radius: 5px;
+      padding: 1px 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      white-space: normal;
+      word-break: break-all;
+    }
+
+    .api {
+      font-weight: 700;
+      color: #0f3e5a;
+    }
+
+    .note {
+      color: #334155;
+      min-width: 240px;
+    }
+
+    .status {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: var(--primary);
+      background: var(--primary-soft);
+      margin-bottom: 6px;
+    }
+
+    .status.ignore {
+      color: var(--ignore);
+      background: var(--ignore-bg);
+    }
+
+    .status.compat {
+      color: #475569;
+      background: #e9eef5;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 980px) {
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .section-head { flex-direction: column; }
+      .counts { justify-content: flex-start; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; padding: 0; }
+      header, .summary-card, .section { box-shadow: none; }
+      .nav { display: none; }
+      th { position: static; }
+      .section { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>PMInfo 四个 Tab 接口清单</h1>
+    </header>
+
+    <section class="summary-grid" id="summary"></section>
+
+    <nav class="nav">
+      <a href="#portfolio-performance">组合表现</a>
+      <a href="#asset-allocation">资产配置</a>
+      <a href="#risk-allocation">风险配置</a>
+      <a href="#holding-analysis">持仓分析</a>
+    </nav>
+
+    <div id="sections"></div>
+
+    <footer>
+      <p>技术源文档：docs/plans/2026-05-14-pm-api-inventory-review.md。此 HTML 为业务 review 展示版，不作为最终 SDK 文档。</p>
+    </footer>
+  </main>
+
+  <script>
+    const sections = [
+      {
+        id: "portfolio-performance",
+        title: "组合表现",
+        description: "回答组合整体表现如何，包括净值、回撤、区间绩效和旗下基金。",
+        rows: [
+          ["P0", "净值曲线", "获取组合累计净值、基准、连续回撤、累计超额等图表序列。", "pm_performance_trend", "zmpmapi/fof/get_performance_trend", "pm_id，可选 end_date/base_date", "首批进入"],
+          ["P0", "组合净值表", "获取组合净值明细表。", "pm_nav", "zmpmapi/fof/get_performance_trend_list", "pm_id，可选 end_date", "已封装，保留现有 API"],
+          ["P0", "绩效统计", "获取组合区间收益、年化、回撤、胜率、Sharpe、下行标准差等绩效指标。", "pm_performance_stats", "zmpmapi/fof/get_pm_performance", "pm_id，可选 begin_date/end_date", "首批进入"],
+          ["P0", "旗下基金", "获取组合旗下基金列表及区间表现。", "pm_subfunds", "zmpmapi/fund/sub_fund_list", "pm_id，可选 begin_date/end_date", "已封装，保留现有 API"]
+        ]
+      },
+      {
+        id: "asset-allocation",
+        title: "资产配置",
+        description: "回答组合的策略、资产、赛道配置及收益贡献如何。",
+        rows: [
+          ["P0", "分策略净值曲线 / 分策略净值", "获取分策略净值、收益和贡献序列。", "pm_strategy_nav", "zmpmapi/fof/get_pm_strategy_yield_contri", "pm_id，可选 freq/begin_date/end_date", "已封装，保留现有 API"],
+          ["P0", "分策略当期绩效", "获取分策略当期区间绩效，并和上一可比区间对比。", "pm_strategy_period_performance", "zmpmapi/fof/get_pm_strategy_performance_thisperiod", "pm_id，可选 begin_date/end_date", "保留独立显式函数；上期区间由 SDK 默认"],
+          ["P0", "分策略全区间绩效", "获取分策略成立以来/全区间绩效。", "pm_strategy_full_period_performance", "zmpmapi/fof/get_pm_strategy_performance_allperiod", "pm_id，可选 begin_date/end_date", "保留独立显式函数；不合并 period_scope"],
+          ["P0", "策略总览-资产配置", "获取策略资产配置总览。", "pm_asset_allocation", "zmpmapi/allocation/get_strategy_allocations", "pm_id，可选 begin_date/end_date", "已封装，保留现有 API"],
+          ["P0", "分策略累计盈亏图", "获取分策略累计盈亏序列。", "pm_strategy_cumulative_pnl", "zmpmapi/allocation/get_strategy_allocations_contribute_new", "pm_id，可选 begin_date/end_date", "金额口径，前端展示为万"],
+          ["P0", "分策略累计收益图", "获取分策略累计收益率序列。", "pm_strategy_cumulative_return", "zmpmapi/allocation/get_pm_strategy_accu_yield", "pm_id，可选 begin_date/end_date", "收益率口径"],
+          ["P1", "分策略年度/区间贡献", "按频率对分策略累计盈亏取期末值再做差分，得到每个周期内各策略盈亏增量。", "pm_strategy_pnl_by_period", "zmpmapi/allocation/get_strategy_allocations_contribute_new_year", "pm_id，可选 freq/end_date", "freq 建议 W/M/Q/Y，默认 Y；begin_date 不暴露"],
+          ["P1", "资产配置收益 / Brinson", "Brinson 归因时序，返回各策略的累计归因和单期归因变化。", "pm_brinson_attribution", "zmpmapi/allocation/brinson_momentums", "pm_id，可选 begin_date/end_date/brinson_type", "brinson_type：1 交互收益，2 资产配置收益，3 选基收益，4 总超额"],
+          ["P0", "策略相关性统计", "获取策略之间的相关性矩阵。", "pm_strategy_correlation", "zmpmapi/fof/get_pm_performance_corr", "pm_id，可选 begin_date/end_date", "首批进入"],
+          ["P1", "策略和基准比较图", "策略净值与比较基准净值的归一化对比，并计算策略与基准的周度收益差。", "pm_strategy_benchmark_comparison", "zmpmapi/allocation/get_strategy_allocations_contr", "pm_id、strategy_type、bench_id，可选日期/base_date", "原配置贡献命名不准确；base_date 为归一化基期"],
+          ["P0", "策略表现统计表", "获取指定策略的日度/区间表现统计表。", "pm_strategy_performance_list", "zmpmapi/fof/get_strategy_performance_list", "pm_id、strategy_type，可选日期/bench_id", "首批进入"],
+          ["P0", "策略比较基准", "获取指定策略默认比较基准。", "pm_strategy_benchmark", "zmpmapi/fof/get_pm_strategy_bench", "pm_id、strategy_type", "多 tab 共用"],
+          ["P0", "赛道筛选", "获取指定策略下可用赛道列表。", "pm_strategy_tracks", "zmpmapi/allocation/get_strategy_race_list", "pm_id、strategy_type，可选 end_date", "多 tab 共用"],
+          ["P0", "策略表现-赛道配置", "获取策略下各赛道配置比例。", "pm_strategy_track_allocation", "zmpmapi/allocation/get_strategy_race_allocation", "pm_id、strategy_type，可选日期", "新增语义化 API；pm_track_allocation 保留兼容"],
+          ["P0", "分赛道累计盈亏", "获取策略下各赛道累计盈亏。", "pm_strategy_track_cumulative_pnl", "zmpmapi/allocation/get_strategy_revenue", "pm_id、strategy_type，可选 end_date", "新增语义化 API；pm_track_revenue 保留兼容"],
+          ["P0", "分赛道累计收益", "获取策略下各赛道累计收益率。", "pm_strategy_track_cumulative_return", "zmpmapi/allocation/get_strategy_race_accu_yield", "pm_id、strategy_type，可选日期", "首批进入"],
+          ["P0", "分赛道贡献", "获取策略下各赛道收益贡献。", "pm_strategy_track_contribution", "zmpmapi/allocation/get_strategy_race_contri", "pm_id、strategy_type，可选日期", "首批进入"]
+        ]
+      },
+      {
+        id: "risk-allocation",
+        title: "风险配置",
+        description: "回答组合在资产、风格、行业/久期、信用、因子上的风险暴露如何。",
+        rows: [
+          ["P0", "大类配置序列图", "获取组合指定策略的大类资产暴露时间序列。", "pm_risk_asset_exposure_trend", "zmpmapi/fof_fund/calc_strategy_asset_exposure_timing", "pm_id、strategy_type，可选 end_date", "SDK 默认 pm_id_list=[pm_id]"],
+          ["P0", "大类-按基金暴露", "获取子基金大类资产暴露截面和持仓比例加权平均。", "pm_risk_asset_exposure_by_fund", "zmpmapi/risk_control/risk_exposure_asset_by_fund", "pm_id、strategy_type，可选 end_date", "首批进入"],
+          ["P0", "大类-按赛道暴露", "获取按赛道聚合的大类资产暴露和基准偏离。", "pm_risk_asset_exposure_by_track", "zmpmapi/risk_control/risk_exposure_asset_by_race", "pm_id、strategy_type，可选 end_date", "首批进入"],
+          ["P0", "风格配置序列图", "获取组合指定策略的风格暴露时间序列。", "pm_risk_style_exposure_trend", "zmpmapi/fof_fund/calc_strategy_style_exposure_timing", "pm_id、strategy_type，可选 end_date", "首批进入"],
+          ["P0", "风格-按基金暴露", "获取子基金风格暴露截面、组合加权平均、比较基准和偏离。", "pm_risk_style_exposure_by_fund", "zmpmapi/risk_control/risk_exposure_style_by_fund", "pm_id、strategy_type，可选 end_date/bench_id", "服务端需要 strategy_type 和 bench_id，不接收 frequency"],
+          ["P0", "风格-按赛道暴露", "获取按赛道聚合的风格暴露和基准偏离。", "pm_risk_style_exposure_by_track", "zmpmapi/risk_control/risk_exposure_style_by_race", "pm_id、strategy_type，可选 end_date/bench_id", "首批进入"],
+          ["P0", "行业/久期配置序列图", "获取股票/中性策略行业暴露序列，或债券策略久期暴露序列。", "pm_risk_industry_exposure_trend", "zmpmapi/fof_fund/calc_strategy_industry_exposure_timing", "pm_id、strategy_type，可选 end_date", "债券策略下 UI 文案是久期配置"],
+          ["P0", "行业/久期-按基金暴露", "获取子基金行业/久期暴露截面、组合加权平均、比较基准和偏离。", "pm_risk_industry_exposure_by_fund", "zmpmapi/risk_control/risk_exposure_industry_by_fund", "pm_id、strategy_type，可选 end_date/bench_id", "首批进入"],
+          ["P0", "行业/久期-按赛道暴露", "获取按赛道聚合的行业/久期暴露和基准偏离。", "pm_risk_industry_exposure_by_track", "zmpmapi/risk_control/risk_exposure_industry_by_race", "pm_id、strategy_type，可选 end_date/bench_id", "首批进入"],
+          ["P0", "信用配置序列图", "获取债券策略信用暴露时间序列。", "pm_risk_credit_exposure_trend", "zmpmapi/fof_fund/calc_strategy_credit_exposure_timing", "pm_id、strategy_type，可选 end_date", "主要债券策略"],
+          ["P0", "信用-按基金暴露", "获取子基金信用暴露截面、组合加权平均、比较基准和偏离。", "pm_risk_credit_exposure_by_fund", "zmpmapi/risk_control/risk_exposure_credit_by_fund", "pm_id、strategy_type，可选 end_date/bench_id", "首批进入"],
+          ["P0", "信用-按赛道暴露", "获取按赛道聚合的信用暴露和基准偏离。", "pm_risk_credit_exposure_by_track", "zmpmapi/risk_control/risk_exposure_credit_by_race", "pm_id、strategy_type，可选 end_date/bench_id", "首批进入"],
+          ["P0", "因子暴露-基金", "获取子基金风险因子暴露。", "pm_risk_factor_exposure", "zmpmapi/factor/risk_factor_exposure", "pm_id、strategy_type，可选日期", "首批进入"],
+          ["P1", "因子敏感性-投顾", "投顾截面市场敏感性，输出投顾简称、仓位超低配、大小盘、成长价值、基差。", "pm_adviser_factor_sensitivity", "zmpmapi/factor/adviser_factor_sensitivity", "pm_id，可选 end_date", "服务端只使用 pm_id/end_date，不接收 strategy_type"]
+        ]
+      },
+      {
+        id: "holding-analysis",
+        title: "持仓分析",
+        description: "回答持仓子基金表现、贡献、相关性、投顾/赛道相关性和可复用风险暴露。",
+        rows: [
+          ["P0", "子基金净值曲线", "获取指定策略下子基金净值曲线，并可拼接策略比较基准。", "pm_holding_fund_navs", "zmpmapi/allocation/get_strategy_fund_net_value", "pm_id、strategy_type，可选 end_date/race_name_list/is_origin/bench_id", "sorce_id_list 拼写按前端保留，skills 可不暴露"],
+          ["P2", "下载子基金净值", "下载指定策略下子基金净值数据。", "no wrapper", "zmpmapi/allocation/get_strategy_fund_net_value_download", "不暴露", "下载接口不进入 skills"],
+          ["P0", "赛道筛选", "获取指定策略下可用赛道列表。", "pm_strategy_tracks", "zmpmapi/allocation/get_strategy_race_list", "pm_id、strategy_type，可选 end_date", "与资产配置共用"],
+          ["P0", "策略比较基准", "获取指定策略默认比较基准。", "pm_strategy_benchmark", "zmpmapi/fof/get_pm_strategy_bench", "pm_id、strategy_type", "与资产配置共用"],
+          ["P0", "子基金绩效/同类对比", "获取子基金绩效统计及同类组合对比。", "pm_holding_fund_performance", "zmpmapi/fund_similar/fund_performance", "pm_id、strategy_type，可选日期", "compare/last 区间由 SDK 默认"],
+          ["P0", "当前子基金统计", "获取当前持仓子基金统计。", "pm_holding_current_fund_stats", "zmpmapi/fund/pms_current_fund_statis", "pm_id、strategy_type，可选 end_date/bench_id/race_name_list", "首批进入"],
+          ["P0", "历史子基金统计", "获取历史持仓子基金统计。", "pm_holding_historical_fund_stats", "zmpmapi/fund/pms_historical_fund_statis", "pm_id、strategy_type，可选日期/bench_id/race_name_list", "首批进入"],
+          ["P0", "子基金收益贡献分解", "获取子基金收益贡献分解。", "pm_holding_yield_decomposition", "zmpmapi/fund/calcSubFundYieldDecompose", "pm_id、strategy_type，可选 freq/end_date", "freq：W/M/Q"],
+          ["P0", "子基金相关性", "获取子基金之间的相关性矩阵。", "pm_holding_fund_correlation", "zmpmapi/fund/calcSubFundCorr", "pm_id、strategy_type，可选日期/corr_type", "首批进入"],
+          ["P0", "子基金赛道相关性", "获取子基金在赛道维度的相关性矩阵。", "pm_holding_track_correlation", "zmpmapi/fund/calc_subfund_corr_race", "pm_id、strategy_type，可选日期/corr_type/race_name_list", "首批进入"],
+          ["P1", "投顾/赛道相关性", "同一赛道内投顾/基金公司收益相关性；股票多头用基准超额收益，其他策略用收益率。", "pm_adviser_track_correlation", "zmpmapi/advistor/yield_corr_track", "pm_id、strategy_type，可选 end_date/compare_begin_date/bench_id", "compare_end_date 由 SDK 默认等于 end_date"],
+          ["P1", "赛道相关性序列", "赛道平均收益之间的 13 周滚动相关性序列；股票多头先扣基准收益。", "pm_adviser_track_correlation_trend", "zmpmapi/advistor/yield_corr_sequence_track", "pm_id、strategy_type，可选 end_date/bench_id", "compare_end_date 由 SDK 默认等于 end_date"],
+          ["P1", "投顾相关性", "按投顾/基金公司合成净值后计算收益相关性；股票多头用基准超额收益，其他策略用收益率。", "pm_adviser_correlation", "zmpmapi/advistor/yield_corr_advistor", "pm_id、strategy_type，可选 end_date/compare_begin_date/bench_id", "股票多头最好传 bench_id"],
+          ["P0", "持仓因子分析-基金", "获取子基金风险因子暴露。", "pm_risk_factor_exposure", "zmpmapi/factor/risk_factor_exposure", "pm_id、strategy_type，可选日期", "与风险配置共用"],
+          ["P1", "持仓因子敏感性-投顾", "投顾截面市场敏感性，输出投顾简称、仓位超低配、大小盘、成长价值、基差。", "pm_adviser_factor_sensitivity", "zmpmapi/factor/adviser_factor_sensitivity", "pm_id，可选 end_date", "与风险配置共用；服务端不接收 strategy_type"],
+          ["P2", "债券持仓暴露/同类对比", "前端指向的债券持仓暴露/同类对比接口。", "no wrapper", "zmpmapi/fund_similar/fund_exposure", "不暴露", "已确认忽略，当前服务端缺失 route"],
+          ["P2", "持仓行业暴露/同类对比", "前端指向的持仓行业暴露/同类对比接口。", "no wrapper", "zmpmapi/fund_similar/fund_exposure_industry", "不暴露", "已确认忽略，当前服务端缺失 route"],
+          ["P1", "持仓大类暴露", "子基金大类资产暴露截面和持仓比例加权平均。", "pm_holding_asset_exposure_by_fund", "zmpmapi/risk_control/risk_exposure_asset_by_fund", "pm_id、strategy_type，可选 end_date", "建议复用风险配置 pm_risk_asset_exposure_by_fund"],
+          ["P1", "持仓风格暴露", "子基金风格暴露截面、组合加权平均、比较基准和偏离。", "pm_holding_style_exposure_by_fund", "zmpmapi/risk_control/risk_exposure_style_by_fund", "pm_id、strategy_type、bench_id，可选 end_date", "建议复用风险配置 pm_risk_style_exposure_by_fund"]
+        ]
+      }
+    ];
+
+    const priorityClass = (p) => p.toLowerCase();
+    const priorityText = { P0: "P0", P1: "P1", P2: "P2" };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderSummary() {
+      const allRows = sections.flatMap((section) => section.rows);
+      const counts = allRows.reduce((acc, row) => {
+        acc[row[0]] = (acc[row[0]] || 0) + 1;
+        return acc;
+      }, {});
+
+      const cards = [
+        ["4", "业务 Tab"],
+        [String(allRows.length), "接口记录"],
+        [String((counts.P0 || 0) + (counts.P1 || 0)), "首批进入 P0 + P1"],
+        [String(counts.P2 || 0), "不进入 / 忽略"]
+      ];
+
+      document.getElementById("summary").innerHTML = cards.map(([value, label]) => `
+        <div class="summary-card">
+          <strong>${escapeHtml(value)}</strong>
+          <span>${escapeHtml(label)}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderSections() {
+      const html = sections.map((section) => {
+        const counts = section.rows.reduce((acc, row) => {
+          acc[row[0]] = (acc[row[0]] || 0) + 1;
+          return acc;
+        }, {});
+
+        const countChips = ["P0", "P1", "P2"].map((p) => `
+          <span class="chip"><span class="priority ${priorityClass(p)}">${p}</span>${counts[p] || 0}</span>
+        `).join("");
+
+        const rows = section.rows.map((row) => {
+          const [priority, module, fn, api, endpoint, params, note] = row;
+          const ignored = priority === "P2" || api === "no wrapper";
+          const statusClass = ignored ? "ignore" : (note.includes("兼容") ? "compat" : "");
+          const statusText = ignored ? "不进入" : (priority === "P1" ? "增强进入" : "首批进入");
+          return `
+            <tr class="${ignored ? "ignored" : ""}">
+              <td><span class="priority ${priorityClass(priority)}">${priorityText[priority]}</span></td>
+              <td class="module">${escapeHtml(module)}</td>
+              <td class="function">${escapeHtml(fn)}</td>
+              <td><code class="api">${escapeHtml(api)}</code></td>
+              <td><code>${escapeHtml(endpoint)}</code></td>
+              <td>${escapeHtml(params)}</td>
+              <td class="note"><span class="status ${statusClass}">${statusText}</span><br>${escapeHtml(note)}</td>
+            </tr>
+          `;
+        }).join("");
+
+        return `
+          <section class="section" id="${section.id}">
+            <div class="section-head">
+              <div>
+                <h2>${escapeHtml(section.title)}</h2>
+                <p>${escapeHtml(section.description)}</p>
+              </div>
+              <div class="counts">${countChips}</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>优先级</th>
+                    <th>页面模块</th>
+                    <th>接口语义(功能)</th>
+                    <th>建议 API</th>
+                    <th>技术接口</th>
+                    <th>业务/Skills 参数</th>
+                    <th>进入范围与说明</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }).join("");
+
+      document.getElementById("sections").innerHTML = html;
+    }
+
+    renderSummary();
+    renderSections();
+  </script>
+</body>
+</html>

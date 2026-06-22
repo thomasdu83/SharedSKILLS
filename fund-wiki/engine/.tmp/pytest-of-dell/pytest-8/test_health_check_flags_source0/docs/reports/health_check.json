@@ -1,0 +1,22 @@
+{
+  "status": "error",
+  "generated_at": "2026-06-05T15:29:52",
+  "issue_count": 1,
+  "high_count": 1,
+  "warning_count": 0,
+  "info_count": 0,
+  "profile_count": 0,
+  "index_record_count": 0,
+  "source_note_count": 1,
+  "issues": [
+    {
+      "severity": "high",
+      "kind": "source_notes_without_index_records",
+      "manager": "平方和",
+      "product_name": "",
+      "detail": "平方和 has 1 source notes but no matching product profile index records.",
+      "path": "F:\\Thomas\\QuantSystem\\.trae\\skills\\fund-wiki\\engine\\.tmp\\pytest-of-dell\\pytest-8\\test_health_check_flags_source0\\docs\\source_notes\\平方和",
+      "evidence": []
+    }
+  ]
+}

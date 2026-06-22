@@ -1,0 +1,21 @@
+---
+run_id: ""
+manager: "平方和"
+source_file: "alpha.txt"
+source_path: "F:\\Thomas\\QuantSystem\\.trae\\skills\\fund-wiki\\engine\\.tmp\\pytest-of-dell\\pytest-8\\test_ingest_folder_reuses_same0\\input\\alpha.txt"
+source_relpath: "alpha.txt"
+sha256: "fba1a88a828b4e7c91f9f16e19b2ff0eb099c59dc9a8ad8dcaca9b73d96945b4"
+size: 16
+mtime: "2026-06-05T15:29:53"
+parse_status: "success"
+parse_method: "text"
+parse_quality_reason: ""
+warnings: []
+error: ""
+chars: 17
+created_at: "2026-06-05T15:29:53"
+---
+
+# Parsed Text
+
+parsed::alpha.txt

@@ -1,0 +1,3 @@
+display_name: "Custom GPT Image 2"
+short_description: "Generate images through the configured custom gpt-image-2 endpoint."
+default_prompt: "Generate an image with all requested on-image text rendered directly in the output using the custom gpt-image-2 endpoint."

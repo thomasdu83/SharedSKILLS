@@ -1,0 +1,11 @@
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=catalog written entries=2 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_priority_scope_pro0\run_logs\source_catalog\平方和.jsonl
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=catalog priority scope enabled cutoff=80 selected=1
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=ingest start manager=平方和 files_total=1 use_llm=False provider=n/a snapshot=manifest changed_only=False force=False ingest_scope=priority
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=parse start file=2026_平方和_尽调笔记.md size=4
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=parsed_cache written file=2026_平方和_尽调笔记.md path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_priority_scope_pro0\parsed_cache\manual-run\平方和\2026_平方和_尽调笔记_6ef7c9b15e.md
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=parse done file=2026_平方和_尽调笔记.md status=success method=text chars=16
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=ingest file 1/1 finalize name=2026_平方和_尽调笔记.md state=parsed
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=write_note done file=2026_平方和_尽调笔记.md note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_priority_scope_pro0\source_notes\平方和\2026_平方和_尽调笔记.md
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=ingest file 1/1 processed name=2026_平方和_尽调笔记.md
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=manifest appended records=1 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_priority_scope_pro0\run_logs\source_manifest.jsonl
+[2026-06-05 15:29:57] [INFO] run_id=no-run-id stage=ingest done processed=1 skipped=0 failed=0 source_missing=0 total_seconds=0.01 llm_seconds=0.0

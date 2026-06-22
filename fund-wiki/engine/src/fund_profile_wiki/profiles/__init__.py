@@ -1,0 +1,2 @@
+"""Product profile compilation."""
+

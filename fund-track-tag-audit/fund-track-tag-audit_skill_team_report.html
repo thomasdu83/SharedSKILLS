@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fund-track-tag-audit Skill 建设汇报</title>
+  <style>
+    :root {
+      --ink: #18202a;
+      --muted: #5d6673;
+      --line: #d7dce2;
+      --soft-line: #e8ebef;
+      --panel: #ffffff;
+      --canvas: #f4f6f8;
+      --navy: #17324d;
+      --blue: #0d5cab;
+      --cyan: #11a7d9;
+      --green: #0a6b3f;
+      --grass: #6c9f2a;
+      --orange: #f08a00;
+      --purple: #6f42c1;
+      --copper: #9b6a3a;
+      --shadow: 0 14px 34px rgba(24, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+      line-height: 1.62;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 284px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: #ffffff;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: grid;
+      gap: 14px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .brand-mark span:first-child {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.18;
+      font-weight: 650;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 4px;
+      padding: 20px 0;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 36px;
+      padding: 7px 8px;
+      border-left: 3px solid transparent;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav a:hover,
+    .nav a:focus {
+      border-left-color: var(--copper);
+      color: var(--ink);
+      background: #f7f8fa;
+      outline: none;
+    }
+
+    .side-actions {
+      display: grid;
+      gap: 8px;
+      padding-top: 18px;
+      border-top: 1px solid var(--soft-line);
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .icon-button svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .hero {
+      min-height: auto;
+      display: grid;
+      align-items: center;
+      padding: 82px clamp(28px, 5vw, 72px) 72px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78)),
+        repeating-linear-gradient(0deg, rgba(23, 50, 77, 0.05) 0 1px, transparent 1px 38px),
+        repeating-linear-gradient(90deg, rgba(23, 50, 77, 0.045) 0 1px, transparent 1px 38px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+      gap: clamp(28px, 4vw, 58px);
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+    }
+
+    .hero h2 {
+      margin: 22px 0 16px;
+      max-width: 820px;
+      font-size: clamp(34px, 4.2vw, 54px);
+      line-height: 1.1;
+      font-weight: 560;
+      letter-spacing: 0;
+    }
+
+    .hero h2 .line {
+      display: block;
+    }
+
+    .hero .lead {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.6vw, 20px);
+      line-height: 1.72;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 34px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 16px;
+      background: #ffffff;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 680;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .research-visual {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .visual-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .visual-head strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .visual-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pipeline-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-top: 18px;
+    }
+
+    .below-hint {
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    section {
+      padding: 58px clamp(28px, 5vw, 72px);
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    section.alt {
+      background: var(--canvas);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.76fr) minmax(320px, 0.44fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-kicker {
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h2.section-title {
+      margin: 8px 0 0;
+      font-size: clamp(27px, 3vw, 42px);
+      line-height: 1.14;
+      font-weight: 600;
+    }
+
+    .section-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-card {
+      min-height: 174px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .summary-card .num {
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-card h3 {
+      margin: 16px 0 8px;
+      font-size: 18px;
+      line-height: 1.28;
+    }
+
+    .summary-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .problem-table,
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .problem-table th,
+    .problem-table td,
+    .field-table th,
+    .field-table td {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--soft-line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .problem-table th,
+    .field-table th {
+      background: #f1f4f7;
+      color: #303946;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .problem-table tr:last-child td,
+    .field-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    code {
+      padding: 2px 5px;
+      background: #eef1f4;
+      color: #263240;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 0.92em;
+      overflow-wrap: anywhere;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(320px, 0.48fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .principle {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      padding: 22px;
+    }
+
+    .principle h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+
+    .principle p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .split-rule {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .split-rule div {
+      padding: 18px;
+      background: #ffffff;
+    }
+
+    .split-rule strong {
+      display: block;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .split-rule span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(112px, 1fr));
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .step {
+      position: relative;
+      min-height: 156px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .step::after {
+      content: "";
+      position: absolute;
+      top: 28px;
+      right: -10px;
+      width: 10px;
+      border-top: 1px solid var(--blue);
+    }
+
+    .step:last-child::after {
+      display: none;
+    }
+
+    .step .idx {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .step h3 {
+      margin: 14px 0 8px;
+      font-size: 15px;
+      line-height: 1.28;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .evidence-band {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .evidence {
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .evidence strong {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      height: 30px;
+      margin-bottom: 14px;
+      color: #ffffff;
+      font-size: 13px;
+    }
+
+    .evidence.p1 strong {
+      background: var(--green);
+    }
+
+    .evidence.p2 strong {
+      background: var(--blue);
+    }
+
+    .evidence h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .evidence p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tech-card {
+      min-height: 190px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .tech-card svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--navy);
+      stroke-width: 1.9;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tech-card h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .tech-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tech-card .transfer {
+      align-self: end;
+      padding-top: 10px;
+      border-top: 1px solid var(--soft-line);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .tech-card.accent {
+      border-top: 4px solid var(--cyan);
+    }
+
+    .tech-card.green {
+      border-top: 4px solid var(--green);
+    }
+
+    .tech-card.orange {
+      border-top: 4px solid var(--orange);
+    }
+
+    .tech-card.purple {
+      border-top: 4px solid var(--purple);
+    }
+
+    .tech-card.copper {
+      border-top: 4px solid var(--copper);
+    }
+
+    .code-panel {
+      border: 1px solid var(--line);
+      background: #101820;
+      color: #e8edf2;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .code-panel .comment {
+      color: #8ea1b2;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .matrix > div {
+      min-height: 136px;
+      padding: 17px;
+      background: #ffffff;
+    }
+
+    .matrix strong {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--navy);
+      font-size: 15px;
+    }
+
+    .matrix span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .owner-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .owner {
+      padding: 22px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .owner h3 {
+      margin: 0 0 10px;
+      font-size: 19px;
+    }
+
+    .owner ul,
+    .check-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .owner li,
+    .check-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .owner li::before,
+    .check-list li::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 7px;
+      border-top: 2px solid var(--green);
+    }
+
+    .closing {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.48fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .closing h2 {
+      margin: 0 0 16px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.1;
+      font-weight: 560;
+    }
+
+    .closing p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .quote-block {
+      padding: 24px;
+      border-left: 5px solid var(--copper);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      font-size: 20px;
+      line-height: 1.5;
+      font-weight: 560;
+    }
+
+    .footer {
+      padding: 24px clamp(28px, 5vw, 72px);
+      background: var(--ink);
+      color: #c9d1d9;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1180px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: relative;
+        height: auto;
+        display: none;
+      }
+
+      .hero-grid,
+      .section-head,
+      .two-col,
+      .closing {
+        grid-template-columns: 1fr;
+      }
+
+      .tech-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 820px) {
+      .hero {
+        min-height: auto;
+      }
+
+      .hero .lead {
+        overflow-wrap: anywhere;
+        word-break: break-all;
+      }
+
+      .research-visual {
+        overflow-x: auto;
+      }
+
+      .hero-grid,
+      .summary-grid,
+      .evidence-band,
+      .owner-grid,
+      .matrix {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tech-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .split-rule {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 42px 20px;
+      }
+
+      .hero {
+        padding: 36px 20px 22px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .shell {
+        display: block;
+      }
+
+      .side,
+      .side-actions {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      section,
+      .hero {
+        break-inside: avoid;
+        padding: 28px 0;
+      }
+
+      .research-visual,
+      .summary-card,
+      .tech-card,
+      .owner,
+      .principle,
+      .evidence {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="side" aria-label="汇报目录">
+      <div class="brand">
+        <div class="brand-mark"><span>FT</span><span>Skill Operating Report</span></div>
+        <h1>fund-track-tag-audit<br>建设汇报</h1>
+        <p>证据化审核、标准化报告、团队级复用。</p>
+      </div>
+      <nav class="nav">
+        <a href="#summary"><span>核心结论</span><span>01</span></a>
+        <a href="#background"><span>建设背景</span><span>02</span></a>
+        <a href="#scope"><span>审核边界</span><span>03</span></a>
+        <a href="#workflow"><span>工作原理</span><span>04</span></a>
+        <a href="#efficiency"><span>提效技巧</span><span>05</span></a>
+        <a href="#usage"><span>使用方法</span><span>06</span></a>
+        <a href="#team"><span>团队协作</span><span>07</span></a>
+        <a href="#value"><span>价值总结</span><span>08</span></a>
+      </nav>
+      <div class="side-actions">
+        <button class="icon-button" type="button" onclick="window.print()" aria-label="打印或导出为 PDF">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+          导出 / 打印
+        </button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="hero">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">AI Workflow · Fund Label Governance</div>
+            <h2><span class="line">把基金标签审核，</span><span class="line">从临时判断变成</span><span class="line">可复用流程。</span></h2>
+            <p class="lead"><code>fund-track-tag-audit</code> 用尽调证据校验 <code>zmdata</code> 字段，输出可追溯、可复核、可归档的策略标签审核报告。</p>
+            <div class="hero-metrics" aria-label="核心指标">
+              <div class="metric"><strong>3</strong><span>重点审核字段<br><code>strategyType</code> / <code>raceName</code> / <code>fundType</code></span></div>
+              <div class="metric"><strong>2</strong><span>证据层级<br>P1 材料 / P2 字段</span></div>
+              <div class="metric"><strong>6</strong><span>固定报告章节<br>便于复核和归档</span></div>
+              <div class="metric"><strong>10</strong><span>建设提效技巧<br>可迁移到其他 Skill</span></div>
+            </div>
+            <div class="below-hint">生成时间：2026-06-01 · 汇报用途：团队分享 / 方法复盘 / 工作流迁移</div>
+          </div>
+
+          <div class="research-visual" aria-label="基金标签审核流程示意图">
+            <div class="visual-head">
+              <div>
+                <strong>审核主线</strong>
+                <span>Evidence → Audit → Archive</span>
+              </div>
+              <div>
+                <strong>输出物</strong>
+                <span>Markdown / HTML / 共享报告库</span>
+              </div>
+            </div>
+            <svg class="pipeline-svg" viewBox="0 0 620 420" role="img" aria-label="投顾材料、zmdata、受控词表汇入审核引擎，并输出归档报告">
+              <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#0d5cab"></path>
+                </marker>
+              </defs>
+              <rect x="24" y="34" width="158" height="82" fill="#eef6f0" stroke="#0a6b3f"></rect>
+              <text x="48" y="67" fill="#18202a" font-size="17" font-weight="700">P1 尽调材料</text>
+              <text x="48" y="94" fill="#5d6673" font-size="13">笔记 / 纪要 / 路演</text>
+              <rect x="24" y="168" width="158" height="82" fill="#eef4fb" stroke="#0d5cab"></rect>
+              <text x="48" y="201" fill="#18202a" font-size="17" font-weight="700">P2 zmdata</text>
+              <text x="48" y="228" fill="#5d6673" font-size="13">当前结构化字段</text>
+              <rect x="24" y="302" width="158" height="82" fill="#fff5e7" stroke="#f08a00"></rect>
+              <text x="48" y="335" fill="#18202a" font-size="17" font-weight="700">受控词表</text>
+              <text x="48" y="362" fill="#5d6673" font-size="13">标签 / 波动层级</text>
+              <rect x="274" y="137" width="148" height="146" fill="#ffffff" stroke="#18202a" stroke-width="1.5"></rect>
+              <text x="304" y="180" fill="#18202a" font-size="18" font-weight="700">审核引擎</text>
+              <text x="304" y="210" fill="#5d6673" font-size="13">画像构建</text>
+              <text x="304" y="233" fill="#5d6673" font-size="13">字段对照</text>
+              <text x="304" y="256" fill="#5d6673" font-size="13">边界复核</text>
+              <rect x="490" y="70" width="106" height="78" fill="#f8f9fa" stroke="#6f42c1"></rect>
+              <text x="510" y="102" fill="#18202a" font-size="16" font-weight="700">六段报告</text>
+              <text x="510" y="126" fill="#5d6673" font-size="12">标准产物</text>
+              <rect x="490" y="206" width="106" height="78" fill="#f8f9fa" stroke="#9b6a3a"></rect>
+              <text x="510" y="238" fill="#18202a" font-size="16" font-weight="700">Strict 校验</text>
+              <text x="510" y="262" fill="#5d6673" font-size="12">质量前置</text>
+              <rect x="490" y="330" width="106" height="58" fill="#f8f9fa" stroke="#0a6b3f"></rect>
+              <text x="510" y="364" fill="#18202a" font-size="16" font-weight="700">共享归档</text>
+              <line x1="182" y1="75" x2="274" y2="177" stroke="#0d5cab" stroke-width="1.5" marker-end="url(#arrow)"></line>
+              <line x1="182" y1="209" x2="274" y2="209" stroke="#0d5cab" stroke-width="1.5" marker-end="url(#arrow)"></line>
+              <line x1="182" y1="343" x2="274" y2="245" stroke="#0d5cab" stroke-width="1.5" marker-end="url(#arrow)"></line>
+              <line x1="422" y1="190" x2="490" y2="109" stroke="#0d5cab" stroke-width="1.5" marker-end="url(#arrow)"></line>
+              <line x1="422" y1="222" x2="490" y2="245" stroke="#0d5cab" stroke-width="1.5" marker-end="url(#arrow)"></line>
+              <line x1="543" y1="284" x2="543" y2="330" stroke="#0d5cab" stroke-width="1.5" marker-end="url(#arrow)"></line>
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <section id="summary">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">01 · Executive Message</div>
+            <h2 class="section-title">核心结论：这不是读材料工具，而是标签治理流程。</h2>
+          </div>
+          <p class="section-note">它把「证据、字段、结论、归档」串成闭环，让基金赛道审核从一次性判断变成团队资产。</p>
+        </div>
+        <div class="summary-grid">
+          <article class="summary-card">
+            <div class="num">A</div>
+            <h3>证据可追溯</h3>
+            <p>区分 P1 尽调材料和 P2 当前字段，建议必须说明来源与强度。</p>
+          </article>
+          <article class="summary-card">
+            <div class="num">B</div>
+            <h3>结论可复核</h3>
+            <p>统一使用一致、需补充、需修正、需复核补充、人工复核等口径。</p>
+          </article>
+          <article class="summary-card">
+            <div class="num">C</div>
+            <h3>报告可沉淀</h3>
+            <p>单基金报告进入共享报告库，后续可查询、复用和对比。</p>
+          </article>
+          <article class="summary-card">
+            <div class="num">D</div>
+            <h3>流程可迁移</h3>
+            <p>workspace 接入、规则拆分、词表脚本、strict 校验都可迁移到其他 Skill。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="background" class="alt">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">02 · Why Build</div>
+            <h2 class="section-title">建设背景：基金标签是基础数据，但维护天然滞后。</h2>
+          </div>
+          <p class="section-note">核心矛盾不是没有材料，而是材料、系统字段和人工判断之间缺少稳定连接。</p>
+        </div>
+        <table class="problem-table">
+          <thead>
+            <tr>
+              <th>问题</th>
+              <th>典型表现</th>
+              <th>业务影响</th>
+              <th>Skill 的处理方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>字段更新滞后</td>
+              <td>管理人策略变化，`zmdata` 仍是旧赛道。</td>
+              <td>筛选和对比失真。</td>
+              <td>用最新 P1 材料对照当前字段。</td>
+            </tr>
+            <tr>
+              <td>标签颗粒度不足</td>
+              <td>只填「股票多头」或「CTA」，缺少细分赛道。</td>
+              <td>无法精细化研究。</td>
+              <td>通过受控词表验证候选 `raceName`。</td>
+            </tr>
+            <tr>
+              <td>同系列口径不一致</td>
+              <td>同管理人不同产品字段不统一。</td>
+              <td>数据治理成本上升。</td>
+              <td>区分主审记录和参考记录。</td>
+            </tr>
+            <tr>
+              <td>人工判断难沉淀</td>
+              <td>每次重新翻材料、重新写结论。</td>
+              <td>经验无法复用。</td>
+              <td>报告归档并支持历史复用。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="scope">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">03 · Audit Scope</div>
+            <h2 class="section-title">审核边界：字段治理和策略画像分开。</h2>
+          </div>
+          <p class="section-note">研究信息可以丰富展示，但真正进入字段审核的对象必须受控。</p>
+        </div>
+        <div class="two-col">
+          <div>
+            <table class="field-table">
+              <thead>
+                <tr>
+                  <th>字段</th>
+                  <th>含义</th>
+                  <th>审核重点</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>strategyType</code></td>
+                  <td>一级策略</td>
+                  <td>是否属于正确大类，如 CTA、股票多头、市场中性。</td>
+                </tr>
+                <tr>
+                  <td><code>raceName</code></td>
+                  <td>细分赛道</td>
+                  <td>是否过宽、缺失或与材料冲突。</td>
+                </tr>
+                <tr>
+                  <td><code>fundType</code></td>
+                  <td>波动层级</td>
+                  <td>是否与风险评级、杠杆、基准和净值特征匹配。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="principle">
+            <h3>边界原则</h3>
+            <p>策略画像服务于研究理解，字段审核服务于数据治理。`labelIDs` 只展示，不纳入人工字段审核。</p>
+            <div class="split-rule">
+              <div>
+                <strong>Display</strong>
+                <span>L1/L2/L3、资产覆盖、子策略、风控、容量、换手率。</span>
+              </div>
+              <div>
+                <strong>Audit</strong>
+                <span>只判断系统中需要治理的结构化字段。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="alt">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">04 · Operating Model</div>
+            <h2 class="section-title">工作原理：7 步完成从证据到归档的闭环。</h2>
+          </div>
+          <p class="section-note">流程稳定比单次回答漂亮更重要。每一步都服务于可追溯和可复用。</p>
+        </div>
+        <div class="workflow" aria-label="七步工作流程">
+          <article class="step"><span class="idx">1</span><h3>检查环境</h3><p>确认尽调材料盘和共享报告库可访问。</p></article>
+          <article class="step"><span class="idx">2</span><h3>查历史报告</h3><p>未要求刷新时，优先复用已有单基金报告。</p></article>
+          <article class="step"><span class="idx">3</span><h3>查 zmdata</h3><p>获取基金 ID、代码、管理人和当前字段。</p></article>
+          <article class="step"><span class="idx">4</span><h3>定位证据</h3><p>读取尽调笔记、投决会纪要和路演材料。</p></article>
+          <article class="step"><span class="idx">5</span><h3>构建画像</h3><p>抽取赛道、收益来源、风险画像和标签映射。</p></article>
+          <article class="step"><span class="idx">6</span><h3>字段审核</h3><p>对照受控词表和证据强度给出结论。</p></article>
+          <article class="step"><span class="idx">7</span><h3>校验归档</h3><p>通过 strict 校验后同步到共享报告库。</p></article>
+        </div>
+        <div class="evidence-band">
+          <article class="evidence p1">
+            <strong>P1</strong>
+            <h3>尽调材料</h3>
+            <p>用于判断真实策略画像和标签建议，包括尽调笔记、尽调问卷、投决会纪要、路演材料和营销材料。</p>
+          </article>
+          <article class="evidence p2">
+            <strong>P2</strong>
+            <h3>zmdata 当前字段</h3>
+            <p>作为被审核的系统字段基线。P2 不替代 P1，只说明当前结构化数据长什么样。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="efficiency">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">05 · Efficiency Playbook</div>
+            <h2 class="section-title">建设提效技巧：效率来自工作流设计，而不只是模型能力。</h2>
+          </div>
+          <p class="section-note">这些做法可以迁移到管理人画像、产品线分类、投后质检和批量标签清洗等场景。</p>
+        </div>
+        <div class="tech-grid">
+          <article class="tech-card accent">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+            <h3>网盘加入 workspace</h3>
+            <p>将 `W:` / `Z:` 尽调材料和 `Y:` 报告库接入工作区，用原生工具读文件，替代重型 SMB 管道。</p>
+            <div class="transfer">迁移经验：共享资料先接入 workspace。</div>
+          </article>
+          <article class="tech-card green">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v7H4z"/><path d="M13 5h7v7h-7z"/><path d="M4 14h7v5H4z"/><path d="M13 14h7v5h-7z"/></svg>
+            <h3>规则拆分</h3>
+            <p>把主流程、证据规则、输出模板、保存流程拆成独立 reference 文件，降低上下文噪音。</p>
+            <div class="transfer">迁移经验：复杂 Skill 不写成大提示词。</div>
+          </article>
+          <article class="tech-card orange">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>
+            <h3>固定缓冲区保存</h3>
+            <p>先写 `latest_report.md`，再校验、同步，避开中文路径和命令行内嵌字符串的编码风险。</p>
+            <div class="transfer">迁移经验：中文长文档走缓冲文件。</div>
+          </article>
+          <article class="tech-card purple">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/><path d="M4 20h16"/></svg>
+            <h3>Strict 校验前置</h3>
+            <p>用脚本检查章节、证据等级、字段行、推论边界和表格格式，模型不能绕过质检。</p>
+            <div class="transfer">迁移经验：共享产物必须机器校验。</div>
+          </article>
+          <article class="tech-card copper">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12a7 7 0 0 1 12-5"/><path d="M17 7h-5V2"/><path d="M19 12a7 7 0 0 1-12 5"/><path d="M7 17h5v5"/></svg>
+            <h3>历史报告复用</h3>
+            <p>先查历史产物，未要求刷新就复用；多基金先预检，避免重复审计。</p>
+            <div class="transfer">迁移经验：研究工作先查缓存。</div>
+          </article>
+          <article class="tech-card accent">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/><path d="M16 17l2 2 4-5"/></svg>
+            <h3>受控词表脚本</h3>
+            <p>用 `_vocabulary.py` 查询标签、波动层级和 label ID，避免生成系统中不存在的候选值。</p>
+            <div class="transfer">迁移经验：内部枚举配轻量 CLI。</div>
+          </article>
+          <article class="tech-card green">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4"/><path d="M9 12h6"/><path d="M9 16h4"/></svg>
+            <h3>长文档定向抽取</h3>
+            <p>PDF 按页码、关键词和上下文页抽取，DOCX 限长提取，减少材料噪音。</p>
+            <div class="transfer">迁移经验：先取证，再判断。</div>
+          </article>
+          <article class="tech-card orange">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18"/><path d="M5 8h14"/><path d="M5 16h14"/></svg>
+            <h3>主审 / 参考分离</h3>
+            <p>多记录命中时，明确主审对象和同系列参考对象，避免字段互相污染。</p>
+            <div class="transfer">迁移经验：多记录业务显式定主对象。</div>
+          </article>
+          <article class="tech-card purple">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8"/><path d="M8 13h5"/><path d="M18 16l2 2"/></svg>
+            <h3>证据源只读</h3>
+            <p>尽调材料只允许读取、搜索和抽取，派生报告写入共享报告库或缓冲区。</p>
+            <div class="transfer">迁移经验：原始证据和派生成果分离。</div>
+          </article>
+          <article class="tech-card copper">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h7"/><path d="M17 14l3 3-3 3"/></svg>
+            <h3>终端输出隔离</h3>
+            <p>盘符探测、查询、枚举、词表、保存分别执行，输出更干净，排错更快。</p>
+            <div class="transfer">迁移经验：终端输出也是上下文资产。</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="usage" class="alt">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">06 · How To Use</div>
+            <h2 class="section-title">使用方法：默认复用历史，明确刷新才重跑。</h2>
+          </div>
+          <p class="section-note">这样能同时兼顾效率和时效性，避免团队在同一基金上反复做相同审核。</p>
+        </div>
+        <div class="two-col">
+          <div class="code-panel" aria-label="常用命令">
+            <div><span class="comment"># 首次环境检查</span></div>
+            <div>Test-Path "W:\投顾信息（PPT、尽调反馈表等）"</div>
+            <div>Test-Path "Z:\投顾信息（PPT、尽调反馈表等）"</div>
+            <div>Test-Path "Y:\投顾管理人研究\fund-track-tag-audit"</div>
+            <br>
+            <div><span class="comment"># 单基金审核</span></div>
+            <div>用 fund-track-tag-audit 审核一下 &lt;基金名称&gt; 的策略标签。</div>
+            <br>
+            <div><span class="comment"># 重新审核</span></div>
+            <div>重新审核 &lt;基金名称&gt;，以当前 zmdata 和最新尽调材料为准。</div>
+            <br>
+            <div><span class="comment"># 多基金审核</span></div>
+            <div>请审核以下基金的赛道标签：A 基金、B 基金、C 基金。</div>
+          </div>
+          <div class="matrix">
+            <div><strong>默认路径</strong><span>有历史报告且未要求刷新，直接返回历史报告。</span></div>
+            <div><strong>刷新路径</strong><span>用户明确说重新审核、最新、当前，才跑完整流程。</span></div>
+            <div><strong>多基金路径</strong><span>先预检，已有报告复用，未覆盖基金新审。</span></div>
+            <div><strong>阅读重点</strong><span>优先看结论摘要、字段审核、关键证据和口径说明。</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="team">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">07 · Team Adoption</div>
+            <h2 class="section-title">团队协作：不同角色看不同层次。</h2>
+          </div>
+          <p class="section-note">同一份报告既是研究证据，也是数据治理依据，还是 Skill 后续维护的反馈入口。</p>
+        </div>
+        <div class="owner-grid">
+          <article class="owner">
+            <h3>投研 / FOF 研究</h3>
+            <ul>
+              <li>入池前标签核验。</li>
+              <li>投后复盘时更新策略画像。</li>
+              <li>同系列产品口径统一。</li>
+              <li>向数据团队提交字段修正依据。</li>
+            </ul>
+          </article>
+          <article class="owner">
+            <h3>数据治理团队</h3>
+            <ul>
+              <li>批量检查字段缺失。</li>
+              <li>识别 `raceName` 过宽产品。</li>
+              <li>建立 `fundType` 人工复核清单。</li>
+              <li>确认建议值是否通过受控词表校验。</li>
+            </ul>
+          </article>
+          <article class="owner">
+            <h3>Skill 维护者</h3>
+            <ul>
+              <li>维护审核规则和报告模板。</li>
+              <li>更新词表解析脚本。</li>
+              <li>补充 strict 质检规则。</li>
+              <li>监控归档路径和保存流程稳定性。</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="value" class="alt">
+        <div class="closing">
+          <div>
+            <div class="section-kicker">08 · Closing</div>
+            <h2>方法论价值：从单次 AI 辅助，走向团队级数据治理。</h2>
+            <p>这套方法可以继续迁移到管理人画像更新、产品线分类、策略变更追踪、投后报告质检和批量标签清洗。</p>
+          </div>
+          <div class="quote-block">
+            它把「读材料」升级为「证据化审核」，把「一次性回答」升级为「可归档报告」，把「个人经验」升级为「团队可复用流程」。
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        fund-track-tag-audit Skill 建设汇报 · 独立 HTML 文档 · 2026-06-01
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

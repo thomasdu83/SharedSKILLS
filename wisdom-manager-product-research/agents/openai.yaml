@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wisdom Manager Product Research"
+  short_description: "Call private-fund manager and product research APIs."
+  default_prompt: "Use this skill to answer private-fund manager and product questions via fofresearchsvr/ai tool calls and return data-grounded conclusions."

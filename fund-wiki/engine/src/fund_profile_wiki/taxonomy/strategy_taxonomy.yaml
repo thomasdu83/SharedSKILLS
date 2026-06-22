@@ -1,0 +1,157 @@
+version: "2026-06-04"
+policy:
+  primary_tag_rule: "A product should have one dominant primary strategy tag; multiple tags are allowed only when evidence is mixed or provisional."
+  evidence_layer_rule: "Keep raw strategy evidence and candidate tags; do not overwrite source language with normalized labels."
+primary_tags:
+  - code: EQ_LONG
+    name: 股票多头
+    aliases: [股票多头, 主观多头, 量化多头, 量化多头策略, 股票主题, 股票策略, 空气指增]
+  - code: EQ_INDEX_ENH
+    name: 指数增强
+    aliases: [指数增强, 指增, 量化指增]
+  - code: EQ_NEUTRAL
+    name: 市场中性
+    aliases: [市场中性, 量化中性, 股票市场中性, 中性策略, 对冲]
+  - code: CTA
+    name: 管理期货
+    aliases: [CTA, 管理期货, 量化CTA, 期货策略]
+  - code: ARB
+    name: 相对价值
+    aliases: [相对价值, 套利, 统计套利, ETF套利, 期货套利, 转债套利, 跨境套利, 做市]
+  - code: VOL
+    name: 期权波动率
+    aliases: [期权, 波动率, 期权波动率, 期权套利, 期权CTA, 双卖, 香草, 雪球]
+  - code: FI
+    name: 债券信用
+    aliases: [债券, 固收, 信用, 利率, 转债多头, 固收增强, 高收益信用]
+  - code: MACRO_MULTI
+    name: 宏观多资产
+    aliases: [宏观, 多资产, 宏观对冲, ETF轮动, 全球宏观, 系统化宏观, 风险平价]
+  - code: FOF_MOM
+    name: 组合基金
+    aliases: [FOF, MOM, 组合基金, 多策略组合, 管理人组合]
+  - code: EVENT
+    name: 事件驱动
+    aliases: [事件驱动, 定增, 并购重组, 困境, 打新, 指数纳入]
+  - code: OTHER_REVIEW
+    name: 待确认
+    aliases: [待确认, 待定, 混合, 灵活对冲, 无法识别]
+secondary_tags:
+  - code: IE_300
+    parent: EQ_INDEX_ENH
+    name: 300指增
+    aliases: [沪深300, 300指增, 沪深300指数增强, 300增强]
+  - code: IE_500
+    parent: EQ_INDEX_ENH
+    name: 500指增
+    aliases: [中证500, 500指增, 中证500指数增强, 500增强]
+  - code: IE_1000
+    parent: EQ_INDEX_ENH
+    name: 1000指增
+    aliases: [中证1000, 1000指增, 中证1000指数增强, 1000增强, 千指增]
+  - code: IE_A500
+    parent: EQ_INDEX_ENH
+    name: A500指增
+    aliases: [中证A500, A500指增, 中证A500指数增强, A500指数增强, A500增强]
+  - code: IE_2000
+    parent: EQ_INDEX_ENH
+    name: 2000指增
+    aliases: [中证2000, 2000指增, 中证2000指数增强, 2000增强]
+  - code: MN_300
+    parent: EQ_NEUTRAL
+    name: 300中性
+    aliases: [300中性, 沪深300中性]
+  - code: MN_500
+    parent: EQ_NEUTRAL
+    name: 500中性
+    aliases: [500中性, 中证500中性]
+  - code: MN_1000
+    parent: EQ_NEUTRAL
+    name: 1000中性
+    aliases: [1000中性, 中证1000中性]
+  - code: CTA_COMMODITY
+    parent: CTA
+    name: 商品CTA
+    aliases: [商品CTA, 商品趋势, 商品期货, 商品基本面, 商品期限结构]
+  - code: CTA_INDEX
+    parent: CTA
+    name: 股指CTA
+    aliases: [股指CTA, 股指期货CTA, 金融CTA]
+  - code: CTA_TREND
+    parent: CTA
+    name: 趋势CTA
+    aliases: [趋势CTA, 短周期趋势CTA, 中周期趋势CTA, 长周期趋势CTA, 趋势跟踪]
+  - code: CTA_FUNDAMENTAL
+    parent: CTA
+    name: 基本面CTA
+    aliases: [基本面CTA, 产业逻辑, 库存, 仓单]
+  - code: VOL_OPTION_CTA
+    parent: VOL
+    name: 期权CTA
+    aliases: [期权CTA, 期权方向, 期权趋势]
+  - code: VOL_SHORT_VOL
+    parent: VOL
+    name: 期权双卖
+    aliases: [双卖, 卖波, 卖出波动率, 时间价值]
+  - code: ARB_ETF
+    parent: ARB
+    name: ETF套利
+    aliases: [ETF套利, ETF做市, ETF价差]
+  - code: ARB_CONVERTIBLE
+    parent: ARB
+    name: 转债套利
+    aliases: [转债套利, 可转债套利, 转债中性]
+  - code: FI_CREDIT
+    parent: FI
+    name: 信用债
+    aliases: [信用债, 短期信用, 中长期信用, 中高收益信用, 高收益信用]
+  - code: FI_RATE
+    parent: FI
+    name: 利率债
+    aliases: [利率债, 久期, 中短期利率, 中长期利率]
+  - code: MACRO_ETF_ROTATION
+    parent: MACRO_MULTI
+    name: ETF轮动
+    aliases: [ETF轮动, 大类资产轮动]
+facet_axes:
+  benchmark:
+    沪深300: [沪深300, 300]
+    中证500: [中证500, 500]
+    中证A500: [中证A500, A500]
+    中证1000: [中证1000, 1000, 千指]
+    中证2000: [中证2000, 2000]
+  decision_mode:
+    量化: [量化, 系统化, 模型]
+    主观: [主观, 人工]
+    混合: [主观+量化, 混合]
+  instrument:
+    股票: [股票, A股]
+    商品期货: [商品期货, 商品]
+    股指期货: [股指期货, 股指]
+    国债期货: [国债期货]
+    场内期权: [ETF期权, 股指期权, 场内期权]
+    场外期权: [场外期权, 香草, 雪球]
+    可转债: [可转债, 转债]
+  horizon:
+    日内: [日内, T0]
+    短周期: [短周期, 高频]
+    中周期: [中周期, 中短周期]
+    长周期: [长周期, 长期]
+  return_engine:
+    alpha: [alpha, 阿尔法, 超额]
+    trend: [trend, 趋势, 动量]
+    carry: [carry, 期限结构, 展期]
+    volatility: [volatility, 波动率, 波动]
+    convergence: [convergence, 回归, 收敛, 价差]
+    credit_spread: [信用利差, 利差]
+  risk_shape:
+    低波: [低波, 低波动]
+    高杠杆: [高杠杆, 杠杆]
+    尾部保护: [尾部保护, 买权保护]
+    尾部卖方: [尾部卖方, 卖波]
+    高换手: [高换手]
+  portfolio_role:
+    权益进攻: [权益进攻]
+    低波底仓: [低波底仓, 底仓]
+    现金增强: [现金增强]
+    分散化: [分散化, 分散]

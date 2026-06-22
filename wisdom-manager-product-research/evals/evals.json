@@ -1,0 +1,101 @@
+{
+  "skill_name": "wisdom-manager-product-research",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我查一下私募管理人“幻方”，先做私募查询并确认目标机构。",
+      "expected_output": "调用 search_managers，返回与“幻方”相关的管理人候选，并明确目标管理人。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "查到幻方后，给我这家机构的详情信息（成立时间、核心人员、策略方向等）。",
+      "expected_output": "先确认 manager_id，再调用 get_manager_detail 返回管理人详情。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "列出幻方旗下产品，给我一个产品清单。",
+      "expected_output": "先确认 manager_id，再调用 list_manager_products 返回该管理人旗下产品列表。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "我想看幻方的尽调/路演等资料，先列出可用资料文件。",
+      "expected_output": "先确认 manager_id，再调用 list_manager_materials 返回资料文件列表。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "从幻方资料列表里选一个文件并下载给我。",
+      "expected_output": "先有 file_path_reality，再调用 download_manager_material 执行文件下载。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "做策略查询：我要看“指增”方向的私募产品，请先给我候选产品。",
+      "expected_output": "调用 search_products，可结合 product_name / strategy_name / race_name / performance_fee 等条件返回产品候选。",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "查“幻方中证500量化进取1号”的产品详情。",
+      "expected_output": "先通过 search_products 确认唯一 product_id，再调用 get_product_detail 返回详情。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "查产品要素，产品编码是 SAHG65",
+      "expected_output": "优先使用 fund_code=SAHG65 调用 get_product_terms，返回产品要素结果。",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "下载 SAHG65 这只产品的合同文件。",
+      "expected_output": "优先使用 fund_code=SAHG65 调用 get_product_contract；下载成功后应落盘到 /tmp/openclaw_downloads/wisdom-manager-product-research/ 并返回 local_file_path / filename / content_type / file_size_bytes，其中 filename 必须等于服务端原始文件名。",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "查“幻方中证500量化进取1号”最近净值。",
+      "expected_output": "先通过 search_products 确认唯一 product_id，再调用 get_product_nav 返回净值序列。",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "Two Sigma相关的私募",
+      "expected_output": "调用 search_managers，并通过 query=Two Sigma 返回匹配管理人结果。",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "交睿宏观配置1号这只基金的基本情况如何?",
+      "expected_output": "调用 search_products 确认产品及 product_id，随后调用 get_product_detail（或组合 get_product_terms）返回该基金的基础概况。",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "交睿宏观配置1号这个基金管理人怎么样?",
+      "expected_output": "调用 search_managers 或 get_manager_detail 返回该机构的核心团队、策略特点及风控体系。",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "上海思勰星汇私募基金管理有限公司有没有被尽调过?",
+      "expected_output": "调用 search_managers 精准匹配该机构名称，通过返回结果中的“是否被详细尽调”字段进行明确答复，并附带其基础概况。",
+      "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "高亢所在公司旗下有哪些产品？",
+      "expected_output": "先调用 search_managers 传入参数 personnel_name=高亢 定位到对应管理人，获取 manager_id 后，调用 list_manager_products 返回产品清单。",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "对比一下上海衍复投资管理公司和交睿（上海）投资管理有限公司",
+      "expected_output": "分别调用 search_managers 获取两家机构的详细数据，从核心策略、管理规模、团队背景、产品线特征等维度进行结构化对比。",
+      "files": []
+    }
+  ]
+}

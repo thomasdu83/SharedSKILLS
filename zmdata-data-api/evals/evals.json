@@ -1,0 +1,149 @@
+[
+  {
+    "id": "market_tracking_pool_all_labels",
+    "prompt": "市场跟踪池所有的标签",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "zm_fund_group_ids.md",
+        "label_id",
+        "市场跟踪池",
+        "赛道"
+      ],
+      "must_not_include": [
+        "rankconfig_id.md",
+        "rankconfigid"
+      ],
+      "sample_answer": "查询“市场跟踪池所有的标签”属于基金分组/标签枚举问题，应优先查看 `references/zm_fund_group_ids.md`。其中“市场跟踪池”按赛道列出 `label_id`，例如股票多头、债券、CTA、市场中性和其他赛道。拿到目标 `label_id` 后，可用 `api.get_fund_in_label(label_id_list=[...])` 查询对应基金列表。"
+    }
+  },
+  {
+    "id": "fund_pool_interface_choice",
+    "prompt": "怎么查询某个基金池/标签下面有哪些基金？给我 zmdata 调用示例。",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "get_fund_in_label",
+        "import zmdata as api",
+        "label_id_list"
+      ],
+      "must_not_include": [
+        "get_fund_in_following_list"
+      ],
+      "sample_answer": "使用 `api.get_fund_in_label(label_id_list=[label_id])` 查询基金池成分。示例：\n\n```python\nimport zmdata as api\n\ndf = api.get_fund_in_label(label_id_list=[12345])\nprint(df.head())\n```"
+    }
+  },
+  {
+    "id": "market_tracking_cta_score_flow",
+    "prompt": "我要查市场跟踪池 CTA 产品评分，应该怎么调用？",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "rankconfig_id.md",
+        "rankconfigid",
+        "label_id",
+        "get_fund_in_label",
+        "get_fund_score",
+        "is_norm=1"
+      ],
+      "sample_answer": "先在 `references/rankconfig_id.md` 中定位“市场跟踪池”下 CTA 的 `rankconfigid` 和 `label_id`，再用 `get_fund_in_label` 查基金列表，最后用 `get_fund_score` 查评分。\n\n```python\nimport zmdata as api\n\npool = api.get_fund_in_label(label_id_list=[label_id])\nfund_ids = pool[\"FundID\"].dropna().astype(int).tolist()\nscore = api.get_fund_score(\n    fund_id_list=fund_ids,\n    rankconfigid=rankconfigid,\n    is_day=0,\n    is_norm=1,\n)\n```"
+    }
+  },
+  {
+    "id": "portfolio_pm_key_requirement",
+    "prompt": "投后组合接口调用前需要设置什么？给一个 pm_nav 示例。",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "PM_API_KEY",
+        "api.PM_API_KEY = '<your-api-key>'",
+        "pm_nav",
+        "pm_id"
+      ],
+      "must_not_include": [
+        "真实 API Key",
+        "x_mars_token"
+      ],
+      "sample_answer": "投后(组合)相关接口调用前必须设置 `PM_API_KEY`，不要在回答中写真实密钥。\n\n```python\nimport zmdata as api\n\napi.PM_API_KEY = '<your-api-key>'\n\ndf = api.pm_nav(pm_id=10001)\nprint(df.head())\n```"
+    }
+  },
+  {
+    "id": "portfolio_track_revenue_cli",
+    "prompt": "帮我实际跑一下投后组合 10001 股票多头策略下赛道累计盈亏，返回前 20 行。",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "intent": "actual_data_retrieval",
+      "must_include": [
+        "scripts/zmdata_cli.py call pm_track_revenue",
+        "--params",
+        "\"pm_id\":10001",
+        "\"strategy_type\":1",
+        "--head 20",
+        "ZM_PM_API_KEY"
+      ],
+      "sample_answer": "这是实际取数场景，应优先用 CLI。若环境中已有 `ZM_PM_API_KEY`：\n\n```bash\npython scripts/zmdata_cli.py call pm_track_revenue \\\n  --params '{\"pm_id\":10001,\"strategy_type\":1}' \\\n  --format json \\\n  --head 20\n```\n\n如果缺少 `ZM_PM_API_KEY`，说明需要先配置该环境变量，不要在命令行传真实 key。"
+    }
+  },
+  {
+    "id": "portfolio_track_revenue_doc_lookup",
+    "prompt": "pm_track_revenue 这个接口有哪些必填参数？",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "pm_track_revenue",
+        "pm_id",
+        "strategy_type",
+        "1 股票多头",
+        "3 市场中性",
+        "4 债券",
+        "5 CTA",
+        "9 ETF"
+      ],
+      "sample_answer": "`pm_track_revenue` 用于获取给定策略下赛道的累计盈亏。必填参数是 `pm_id` 和 `strategy_type`。`strategy_type` 取值：1 股票多头，3 市场中性，4 债券，5 CTA，9 ETF。"
+    }
+  },
+  {
+    "id": "index_component_code_generation",
+    "prompt": "用 zmdata 查询指数成分怎么写？如果是内部指数名称我该查哪里？",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "index_component",
+        "import zmdata as api",
+        "zm_index_ids.md",
+        "benchID",
+        "index_code"
+      ],
+      "sample_answer": "查询指数成分使用 `api.index_component(...)`。如果用户给的是内部指数名称，先查 `references/zm_index_ids.md` 找到对应 `benchID` 或 `index_code`。\n\n```python\nimport zmdata as api\n\ndf = api.index_component(bench_id_list=[11784])\nprint(df.head())\n```"
+    }
+  },
+  {
+    "id": "stock_quote_cli_or_code",
+    "prompt": "帮我查一下贵州茅台 600519 最近一段时间的日行情，先返回前 5 行。",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "intent": "actual_data_retrieval",
+      "must_include": [
+        "scripts/zmdata_cli.py call stock_daily_quote",
+        "stock_code_list",
+        "600519",
+        "--head 5"
+      ],
+      "sample_answer": "这是实际取数场景，优先用 CLI：\n\n```bash\npython scripts/zmdata_cli.py call stock_daily_quote \\\n  --params '{\"stock_code_list\":[\"600519\"]}' \\\n  --format json \\\n  --head 5\n```\n\n如果只是生成代码，则使用 `api.stock_daily_quote(stock_code_list=[\"600519\"])`。"
+    }
+  },
+  {
+    "id": "api_not_documented_guardrail",
+    "prompt": "调用一个叫 get_pm_strategy_revenue 的接口帮我查组合收益。",
+    "expected_output": {
+      "should_use_skill": "zmdata-data-api",
+      "must_include": [
+        "文档中没有 get_pm_strategy_revenue",
+        "pm_track_revenue",
+        "pm_strategy_nav",
+        "不要臆造接口"
+      ],
+      "sample_answer": "不要直接调用未在 references 中出现的 `get_pm_strategy_revenue`。当前投后文档中相关接口包括 `pm_track_revenue`（赛道累计盈亏）和 `pm_strategy_nav`（分策略净值）。请根据需求选择其中一个；如果要查给定策略下赛道累计盈亏，用 `pm_track_revenue`。"
+    }
+  }
+]

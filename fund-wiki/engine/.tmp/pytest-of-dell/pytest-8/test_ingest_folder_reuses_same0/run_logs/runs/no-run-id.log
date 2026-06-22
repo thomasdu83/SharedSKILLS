@@ -1,0 +1,18 @@
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=catalog written entries=2 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_reuses_same0\run_logs\source_catalog\平方和.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest start manager=平方和 files_total=2 use_llm=True provider=deepseek snapshot=manifest changed_only=False force=False ingest_scope=all
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest parallel_parse enabled workers=2
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse start file=alpha.txt size=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse start file=beta.txt size=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parsed_cache written file=alpha.txt path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_reuses_same0\parsed_cache\manual-run\平方和\alpha_fba1a88a82.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parsed_cache written file=beta.txt path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_reuses_same0\parsed_cache\manual-run\平方和\beta_fba1a88a82.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse done file=alpha.txt status=success method=text chars=17
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse done file=beta.txt status=success method=text chars=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/2 finalize name=alpha.txt state=parsed
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=llm_extract start file=alpha.txt provider=deepseek
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=llm_extract done file=alpha.txt chars=276 seconds=0.00
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=write_note done file=alpha.txt note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_reuses_same0\source_notes\平方和\alpha.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/2 processed name=alpha.txt
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 2/2 finalize name=beta.txt state=parsed
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 2/2 skipped name=beta.txt reason=duplicate_sha note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_reuses_same0\source_notes\平方和\alpha.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=manifest appended records=2 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_reuses_same0\run_logs\source_manifest.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest done processed=1 skipped=1 failed=0 source_missing=0 total_seconds=0.02 llm_seconds=0.0

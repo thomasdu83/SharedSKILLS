@@ -1,0 +1,6 @@
+interface:
+  display_name: "ZMData Data API"
+  short_description: "Find ZMData APIs and Python calls."
+  default_prompt: "Use $zmdata-data-api to find the right zmdata interface and generate the Python call."
+policy:
+  allow_implicit_invocation: true

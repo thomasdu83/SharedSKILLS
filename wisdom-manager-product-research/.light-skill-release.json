@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "skillId": "wisdom-manager-product-research",
+  "name": "Wisdom Manager Product Research",
+  "version": "git:3de70cc",
+  "releaseId": "git:3de70ccd70ba8f2635ec6e04cdd0ca5f9ee94514",
+  "releaseNotes": "Packaged from upstream Git commit 3de70cc.",
+  "publishedAt": "2026-05-09T08:54:22.992Z",
+  "packagedAt": "2026-05-09T08:54:22.992Z",
+  "upstream": {
+    "kind": "git",
+    "repoUrl": "http://10.168.30.12:8083/zm_ai/openclaw_skills.git",
+    "ref": "master",
+    "sourceSubdir": "wisdom-manager-product-research",
+    "commit": "3de70ccd70ba8f2635ec6e04cdd0ca5f9ee94514"
+  },
+  "update": {
+    "checkUrl": "/api/hub/skills/wisdom-manager-product-research/version",
+    "downloadUrl": "/api/hub/skills/wisdom-manager-product-research/download"
+  }
+}

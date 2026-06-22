@@ -1,0 +1,23 @@
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=catalog written entries=3 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\run_logs\source_catalog\平方和.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest start manager=平方和 files_total=3 use_llm=False provider=n/a snapshot=manifest changed_only=False force=False ingest_scope=all
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest parallel_parse enabled workers=3
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse start file=alpha.md size=12
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parsed_cache written file=alpha.md path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\parsed_cache\manual-run\平方和\alpha_93fb2bb9fe.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse done file=alpha.md status=success method=text chars=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse start file=beta.txt size=12
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parsed_cache written file=beta.txt path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\parsed_cache\manual-run\平方和\beta_2e8c992d66.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse done file=beta.txt status=success method=text chars=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse start file=gamma.md size=12
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parsed_cache written file=gamma.md path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\parsed_cache\manual-run\平方和\gamma_e634a85039.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse done file=gamma.md status=success method=text chars=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/3 finalize name=alpha.md state=parsed
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=write_note done file=alpha.md note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\source_notes\平方和\alpha.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/3 processed name=alpha.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 2/3 finalize name=beta.txt state=parsed
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=write_note done file=beta.txt note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\source_notes\平方和\beta.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 2/3 processed name=beta.txt
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 3/3 finalize name=gamma.md state=parsed
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=write_note done file=gamma.md note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\source_notes\平方和\gamma.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 3/3 processed name=gamma.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=manifest appended records=3 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_parallelize0\run_logs\source_manifest.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest done processed=3 skipped=0 failed=0 source_missing=0 total_seconds=0.02 llm_seconds=0.0

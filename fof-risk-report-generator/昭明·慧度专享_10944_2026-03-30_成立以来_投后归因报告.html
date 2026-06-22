@@ -1,0 +1,163 @@
+<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'/>
+<meta name='viewport' content='width=device-width,initial-scale=1'/>
+<title>昭明·慧度专享：2026-03-30以来表现分析</title>
+<style>
+    :root{--fg:#111827;--muted:#6b7280;--border:#e5e7eb;--bg:#ffffff;--bg2:#f9fafb;--warn:#b91c1c;}
+    body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;}
+    .container{max-width:1100px;margin:24px auto;padding:0 16px 40px;}
+    h1{font-size:22px;margin:0 0 8px;}
+    h2{font-size:16px;margin:18px 0 8px;padding-top:6px;border-top:1px solid var(--border);}
+    h3{font-size:14px;margin:14px 0 8px;}
+    h4{font-size:13px;margin:12px 0 8px;}
+    .meta{color:var(--muted);margin:0 0 14px;}
+    .note{background:var(--bg2);border:1px solid var(--border);padding:10px 12px;border-radius:8px;color:var(--muted);margin:10px 0 14px;}
+    .note strong{color:var(--fg);}
+    .section-lead{color:var(--muted);margin:0 0 6px;}
+    .small{font-size:12px;color:var(--muted);}
+    .warn{color:var(--warn);font-weight:700;}
+    .kpi{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:10px;margin:10px 0 6px;}
+    .card{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#fff;}
+    .card .label{color:var(--muted);font-size:12px;}
+    .card .value{font-size:18px;font-weight:700;margin-top:2px;}
+    .card .sub{color:var(--muted);font-size:12px;margin-top:2px;}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:12px;margin-left:6px;}
+    .hr{height:1px;background:var(--border);margin:18px 0;}
+    table{width:100%;border-collapse:collapse;margin:8px 0 10px;background:#fff;}
+    th,td{border:1px solid var(--border);padding:8px 10px;vertical-align:top;word-break:break-word;}
+    th{background:var(--bg2);text-align:left;font-weight:600;}
+    @media (max-width:900px){.kpi{grid-template-columns:1fr 1fr;}}
+    @media (max-width:520px){.kpi{grid-template-columns:1fr;}}
+    </style></head><body><div class='container'>
+<h1>昭明·慧度专享：2026-03-30以来表现分析</h1>
+<p class='meta'>产品：昭明·慧度专享（PMID=10944）｜区间：2026-03-30 ~ 2026-05-28（起点净值基准日：2026-03-27；净值有效交易日：2026-03-27 ~ 2026-05-28）<span class='badge'>数据源：ZMData 投后/因子接口</span></p>
+<div class='note'><strong>口径说明：</strong><ul>
+<li>区间收益/最大回撤：基于 <code>pm_nav</code> 的单位净值切片计算。</li>
+<li>策略层/赛道层：优先使用系统字段汇总；子基金层用 <code>FundID</code> 对齐，并以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，按比例缩放到策略层区间贡献口径。</li>
+<li>因子贡献为 <strong>诊断性估计</strong>（暴露×因子收益序列），用于风险来源定位，<span class='warn'>不得表述为严格业绩归因</span>。</li>
+</ul></div>
+<h2>分析结论</h2>
+<p class='section-lead'>截至 2026-05-28，组合自 2026-03-30 以来区间收益 4.94%，最大回撤 -3.81%（峰-谷 2026-05-13→2026-05-27）。策略层视角下，主要拖累来自：CTA（49.8bp），股票多头（513.2bp）；主要贡献来自：股票多头（513.2bp），CTA（49.8bp）。后续章节将按“三层结构”把结果拆到策略→赛道→子基金，并用因子暴露/因子收益解释顺逆风。</p>
+<div class='kpi'>
+<div class='card'><div class='label'>区间收益</div><div class='value'>4.94%</div><div class='sub'>单位净值切片</div></div>
+<div class='card'><div class='label'>最大回撤</div><div class='value'>-3.81%</div><div class='sub'>峰-谷：2026-05-13 → 2026-05-27</div></div>
+<div class='card'><div class='label'>年化收益（估算）</div><div class='value'>35.49%</div><div class='sub'>按交易日折算</div></div>
+<div class='card'><div class='label'>年化波动 / Sharpe（估算）</div><div class='value'>11.54% / 3.08</div><div class='sub'>rf=0 近似</div></div>
+</div>
+<p>本节文字总结：区间收益刻画最终结果，最大回撤刻画最差体验。若回撤峰-谷较集中，后续应优先对照该时间段的赛道/子基金负贡献来源，并检查风格因子与对冲成本是否与环境方向相悖。</p>
+<h2>大类赛道归因（策略层）</h2>
+<p class='section-lead'>口径：<code>pm_strategy_nav(freq='D')</code>；区间收益采用收益序列连乘，区间贡献采用贡献序列求和，并与母基金区间净值保持同一“有效交易日窗口”。Residual 用于提示口径差，不把残差强行归因到单一策略。</p>
+<table><thead><tr><th>大类赛道</th><th>平均权重</th><th>区间收益</th><th>区间贡献</th></tr></thead><tbody><tr><td>股票多头</td><td>54.37%</td><td>-</td><td>513.2bp</td></tr><tr><td>市场中性</td><td>-</td><td>-</td><td>-</td></tr><tr><td>CTA</td><td>33.31%</td><td>-</td><td>49.8bp</td></tr><tr><td>债券</td><td>-</td><td>-</td><td>-</td></tr><tr><td>ETF</td><td>-</td><td>-</td><td>-</td></tr></tbody></table>
+<p class='small'>一致性校验：Σ策略贡献 563.1bp vs 组合区间收益 493.9bp，Residual -69.2bp。</p>
+<p>本节文字总结：策略层用于快速判断组合风险预算的主要来源。主要拖累：CTA（49.8bp），股票多头（513.2bp）；主要贡献：股票多头（513.2bp），CTA（49.8bp）。Residual 用于提示口径差（现金/费用/衍生品保证金/净值边界等），不建议把残差强行归因到某一策略。 Residual 超过 50bp，需谨慎解读归因结果并优先解释口径差来源。</p>
+<h2>Brinson 归因（资产配置 vs 选基）</h2>
+<p class='section-lead'>Brinson 归因用于区分“资产配置”与“选基”对超额的贡献；数值口径以接口为准，区间贡献按序列求和或首末差计算。</p>
+<table><thead><tr><th>归因类型</th><th>股票多头</th><th>CTA</th></tr></thead><tbody><tr><td>资产配置收益</td><td>12.2bp</td><td>-7.8bp</td></tr><tr><td>选基收益</td><td>-4.1bp</td><td>37.5bp</td></tr><tr><td>总超额</td><td>7.8bp</td><td>35.6bp</td></tr></tbody></table>
+<p>本节文字总结：Brinson 归因把“超额来源”拆成资产配置与选基两部分。若资产配置收益为主要拖累，通常意味着策略权重结构与环境不匹配；若选基收益为主要拖累，则应优先在关键赛道内定位具体子基金与风格漂移，并结合投后限额/替换动作处理。</p>
+<h2>分段损益归因（按周）</h2>
+<p class='section-lead'>分段盈亏用于定位“拖累发生在哪些周/月”。单位为接口原始口径（通常为金额增量），建议结合当期净资产/保证金占用做归一化解释。</p>
+<table><thead><tr><th>周期结束日</th><th>总盈亏</th><th>股票多头</th><th>CTA</th></tr></thead><tbody><tr><td>2026-04-05</td><td>-385708.02</td><td>-380113.93</td><td>-5594.09</td></tr><tr><td>2026-05-31</td><td>-252775.62</td><td>-152950.59</td><td>-99825.03</td></tr><tr><td>2026-05-17</td><td>-218653.36</td><td>-149904.50</td><td>-68748.86</td></tr><tr><td>2026-05-24</td><td>-199333.72</td><td>-67007.12</td><td>-132326.60</td></tr><tr><td>2026-04-26</td><td>118023.91</td><td>85637.50</td><td>32386.41</td></tr><tr><td>2026-05-03</td><td>336706.81</td><td>290111.93</td><td>46594.88</td></tr><tr><td>2026-04-19</td><td>506519.45</td><td>372623.99</td><td>133895.46</td></tr><tr><td>2026-04-12</td><td>778272.59</td><td>815309.35</td><td>-37036.76</td></tr><tr><td>2026-05-10</td><td>838290.07</td><td>643503.10</td><td>194786.97</td></tr></tbody></table>
+<p>本节文字总结：分段损益用于回答“回撤/反弹集中发生在哪些周”。建议重点关注总盈亏最差的几周：对照当周主拖累策略与赛道，并与净值峰-谷窗口交叉验证；若 CTA/中性在关键周未能对冲，需进一步检查对冲比率、基差/展期成本与风格暴露方向。</p>
+<h2>细分赛道归因（Race 层）</h2>
+<p class='section-lead'>本节按策略类型分别输出赛道贡献 Top/Bottom，并给出下钻赛道清单（触发原因：|贡献|≥20bp 或 top2/bottom2）。赛道层定位结构性拖累/对冲，下一节将把赛道拆到具体子基金。</p>
+<h3>股票多头（strategy_type=1）</h3>
+<p>拖累端（最负）Top：主观多头（-54.0bp），量化多头（-22.0bp）；贡献端（最正）Top：500指增（288.0bp），300指增（174.0bp），1000指增（163.0bp）。下钻赛道选择规则：优先 |贡献|≥20bp，否则取 Top2/Bottom2。</p>
+<table><thead><tr><th>细分赛道</th><th>平均权重</th><th>区间收益</th><th>赛道贡献</th></tr></thead><tbody><tr><td>主观多头</td><td>5.54%</td><td>-9.41%</td><td>-54.0bp</td></tr><tr><td>量化多头</td><td>5.88%</td><td>-4.12%</td><td>-22.0bp</td></tr><tr><td>指数基金</td><td>3.65%</td><td>10.26%</td><td>37.0bp</td></tr><tr><td>2000指增</td><td>6.55%</td><td>14.65%</td><td>89.0bp</td></tr><tr><td>1000指增</td><td>13.08%</td><td>13.02%</td><td>163.0bp</td></tr><tr><td>300指增</td><td>14.98%</td><td>12.97%</td><td>174.0bp</td></tr><tr><td>500指增</td><td>8.43%</td><td>45.94%</td><td>288.0bp</td></tr></tbody></table>
+<p>本段文字总结：股票多头 内部赛道贡献分化明显时，应优先定位最负贡献赛道并解释其收益与权重的组合效应。该策略的主要拖累赛道：主观多头（-54.0bp），量化多头（-22.0bp），指数基金（37.0bp）；主要贡献赛道：500指增（288.0bp），300指增（174.0bp），1000指增（163.0bp）。</p>
+<p>下钻赛道清单（含触发原因）：</p>
+<table><thead><tr><th>下钻赛道</th><th>触发原因</th><th>赛道贡献</th></tr></thead><tbody><tr><td>主观多头</td><td>|contrib|≥20bp</td><td>-54.0bp</td></tr><tr><td>量化多头</td><td>|contrib|≥20bp</td><td>-22.0bp</td></tr><tr><td>指数基金</td><td>|contrib|≥20bp</td><td>37.0bp</td></tr><tr><td>2000指增</td><td>|contrib|≥20bp</td><td>89.0bp</td></tr><tr><td>1000指增</td><td>|contrib|≥20bp</td><td>163.0bp</td></tr><tr><td>300指增</td><td>|contrib|≥20bp</td><td>174.0bp</td></tr><tr><td>500指增</td><td>|contrib|≥20bp</td><td>288.0bp</td></tr></tbody></table>
+<h3>市场中性（strategy_type=3）</h3>
+<p>赛道贡献为空或不可用。</p>
+<p>该策略赛道贡献表为空或不可用。</p>
+<h3>CTA（strategy_type=5）</h3>
+<p>拖累端（最负）Top：中长周期趋势CTA（-4.0bp）；贡献端（最正）Top：宏观对冲（60.0bp），期货主观（1.0bp）。下钻赛道选择规则：优先 |贡献|≥20bp，否则取 Top2/Bottom2。</p>
+<table><thead><tr><th>细分赛道</th><th>平均权重</th><th>区间收益</th><th>赛道贡献</th></tr></thead><tbody><tr><td>中长周期趋势CTA</td><td>14.31%</td><td>0.49%</td><td>-4.0bp</td></tr><tr><td>期货主观</td><td>14.66%</td><td>0.46%</td><td>1.0bp</td></tr><tr><td>宏观对冲</td><td>5.98%</td><td>10.77%</td><td>60.0bp</td></tr></tbody></table>
+<p>本段文字总结：CTA 内部赛道贡献分化明显时，应优先定位最负贡献赛道并解释其收益与权重的组合效应。该策略的主要拖累赛道：中长周期趋势CTA（-4.0bp），期货主观（1.0bp），宏观对冲（60.0bp）；主要贡献赛道：宏观对冲（60.0bp），期货主观（1.0bp），中长周期趋势CTA（-4.0bp）。</p>
+<p>下钻赛道清单（含触发原因）：</p>
+<table><thead><tr><th>下钻赛道</th><th>触发原因</th><th>赛道贡献</th></tr></thead><tbody><tr><td>宏观对冲</td><td>|contrib|≥20bp</td><td>60.0bp</td></tr></tbody></table>
+<h3>债券（strategy_type=4）</h3>
+<p>赛道贡献为空或不可用。</p>
+<p>该策略赛道贡献表为空或不可用。</p>
+<p>本节文字总结：赛道层可解释为何策略总体贡献为正/负。例如 CTA 若出现期货主观显著为负而趋势/跨境套利为正，通常意味着风格分化或单一方向暴露过高；股票多头若由 1000/300 指增贡献驱动，应结合 size/beta/volatility 等因子判断环境顺逆风。</p>
+<h2>子基金归因（子基金层，下钻关键赛道）</h2>
+<p class='section-lead'>本节输出关键赛道下钻子基金 TopN（展示基金简称，保留 FundID 以便核验）。为避免基金全称/简称不一致导致无法聚合，使用 FundID 做主键映射到赛道。子基金贡献以 <code>bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后累加排序。</p>
+<h3>股票多头（strategy_type=1）</h3>
+<p>子基金层采用 FundID 做赛道映射；贡献口径：bar.Yield(差分/求和)比例缩放到策略贡献（scale=0.4237）。本次映射覆盖率（tracks）：记录比例 0.9166666666666666，按|收益|加权覆盖 0.9542643841107499；映射覆盖率（tracks+subfunds 兜底）：记录比例 0.9166666666666666，按|收益|加权覆盖 0.9542643841107499。周频窗口边界：2026-03-22~2026-05-24；贡献累加从首期后一周开始（避免把窗口外周收益计入）。区间收益/回撤优先基于 pm_holding_yield_decomposition.bar.NetValue（周频净值）计算；NetValue 缺失时不从 Yield 反推收益。</p>
+<h4>赛道：主观多头（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“主观多头”赛道内，主要拖累子基金：鲸域禾源一期（-35.7bp）；主要贡献子基金：鲸域禾源一期（-35.7bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042284</td><td>鲸域禾源一期</td><td>5.18%</td><td>-8.39%</td><td>-6.51%</td><td>6</td><td>-35.7bp</td></tr></tbody></table>
+<h4>赛道：量化多头（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“量化多头”赛道内，主要拖累子基金：中信期货微盘成长3号（31.5bp）；主要贡献子基金：中信期货微盘成长3号（31.5bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042281</td><td>中信期货微盘成长3号</td><td>5.55%</td><td>8.32%</td><td>-3.33%</td><td>7</td><td>31.5bp</td></tr></tbody></table>
+<h4>赛道：2000指增（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“2000指增”赛道内，主要拖累子基金：远和可期1号C类（80.6bp）；主要贡献子基金：远和可期1号C类（80.6bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042290</td><td>远和可期1号C类</td><td>6.70%</td><td>19.02%</td><td>-0.98%</td><td>7</td><td>80.6bp</td></tr></tbody></table>
+<h4>赛道：1000指增（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“1000指增”赛道内，主要拖累子基金：云起睿选66号（71.3bp），深度臻选1000指数增强1号（86.5bp）；主要贡献子基金：深度臻选1000指数增强1号（86.5bp），云起睿选66号（71.3bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042283</td><td>云起睿选66号</td><td>6.66%</td><td>16.00%</td><td>-1.37%</td><td>7</td><td>71.3bp</td></tr><tr><td>10000042287</td><td>深度臻选1000指数增强1号</td><td>6.99%</td><td>19.75%</td><td>-0.29%</td><td>7</td><td>86.5bp</td></tr></tbody></table>
+<h4>赛道：300指增（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“300指增”赛道内，主要拖累子基金：磐松大盘股指数增强进取1号（59.8bp），托特沪深300指数增强2号（76.6bp）；主要贡献子基金：托特沪深300指数增强2号（76.6bp），磐松大盘股指数增强进取1号（59.8bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042288</td><td>磐松大盘股指数增强进取1号</td><td>7.58%</td><td>11.37%</td><td>-1.35%</td><td>7</td><td>59.8bp</td></tr><tr><td>10000042285</td><td>托特沪深300指数增强2号</td><td>7.96%</td><td>14.70%</td><td>0.00%</td><td>7</td><td>76.6bp</td></tr></tbody></table>
+<h4>赛道：500指增（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“500指增”赛道内，主要拖累子基金：平方和鼎盛中证500指数增强18号（119.6bp）；主要贡献子基金：平方和鼎盛中证500指数增强18号（119.6bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042286</td><td>平方和鼎盛中证500指数增强18号</td><td>9.46%</td><td>20.33%</td><td>-0.93%</td><td>7</td><td>119.6bp</td></tr></tbody></table>
+<h4>赛道：未映射/需核对（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“未映射/需核对”赛道内，主要拖累子基金：纳指基金（23.0bp）；主要贡献子基金：纳指基金（23.0bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042460</td><td>纳指基金</td><td>0.00%</td><td>11.97%</td><td>0.00%</td><td>5</td><td>23.0bp</td></tr></tbody></table>
+<h3>市场中性（strategy_type=3）</h3>
+<p>赛道映射表为空，无法下钻子基金。</p>
+<p>无法输出该策略子基金 TopN：无可用下钻表</p>
+<h3>CTA（strategy_type=5）</h3>
+<p>子基金层采用 FundID 做赛道映射；贡献口径：bar.Yield(差分/求和)比例缩放到策略贡献（scale=0.1607）。本次映射覆盖率（tracks）：记录比例 1.0，按|收益|加权覆盖 1.0；映射覆盖率（tracks+subfunds 兜底）：记录比例 1.0，按|收益|加权覆盖 1.0。周频窗口边界：2026-03-22~2026-05-24；贡献累加从首期后一周开始（避免把窗口外周收益计入）。区间收益/回撤优先基于 pm_holding_yield_decomposition.bar.NetValue（周频净值）计算；NetValue 缺失时不从 Yield 反推收益。</p>
+<h4>赛道：宏观对冲（Top5/Bottom5）</h4>
+<p>表内‘子基金贡献’以 <code>pm_holding_yield_decomposition.bar.Yield</code> 作为策略内分解权重，并按比例缩放到策略层区间贡献口径后在区间内累加；区间收益/最大回撤来自 bar.NetValue（周频净值）按窗口边界计算。权重列优先取 tracks.ratio（若缺失则用 pm_subfunds.weight 兜底），用于识别“贡献集中度”。</p>
+<p>本段文字总结：在“宏观对冲”赛道内，主要拖累子基金：禅龙全天候复合策略高波1号（24.6bp）；主要贡献子基金：禅龙全天候复合策略高波1号（24.6bp）。若拖累集中于少数高权重基金，需优先复核其风格漂移/风险预算/止损机制；若贡献集中，需评估可持续性与相关性。</p>
+<table><thead><tr><th>FundID</th><th>基金简称</th><th>权重(近似)</th><th>区间收益(2/1以来)</th><th>最大回撤(周)</th><th>周数</th><th>子基金贡献(bp)</th></tr></thead><tbody><tr><td>10000042292</td><td>禅龙全天候复合策略高波1号</td><td>6.16%</td><td>8.50%</td><td>-0.65%</td><td>7</td><td>24.6bp</td></tr></tbody></table>
+<h3>债券（strategy_type=4）</h3>
+<p>赛道映射表为空，无法下钻子基金。</p>
+<p>无法输出该策略子基金 TopN：无可用下钻表</p>
+<p>本节文字总结：子基金层把赛道贡献拆到具体基金，支持投后动作（复核/替换/限额）。需要注意本节贡献为估算口径，若要做严格归因应以系统贡献字段或更细颗粒权重序列为准，并对残差进行解释。</p>
+<h2>因子风险暴露与因子收益表现（核心）</h2>
+<p class='section-lead'>本节将 pm_risk_factor_exposure 的组合暴露与 risk_factor_returns 的因子收益并列，给出诊断性贡献（Σ 暴露×因子日收益）。该诊断用于解释顺逆风与风险来源，不作为严格归因。</p>
+<h3>股票多头（strategy_type=1）</h3>
+<p>因子暴露来自 pm_risk_factor_exposure（组合加权平均，当前窗口 2026-03-27~2026-05-28；对比窗口 2026-01-23~2026-03-26），因子收益来自 risk_factor_returns(Yield)。暴露覆盖率（RatioSum）：本期 100.0%，上期 -。暴露为截面（无时序）时不计算历史贡献，仅展示最新暴露与区间因子表现。</p>
+<table><thead><tr><th>因子</th><th>暴露(本期)</th><th>暴露(上期)</th><th>Δ暴露</th><th>因子累计收益</th><th>因子最大回撤</th><th>诊断性贡献(bp)</th><th>暴露覆盖率</th></tr></thead><tbody><tr><td>profit_quality</td><td>1.663</td><td>-</td><td>-</td><td>-3.14%</td><td>-3.19%</td><td>-</td><td>100.0%</td></tr><tr><td>valuation</td><td>1.041</td><td>-</td><td>-</td><td>-1.29%</td><td>-6.03%</td><td>-</td><td>100.0%</td></tr><tr><td>growth</td><td>-1.005</td><td>-</td><td>-</td><td>0.99%</td><td>-1.96%</td><td>-</td><td>100.0%</td></tr><tr><td>momentum</td><td>0.695</td><td>-</td><td>-</td><td>13.51%</td><td>-1.90%</td><td>-</td><td>100.0%</td></tr><tr><td>pb</td><td>-0.551</td><td>-</td><td>-</td><td>-9.94%</td><td>-10.21%</td><td>-</td><td>100.0%</td></tr><tr><td>leverage</td><td>0.460</td><td>-</td><td>-</td><td>-2.32%</td><td>-2.84%</td><td>-</td><td>100.0%</td></tr><tr><td>dividend</td><td>0.368</td><td>-</td><td>-</td><td>-8.39%</td><td>-9.18%</td><td>-</td><td>100.0%</td></tr><tr><td>long_reversal</td><td>0.350</td><td>-</td><td>-</td><td>-3.32%</td><td>-4.48%</td><td>-</td><td>100.0%</td></tr><tr><td>short_reversal</td><td>0.347</td><td>-</td><td>-</td><td>-12.37%</td><td>-12.71%</td><td>-</td><td>100.0%</td></tr><tr><td>liquidity</td><td>-0.272</td><td>-</td><td>-</td><td>12.85%</td><td>-2.45%</td><td>-</td><td>100.0%</td></tr><tr><td>profit_volatility</td><td>-0.265</td><td>-</td><td>-</td><td>2.76%</td><td>-0.63%</td><td>-</td><td>100.0%</td></tr><tr><td>investment_quality</td><td>-0.262</td><td>-</td><td>-</td><td>-7.20%</td><td>-8.07%</td><td>-</td><td>100.0%</td></tr></tbody></table>
+<p>本段文字总结：该策略本期主要暴露因子（按|暴露|排序）为：profit_quality（1.663），valuation（1.041），growth（-1.005），momentum（0.695），pb（-0.551）。当暴露与因子收益同向时通常顺风；当暴露方向与因子收益方向相反时通常逆风。Δ暴露用于识别风格漂移：若某些因子暴露在本期相对上期显著抬升/下降，应结合赛道与子基金 TopN 解释其来源并评估是否需要约束。</p>
+<h3>市场中性（strategy_type=3）</h3>
+<p>因子暴露为空。</p>
+<p>该策略因子表为空或不可用：因子表为空</p>
+<h3>CTA（strategy_type=5）</h3>
+<p>因子暴露来自 pm_risk_factor_exposure（组合加权平均，当前窗口 2026-03-27~2026-05-28；对比窗口 2026-01-23~2026-03-26），因子收益来自 risk_factor_returns(Yield)。暴露覆盖率（RatioSum）：本期 100.0%，上期 -。暴露为截面（无时序）时不计算历史贡献，仅展示最新暴露与区间因子表现。</p>
+<table><thead><tr><th>因子</th><th>暴露(本期)</th><th>暴露(上期)</th><th>Δ暴露</th><th>因子累计收益</th><th>因子最大回撤</th><th>诊断性贡献(bp)</th><th>暴露覆盖率</th></tr></thead><tbody><tr><td>IC持仓主连合约</td><td>0.502</td><td>-</td><td>-</td><td>12.39%</td><td>-4.91%</td><td>-</td><td>100.0%</td></tr><tr><td>南华贵金属指数</td><td>0.456</td><td>-</td><td>-</td><td>-1.47%</td><td>-10.99%</td><td>-</td><td>100.0%</td></tr><tr><td>南华有色金属指数</td><td>0.430</td><td>-</td><td>-</td><td>5.01%</td><td>-3.66%</td><td>-</td><td>100.0%</td></tr><tr><td>南华黑色指数</td><td>0.356</td><td>-</td><td>-</td><td>0.07%</td><td>-4.09%</td><td>-</td><td>100.0%</td></tr><tr><td>国君期货商品偏度策略</td><td>0.303</td><td>-</td><td>-</td><td>1.79%</td><td>-1.07%</td><td>-</td><td>100.0%</td></tr><tr><td>国君期货商品长期规则动量策略</td><td>0.276</td><td>-</td><td>-</td><td>0.39%</td><td>-1.09%</td><td>-</td><td>100.0%</td></tr><tr><td>国君期货商品量价相关性策略</td><td>0.251</td><td>-</td><td>-</td><td>1.98%</td><td>-3.10%</td><td>-</td><td>100.0%</td></tr><tr><td>国君期货商品期限基差策略</td><td>-0.206</td><td>-</td><td>-</td><td>-1.42%</td><td>-2.84%</td><td>-</td><td>100.0%</td></tr><tr><td>南华农产品指数</td><td>0.173</td><td>-</td><td>-</td><td>-1.40%</td><td>-2.83%</td><td>-</td><td>100.0%</td></tr><tr><td>国君期货商品利润策略</td><td>0.154</td><td>-</td><td>-</td><td>-4.92%</td><td>-5.16%</td><td>-</td><td>100.0%</td></tr><tr><td>国君期货商品反转策略</td><td>0.109</td><td>-</td><td>-</td><td>-4.26%</td><td>-5.85%</td><td>-</td><td>100.0%</td></tr><tr><td>南华能化指数</td><td>-0.098</td><td>-</td><td>-</td><td>-9.17%</td><td>-10.30%</td><td>-</td><td>100.0%</td></tr></tbody></table>
+<p>本段文字总结：该策略本期主要暴露因子（按|暴露|排序）为：IC持仓主连合约（0.502），南华贵金属指数（0.456），南华有色金属指数（0.430），南华黑色指数（0.356），国君期货商品偏度策略（0.303）。当暴露与因子收益同向时通常顺风；当暴露方向与因子收益方向相反时通常逆风。Δ暴露用于识别风格漂移：若某些因子暴露在本期相对上期显著抬升/下降，应结合赛道与子基金 TopN 解释其来源并评估是否需要约束。</p>
+<h3>债券（strategy_type=4）</h3>
+<p>因子暴露为空。</p>
+<p>该策略因子表为空或不可用：因子表为空</p>
+<h2>告警项与风控关注</h2>
+<p class='section-lead'>本节将关键风险点用可核验指标表达：Residual 偏大、单赛道/单基金贡献过于集中、基差方向不一致、因子暴露与环境方向相悖等。</p>
+<ul>
+<li><strong>Residual：</strong>若策略层 Σ贡献 与组合收益差异较大，优先核对现金/费用/衍生品保证金/份额因素口径。</li>
+<li><strong>CTA 单点：</strong>若期货主观为主要拖累且权重高，建议单列风控维度（仓位上限/回撤阈值/相关性约束）。</li>
+<li><strong>基差风险：</strong>市场中性端如 IF/IC 基差暴露方向不一致，需复核对冲合约、展期成本与对冲比率漂移。</li>
+<li><strong>风格因子：</strong>股票多头如偏低波动/低Beta/偏大市值，在小盘/高波动占优阶段可能系统性逆风，建议设置暴露上限或偏离容忍区间。</li>
+</ul>
+<p>本节文字总结：告警的目的不是给出单点结论，而是把风险显性化并指向可执行检查项。建议将告警与回撤峰-谷时段做对照，优先处理高权重且贡献集中的风险源。</p>
+<h2>持仓建议（可执行）</h2>
+<ul>
+<li><strong>CTA 风险预算：</strong>对期货主观/贵金属方向设置更严格的仓位与回撤阈值，避免成为组合回撤单点来源。</li>
+<li><strong>股票多头风格约束：</strong>把 size/beta/volatility 作为组合级约束项，控制极端暴露；环境切换时优先通过指增池替换。</li>
+<li><strong>中性对冲复核：</strong>按周复核 IF/IC 基差暴露、展期成本与净敞口，避免收益被对冲成本吞噬。</li>
+<li><strong>TopN 动作：</strong>对子基金 TopN 做投后复核与替换评估：拖累基金重点查风格漂移/回撤控制，贡献基金重点查可持续性与相关性。</li>
+</ul>
+<p>本节文字总结：建议优先从高权重-高贡献集中的赛道/子基金入手，用风格约束与风险预算把风险转化为规则，同时复核对冲成本与基差风险，形成可持续的风险控制闭环。</p>
+<h2>总结陈述</h2>
+<p>昭明·慧度专享在 2026-03-30~2026-05-28 区间收益4.94%、最大回撤-3.81%（峰-谷 2026-05-13→2026-05-27），回撤窗口可作为重点复盘时段。本报告净值起点取起始日前一交易日（基准日：2026-03-27）。 策略层贡献显示：本期各策略贡献未出现显著为负项，贡献靠前为股票多头（513.2bp），CTA（49.8bp），贡献相对靠后为其余策略贡献缺失/接近0，Residual约-69.2bp。 Brinson 视角下，资产配置贡献4.4bp、选基贡献33.4bp，用于判断“结构”与“选基”孰主导。 细分赛道层聚焦在股票多头：拖累Top为主观多头（-54.0bp），量化多头（-22.0bp），贡献Top为500指增（288.0bp），300指增（174.0bp）。 子基金层：拖累Top为鲸域禾源一期@主观多头/股票多头（-35.7bp）；贡献Top为平方和鼎盛中证500指数增强18号@500指增/股票多头（119.6bp），深度臻选1000指数增强1号@1000指增/股票多头（86.5bp）。另有未映射条目1条需核对。 因子暴露（组合口径加权汇总）Top为：profit_quality（0.904），valuation（0.566），growth（-0.546）（覆盖权重加权均值约100.0%）。风险提示：profit_quality 暴露偏高（0.904）：该因子方向在环境变化时可能放大组合波动，建议设置暴露容忍区间并跟踪。 valuation 暴露偏高（0.566）：估值因子敞口更显著，估值扩张/压缩阶段可能对收益造成更强解释力。</p>
+<div class='hr'></div>
+<p class='small'>生成时间：2026-06-01｜输出：HTML</p>
+</div></body></html>

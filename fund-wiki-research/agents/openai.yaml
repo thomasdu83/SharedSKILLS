@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fund Wiki Research"
+  short_description: "Research SOP and artifacts for fund-wiki"
+  default_prompt: "Use $fund-wiki-research to design a fund-wiki based manager strategy comparable-pool research report."

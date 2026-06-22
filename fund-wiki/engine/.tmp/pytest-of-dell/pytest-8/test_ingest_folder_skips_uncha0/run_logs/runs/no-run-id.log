@@ -1,0 +1,6 @@
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=catalog written entries=1 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_skips_uncha0\run_logs\source_catalog\平方和.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest start manager=平方和 files_total=1 use_llm=False provider=n/a snapshot=manifest changed_only=True force=False ingest_scope=all
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/1 finalize name=same.md state=skipped
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/1 skipped name=same.md reason=manifest_hash
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=manifest appended records=1 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_folder_skips_uncha0\run_logs\source_manifest.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest done processed=0 skipped=1 failed=0 source_missing=0 total_seconds=0.01 llm_seconds=0.0

@@ -1,0 +1,15 @@
+{
+  "status": "ok",
+  "profile_count": 1,
+  "canonical_product_count": 1,
+  "generic_profile_count": 0,
+  "duplicate_group_count": 0,
+  "suspicious_product_names": [],
+  "quality_status_counts": {
+    "confirmed": 1
+  },
+  "product_name_reason_counts": {
+    "product_specific": 1
+  },
+  "removed_existing_profiles": 1
+}

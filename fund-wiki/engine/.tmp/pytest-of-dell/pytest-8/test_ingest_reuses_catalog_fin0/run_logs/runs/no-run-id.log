@@ -1,0 +1,10 @@
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=catalog written entries=1 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_reuses_catalog_fin0\run_logs\source_catalog\平方和.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest start manager=平方和 files_total=1 use_llm=False provider=n/a snapshot=manifest changed_only=False force=False ingest_scope=all
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse start file=alpha.md size=9
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parsed_cache written file=alpha.md path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_reuses_catalog_fin0\parsed_cache\manual-run\平方和\alpha_924f6e679a.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=parse done file=alpha.md status=success method=text chars=16
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/1 finalize name=alpha.md state=parsed
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=write_note done file=alpha.md note=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_reuses_catalog_fin0\source_notes\平方和\alpha.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest file 1/1 processed name=alpha.md
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=manifest appended records=1 path=F:\Thomas\QuantSystem\.trae\skills\fund-wiki\engine\.tmp\pytest-of-dell\pytest-8\test_ingest_reuses_catalog_fin0\run_logs\source_manifest.jsonl
+[2026-06-05 15:29:53] [INFO] run_id=no-run-id stage=ingest done processed=1 skipped=0 failed=0 source_missing=0 total_seconds=0.01 llm_seconds=0.0

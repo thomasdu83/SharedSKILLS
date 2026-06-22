@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Project Workflow"
+  short_description: "Initialize, connect, push, and sync GitHub repos safely."
+  default_prompt: "Use $github-project-workflow to set up or update a GitHub repository with verified Git status, remotes, ignores, and safe push steps."

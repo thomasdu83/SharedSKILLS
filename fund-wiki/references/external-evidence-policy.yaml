@@ -1,0 +1,48 @@
+# External evidence governance policy for fund-wiki.
+#
+# Public web evidence is a corroboration layer, not the primary source of truth.
+# Internal due-diligence notes and manager-provided materials remain the default
+# source for product facts.
+
+source_tiers:
+  internal_due_diligence:
+    priority: 10
+    can_confirm_profile_fact: true
+    default_status: primary
+  regulatory_public:
+    priority: 20
+    can_confirm_profile_fact: true
+    examples:
+      - AMAC registration or regulatory disclosure
+      - regulator penalty notice
+  official_public:
+    priority: 30
+    can_confirm_profile_fact: true
+    examples:
+      - manager official website
+      - manager official announcement
+  manager_website:
+    priority: 40
+    can_confirm_profile_fact: true
+  third_party_public:
+    priority: 70
+    can_confirm_profile_fact: false
+    review_required: true
+  search_discovery_only:
+    priority: 90
+    can_confirm_profile_fact: false
+    review_required: true
+
+trigger_conditions:
+  - low_entity_confidence
+  - profile_quality_short_name
+  - zm_cross_manager_candidates_suspicious
+  - duplicate_canonical_product
+  - missing_manager_alias
+  - people_background_needs_public_corroboration
+
+privacy_rules:
+  - Do not search raw internal due-diligence snippets.
+  - Prefer public entity names: manager full name, product full name, person name plus manager.
+  - Store URL, title, publisher, retrieved_at, source_tier, claim, evidence_quote, and conflict status.
+  - Never overwrite internal profile facts automatically with external web evidence.

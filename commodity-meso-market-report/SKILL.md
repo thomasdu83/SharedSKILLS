@@ -29,7 +29,7 @@ The skill is a staged report-preparation guide. All executable logic lives in th
 - Missing manual charts or reports may produce a skeleton with pending markers, but never hide missing materials.
 - Do not read a prior Word document as the source of previous advice. Read prior standardized Excel from `artifacts/report_runs/<prior_date>/tables/`.
 - Existing files under `artifacts/report_runs/<run_date>/texts/` are not evidence that the current run text is fresh. Regenerate and overwrite every required text file for the run after reading the current materials, prompts, monitor snapshots, and standardized tables.
-- After regenerating texts, show the full generated text content in the conversation and pause for user review before running `render`.
+- After regenerating texts, run the text review gate, show the full generated text content and review summary in the conversation, and pause for user review before running `render`.
 
 ## Directory Contract
 
@@ -111,6 +111,24 @@ Generate final Word after user confirms texts and tables:
 python src\report_workflow.py render --run-date <YYYY-MM-DD> --freq W
 ```
 
+## Linked Fund Weekly Report CLI
+
+Product-performance manual charts may come from:
+
+`F:\Thomas\QuantSystem\domains\fund\tracked-fund-weekly-report`
+
+When the user asks to refresh product performance labels, weekly performance heatmaps, CTA category labels, or integrated CTA display from that source project, run this command from `F:\Thomas\QuantSystem`:
+
+```powershell
+.venv\Scripts\python.exe domains\fund\tracked-fund-weekly-report\src\run_report.py
+```
+
+After running, check the latest files under:
+
+`domains\fund\tracked-fund-weekly-report\output\`
+
+Do not introduce a separate cross-project workflow unless the user explicitly asks to modify the fund weekly report project itself.
+
 ## Workflow
 
 1. Ask for `run_date` if absent.
@@ -122,8 +140,24 @@ python src\report_workflow.py render --run-date <YYYY-MM-DD> --freq W
    - `artifacts/report_runs/<run_date>/texts/`
    - `artifacts/report_runs/<run_date>/tables/`
 7. Run `context` to refresh machine-readable context and standardized tables.
-8. Display the full generated contents of all text files in the conversation, then stop and ask the user to review the generated texts and Excel tables.
-9. Only after the user confirms, run `render`.
+8. Run the text review gate before asking for user confirmation. If the user requests text changes, apply the changes and run the text review gate again.
+9. Display the full generated contents of all text files plus a concise review summary in the conversation, then stop and ask the user to review the generated texts and Excel tables.
+10. Only after the user confirms, run `render`.
+
+## Text Review Gate
+
+Before asking the user to confirm rendering, review all files under `artifacts/report_runs/<run_date>/texts/` against these checks:
+
+- Source wording: do not write `手动行情图显示`, `自动图显示`, `图中可以看到`, or similar chart-provenance narration in report body text. State the conclusion directly.
+- Unsupported concepts: do not introduce broad concepts that are not supported by the chart, table, or materials, such as `相对价值` or `单一商品总指数对整体机会的代表性下降`.
+- Legend fidelity: use chart legend labels exactly when describing chart categories. Use `升水品种` and `贴水品种` instead of internally inferred labels such as `低曲线 RSI 品种` or `高曲线 RSI 品种`.
+- Factor names: use standard factor wording from the chart or prompt, such as `商品动量因子`; do not shorten or mistype it as `商品动因`.
+- Term structure: combine the futures curve structure with its performance to state whether it is a positive or negative contribution to the roll/term-structure factor. If the term-structure factor weakens, explain the source of the drag.
+- Product labels: when describing product performance, strictly follow the category labels shown in the product-performance legend.
+- Weekly heatmap: treat the rightmost column of the weekly performance heatmap as the latest week.
+- Integrated CTA wording: describe the aggregate `CTA` line naturally as `综合 CTA` when needed; do not add a stiff definition of what CTA aggregates.
+- Summary discipline: do not force a final `综合来看` paragraph if it only repeats later strategy advice or adds no new judgment.
+- Review output: report a short checklist summary to the user together with the full text. If any item fails, fix the text before asking for confirmation.
 
 ## Prompt Sources
 
@@ -144,7 +178,7 @@ When generating `strategy_advice` or `commodity_advice`, read the corresponding 
 - `commodity_advice` may only use `看多`, `看空`, or `中性`.
 - Do not generate `上期建议`; the project code merges it from prior standardized Excel.
 
-When generating report text, read `runtime_assets/report_prompts/chart_interpretation.md` first. The text style contract applies to chart interpretation text and table intro text:
+When generating report text, read `runtime_assets/report_prompts/chart_interpretation.md` first. Treat it as the authoritative source for report-body wording. Keep `SKILL.md` focused on workflow and review gates; place detailed reusable wording rules in the prompt file. The text style contract applies to chart interpretation text and table intro text:
 
 - Keep the language professional, compressed, and weekly-report-like.
 - Do not use bold, bullet lists, or instruction-like prose in report body text.

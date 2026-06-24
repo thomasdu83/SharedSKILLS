@@ -155,8 +155,10 @@ Before asking the user to confirm rendering, review all files under `artifacts/r
 - Term structure: combine the futures curve structure with its performance to state whether it is a positive or negative contribution to the roll/term-structure factor. If the term-structure factor weakens, explain the source of the drag.
 - Product labels: when describing product performance, strictly follow the category labels shown in the product-performance legend.
 - Weekly heatmap: treat the rightmost column of the weekly performance heatmap as the latest week.
+- Weekly heatmap scope: in report body text, describe only `CTA中长周期趋势`, `CTA短周期趋势`, `期货主观趋势`, and `股指CTA`; write them as `中长周期趋势CTA`, `短周期趋势CTA`, `期货主观`, and `股指CTA`. Do not describe other product strategies from the weekly heatmap.
 - Integrated CTA wording: describe the aggregate `CTA` line naturally as `综合 CTA` when needed; do not add a stiff definition of what CTA aggregates.
 - Summary discipline: do not force a final `综合来看` paragraph if it only repeats later strategy advice or adds no new judgment.
+- Concision mode: if the user asks to simplify, compress, reduce text, or says the client thinks the text is too long, verify `客户精简模式` was applied: no mechanical chart-by-chart expansion, no table-intro over-explanation, and paragraph counts stay within the prompt limits.
 - Review output: report a short checklist summary to the user together with the full text. If any item fails, fix the text before asking for confirmation.
 
 ## Prompt Sources
@@ -178,7 +180,7 @@ When generating `strategy_advice` or `commodity_advice`, read the corresponding 
 - `commodity_advice` may only use `看多`, `看空`, or `中性`.
 - Do not generate `上期建议`; the project code merges it from prior standardized Excel.
 
-When generating report text, read `runtime_assets/report_prompts/chart_interpretation.md` first. Treat it as the authoritative source for report-body wording. Keep `SKILL.md` focused on workflow and review gates; place detailed reusable wording rules in the prompt file. The text style contract applies to chart interpretation text and table intro text:
+When generating report text, read `runtime_assets/report_prompts/chart_interpretation.md` first. Treat it as the authoritative source for report-body wording. Keep `SKILL.md` focused on workflow and review gates; place detailed reusable wording rules in the prompt file. If the user says the client thinks the text is too long or asks to simplify, compress, or reduce the body text, enable the prompt file's `客户精简模式`. The text style contract applies to chart interpretation text and table intro text:
 
 - Keep the language professional, compressed, and weekly-report-like.
 - Do not use bold, bullet lists, or instruction-like prose in report body text.
@@ -186,6 +188,7 @@ When generating report text, read `runtime_assets/report_prompts/chart_interpret
 - Default to qualitative positioning; include at most one core number only for anomalies or important turning points.
 - Use light strategy implications, such as `对中短周期趋势更友好` or `可保持中性偏积极`, but avoid strong allocation commands.
 - Table intro files `strategy_advice_intro.md` and `commodity_advice_intro.md` must follow the same style.
+- In `客户精简模式`, keep `market_overview.md` to 4-5 paragraphs, `factor_performance.md` to 3 paragraphs, `product_strategy.md` to 3 paragraphs, and each table intro to one concise paragraph.
 
 ## Table Rules
 

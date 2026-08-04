@@ -1,6 +1,6 @@
 ---
 name: wisdom-manager-product-research
-description: Call fofresearchsvr/ai business APIs for private-fund manager and product facts: 私募管理人、机构详情、管理人旗下产品、私募产品查询、产品要素、合同文件下载、产品净值, or manager/product disambiguation. For Obsidian-note-based investment synthesis or judging strategy/team/performance with quantitative scripts, use quant-research after needed facts are retrieved.
+description: Call fofresearchsvr/ai business APIs for private-fund manager and product facts: 私募管理人、机构详情、管理人旗下产品、私募产品查询、产品要素、合同文件下载、产品净值, or manager/product disambiguation. For fund-wiki based investment synthesis or broader strategy/team/performance judgment, use fund-wiki-research after needed facts are retrieved.
 triggers: ["私募尽调", "私募研究", "管理人分析"]
 ---
 <!-- light-skill-version-check:start -->
@@ -22,9 +22,9 @@ Use this skill as the unified entry for private-fund manager and product lookup.
 The service boundary is `fofresearchsvr/ai`. Do not call Knowledge OS retrieval APIs directly from this skill. Product terms and contract queries must go through the business APIs exposed by `fofresearchsvr/ai`.
 When users say 产品编码, map it to API param `fund_code`.
 
-## Boundary With quant-research
+## Boundary With fund-wiki-research
 
-Use this skill for factual manager/product retrieval through business APIs. Do not use it to synthesize Obsidian notes, update research notes, or make broader FOHF investment judgments. When the user needs both factual retrieval and research interpretation, complete the API lookup here first, then hand the retrieved facts to `quant-research`.
+Use this skill for factual manager/product retrieval through business APIs. Do not use it to synthesize fund-wiki evidence, update research notes, or make broader FOHF investment judgments. When the user needs both factual retrieval and research interpretation, complete the API lookup here first, then hand the retrieved facts to `fund-wiki-research`. For documented data API usage, use `zmdata-data-api`; for QuantSystem data-layer engineering, use `quant-develop` with `platform.data`.
 
 ## Workflow Decision Tree
 

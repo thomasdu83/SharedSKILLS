@@ -1,6 +1,6 @@
 ---
 name: fund-wiki-research
-description: Use when the user asks for a fund-wiki based investment research topic or report, including manager/product comparable pools, strategy taxonomy, sample funnels, evidence grading, core/observation/boundary pools, research SOP, review of prior fund-wiki research outputs, internal circulation versions for other investment teams, or research artifacts under fund_profile_wiki_docs/research.
+description: Use when the user asks for a fund-wiki based investment research topic or report, including manager/product comparable pools, strategy taxonomy, sample funnels, evidence grading, core/observation/boundary pools, claim fact-checking against fund facts, research SOP, review of prior fund-wiki research outputs, internal circulation versions for other investment teams, or research artifacts under fund_profile_wiki_docs/research.
 ---
 
 # Fund Wiki Research
@@ -24,6 +24,16 @@ Fact-grounded: formal conclusions must be grounded back to product_profiles, man
 ```
 
 Research artifacts are derived knowledge. They can provide history, hypotheses, sample pools, prior classifications, and review leads, but they must not be treated as primary evidence for product strategy facts or silently written back into `product_profiles` / `manager_profiles`.
+
+## Current Data Checks
+
+When a research conclusion depends on current performance, NAV, scale, holdings, product terms, or manager/product facts, do not rely on stale notes alone. Retrieve or verify the current fact layer first:
+
+- Use `wisdom-manager-product-research` for manager/product facts, terms, contracts, and NAV.
+- Use `zmdata-data-api` for documented ZM data APIs, ID mappings, or API-backed data checks.
+- Use `quant-develop` when the task requires QuantSystem code, data contracts, or `platform.data` engineering.
+
+Keep these checks separate from fund-wiki research evidence, and include the data cutoff date when using time-series or current product facts.
 
 ## Use Fund-Wiki First
 

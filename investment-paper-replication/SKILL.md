@@ -22,7 +22,8 @@ Use this skill to turn an investment-related source document into a disciplined 
 
 This skill acts as the project orchestrator when the task starts from an investment research source and may lead to reports, visual prototypes, or systems. Use related skills as specialist layers:
 
-- Use `quant-research` when the work requires FOHF/fund research, Obsidian note verification, entity mapping, or qualitative notes cross-checked against quantitative facts.
+- Use `fund-wiki-research` when the work requires FOHF/fund research synthesis, fund-wiki evidence, comparable pools, strategy taxonomy, or qualitative claims cross-checked against fund facts.
+- Use `zmdata-data-api` when the work requires documented ZM data APIs, ID mappings, or direct current data retrieval before replication.
 - Use `quant-develop` when confirmed work moves into production code, data pipelines, backtests, portfolio construction modules, logging, config-driven architecture, or maintainable system engineering.
 - Use `research-report-writer` when drafting, restructuring, or polishing the final research report prose, especially when the report needs a clearer thesis, tighter analytical flow, restrained professional language, or better section rhythm.
 

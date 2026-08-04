@@ -25,15 +25,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def _resolve_project_root() -> str:
+    """Resolve QuantSystem root from env, cwd, or legacy skill install layout."""
+    env_root = os.environ.get("QUANT_SYSTEM_ROOT") or os.environ.get("QSYS_ROOT")
+    if env_root:
+        return str(Path(env_root).expanduser().resolve())
+
+    candidates = list(Path(__file__).resolve().parents) + list(Path.cwd().resolve().parents)
+    for candidate in candidates:
+        if (candidate / "main_config.py").exists() or (candidate / "asset_allocation").exists():
+            return str(candidate)
+
+    # Legacy nested install layout: QuantSystem/<agent-skills-dir>/assets-score/scripts/skill_interface.py
+    try:
+        return str(Path(__file__).resolve().parents[4])
+    except IndexError:
+        return str(Path(__file__).resolve().parent)
+
+
 # --- Path Configuration ---
 # 1. Project Root (QuantSystem)
-# Current: .trae/skills/assets-score/scripts/skill_interface.py
-# Root is 5 levels up: scripts -> assets-score -> skills -> .trae -> QuantSystem
-try:
-    project_root = str(Path(__file__).parents[4])
-except IndexError:
-    # Fallback if path structure is unexpected
-    project_root = str(Path(__file__).parent.parent.parent.parent.parent)
+project_root = _resolve_project_root()
 
 if project_root not in sys.path:
     sys.path.append(project_root)

@@ -25,11 +25,14 @@ The skill is a staged report-preparation guide. All executable logic lives in th
 - The user must provide `run_date` each time. Do not guess today's date or the latest directory.
 - Default `freq` is `W` only when the user does not specify frequency.
 - Use staged progression. After each key check or generated interpretation, pause and wait for user confirmation.
+- User confirmation is state-specific. Any text/table generation or change after confirmation invalidates the prior render approval.
 - Formal Word generation requires successful monitor charts under `artifacts/charts/<run_date>/<freq>/`.
 - Missing manual charts or reports may produce a skeleton with pending markers, but never hide missing materials.
 - Do not read a prior Word document as the source of previous advice. Read prior standardized Excel from `artifacts/report_runs/<prior_date>/tables/`.
 - Existing files under `artifacts/report_runs/<run_date>/texts/` are not evidence that the current run text is fresh. Regenerate and overwrite every required text file for the run after reading the current materials, prompts, monitor snapshots, and standardized tables.
-- After regenerating texts, run the text review gate, show the full generated text content and review summary in the conversation, and pause for user review before running `render`.
+- For manual charts, separate `fact extraction` from `report wording`: first auto-draft observable facts, rankings, confidence, and uncertainty into `artifacts/report_runs/<run_date>/chart_facts/`, then write report text from those facts plus local reports. Human edits are optional and only needed for low-confidence or conflicting cases.
+- The first creation of run texts is also a text change. After initial generation, regeneration, or any edit, run the text review gate, show the full generated text content and review summary in the conversation, and pause for user review before running `render`.
+- Never run `render` based on a confirmation that happened before the latest text/table generation or edit. The latest assistant message before `render` must have displayed the full current text contents and explicitly asked for render confirmation, and the user must confirm after that message.
 
 ## Directory Contract
 
@@ -56,6 +59,8 @@ Report outputs:
 - `artifacts/report_runs/<run_date>/report_context.json`
 - `artifacts/report_runs/<run_date>/source_manifest.json`
 - `artifacts/report_runs/<run_date>/texts/`
+- `artifacts/report_runs/<run_date>/chart_facts/`
+- `artifacts/report_runs/<run_date>/text_review.json`
 - `artifacts/report_runs/<run_date>/tables/strategy_advice.xlsx`
 - `artifacts/report_runs/<run_date>/tables/commodity_advice.xlsx`
 - `artifacts/report_runs/<run_date>/CTA市场环境跟踪-<run_date>.docx`
@@ -99,6 +104,20 @@ Generate context and standardized Excel tables without Word:
 python src\report_workflow.py context --run-date <YYYY-MM-DD> --freq W
 ```
 
+Initialize manual-chart fact sheets without overwriting existing fact notes:
+
+```powershell
+python src\report_workflow.py init-facts --run-date <YYYY-MM-DD> --freq W
+```
+
+`init-facts` only initializes or upgrades `chart_facts` files. The actual first-draft content for `chart_facts` should be produced by the current assistant conversation after reading charts and local materials, not by an extra API key or a project-side LLM client.
+
+Run static text review before asking for render confirmation:
+
+```powershell
+python src\report_workflow.py review --run-date <YYYY-MM-DD> --freq W
+```
+
 Generate a skeleton Word after monitor charts exist, allowing pending manual/report sections:
 
 ```powershell
@@ -136,18 +155,25 @@ Do not introduce a separate cross-project workflow unless the user explicitly as
 3. If auto charts are missing, ask permission to run `charts`. After running, run `check` again.
 4. Pause and ask the user to place reports and manual charts in the per-run input directories.
 5. After user confirms materials are ready, run `check` again.
-6. Interpret charts and reports in the conversation using fixed prompts, then overwrite outputs in:
+6. Initialize or refresh manual-chart fact sheets under `artifacts/report_runs/<run_date>/chart_facts/` without overwriting existing notes, then auto-draft chart facts from charts and local reports in the conversation using fixed prompts. Treat `chart_facts` plus local reports as explicit body-text inputs, and overwrite outputs in:
    - `artifacts/report_runs/<run_date>/texts/`
    - `artifacts/report_runs/<run_date>/tables/`
+   - Prefer the explicit section-level input artifact `artifacts/report_runs/<run_date>/text_generation_inputs.json` when drafting body text. It is the prompt-ready version of `chart_facts.section_inputs`.
 7. Run `context` to refresh machine-readable context and standardized tables.
-8. Run the text review gate before asking for user confirmation. If the user requests text changes, apply the changes and run the text review gate again.
-9. Display the full generated contents of all text files plus a concise review summary in the conversation, then stop and ask the user to review the generated texts and Excel tables.
-10. Only after the user confirms, run `render`.
+8. Run `review` plus the text review gate before asking for user confirmation after initial generation and after every subsequent edit. If the user requests text changes, apply the changes and run the text review gate again.
+9. Display the full generated contents of all text files plus a concise review summary in the conversation, then stop and ask the user to review the generated texts and Excel tables. File paths, links, or summaries are not a substitute for the full text display.
+10. Treat this display as the render approval checkpoint. This checkpoint is required after the first generated text set as well as after later revisions. General confirmations such as “continue” or material-readiness approvals before the latest full-text display do not authorize Word rendering.
+11. If any text or table is generated, regenerated, or edited after this display, go back to step 8; older confirmations are void.
+12. Only after the user confirms the latest displayed full text set, run `render`.
 
 ## Text Review Gate
 
 Before asking the user to confirm rendering, review all files under `artifacts/report_runs/<run_date>/texts/` against these checks:
 
+- Initial generation gate: the first generated text set must pass the same full-display -> user-confirmation -> render loop as any later revision.
+- Full-text display gate: a summary, file path list, or “texts are ready” status is not a substitute for displaying the full current contents of all required text files in chat.
+- Manual-chart fact gate: for hand-drawn charts, first separate observable facts from interpretation. Prefer a fact sheet under `artifacts/report_runs/<run_date>/chart_facts/` before writing final prose.
+- Manual-chart completeness gate: before render, every configured manual chart should have a matching fact sheet under `artifacts/report_runs/<run_date>/chart_facts/`, and placeholder content such as `待填写`, `自动草稿占位`, or old default confidence markers must be removed. A human reviewer is optional; what matters is that the fact sheet contains substantive auto-drafted facts and report judgments.
 - Source wording: do not write `手动行情图显示`, `自动图显示`, `图中可以看到`, or similar chart-provenance narration in report body text. State the conclusion directly.
 - Unsupported concepts: do not introduce broad concepts that are not supported by the chart, table, or materials, such as `相对价值` or `单一商品总指数对整体机会的代表性下降`.
 - Legend fidelity: use chart legend labels exactly when describing chart categories. Use `升水品种` and `贴水品种` instead of internally inferred labels such as `低曲线 RSI 品种` or `高曲线 RSI 品种`.
@@ -159,7 +185,11 @@ Before asking the user to confirm rendering, review all files under `artifacts/r
 - Integrated CTA wording: describe the aggregate `CTA` line naturally as `综合 CTA` when needed; do not add a stiff definition of what CTA aggregates.
 - Summary discipline: do not force a final `综合来看` paragraph if it only repeats later strategy advice or adds no new judgment.
 - Concision mode: if the user asks to simplify, compress, reduce text, or says the client thinks the text is too long, verify `客户精简模式` was applied: no mechanical chart-by-chart expansion, no table-intro over-explanation, and paragraph counts stay within the prompt limits.
-- Review output: report a short checklist summary to the user together with the full text. If any item fails, fix the text before asking for confirmation.
+- Readability: run a slow read-through for stiff or overloaded wording. Fix sentences that stack three or more judgments, overuse abstract words such as `变量`, `约束`, `识别`, or read like chart-summary stitching rather than weekly-report prose. Use the style and rewrite examples in `runtime_assets/report_prompts/chart_interpretation.md`.
+- Inference discipline: for phrases such as `开始走强`, `恢复明显`, `形态更完整`, `风险偏好回暖`, or `主线确认`, confirm there is direct chart or report support; otherwise rewrite to lower-confidence wording.
+- Revision loop: after initial text generation or any text edit, including minor wording polish, rerun the text review gate, display the full contents of all text files again with a short review summary, and wait for user confirmation before `render`.
+- Confirmation validity: prior user confirmations do not carry across text/table generation or edits. If the current text set has not been fully displayed in the conversation after the latest generation or edit, `render` is forbidden.
+- Review output: report a short checklist summary to the user together with the full text. If any item fails, fix the text before asking for confirmation. The project CLI `review` handles static checks, including `chart_facts` substantive-content checks and weak section coverage, but it does not replace the conversational full-text display and user confirmation gates.
 
 ## Prompt Sources
 
@@ -168,6 +198,7 @@ Fixed prompts live in:
 - `runtime_assets/report_prompts/chart_interpretation.md`
 - `runtime_assets/report_prompts/strategy_table.md`
 - `runtime_assets/report_prompts/commodity_table.md`
+- `runtime_assets/report_prompts/manual_chart_fact_schema.md`
 
 Do not improvise table schemas unless the user explicitly changes the project contract.
 

@@ -1,11 +1,29 @@
 ---
 name: quant-develop
-description: QuantSystem 机构级量化投资系统开发与项目建设规范。适用于新项目创建、旧项目标准化改造、`project.yaml` 设计、`registry/` 与 `workflows/` 接入、数据输出契约落地，以及数据获取、组合构建、回测分析等全流程开发。
+description: QuantSystem 机构级量化投资系统开发与项目建设规范。适用于正式项目创建、旧项目标准化改造、`project.yaml` 设计、`registry/` 与 `workflows/` 接入、数据输出契约落地，以及需要长期复用、定期运行或进入投资管理流程的数据获取、组合构建、回测分析模块。不用于一次性研究脚本、临时数据抽取、探索性图表或轻量原型；这些场景优先使用 quant-research-coding。
 ---
 
 # QuantDevelop 开发规范
 
 机构级量化投资系统的核心开发规范，旨在提供清晰、统一、可维护的工程标准，并让项目从一开始就具备可治理、可接入、可复核的结构。
+
+## 适用边界
+
+只有当代码需要长期复用、多人协作、定期运行、进入 `registry/` /
+`workflows/`、生成可被投资流程消费的输出，或需要从研究原型晋级为正式
+QuantSystem 项目时，才使用本技能。
+
+不要把本技能套到所有量化研究代码上。一次性数据检查、临时取数、探索性
+回测、图表生成、报告素材处理、用于判断想法是否值得继续的轻量原型，优先
+使用 `quant-research-coding`。这些任务只需要清晰脚本、最小可复跑入口和
+有证据的结果校验，不需要默认建立 `project.yaml`、`registry/`、`workflows/`
+或完整项目目录。
+
+升级到本技能的信号：
+- 脚本会被反复运行，且结果会进入研究或投资管理流程。
+- 输出会被他人消费、复核、归档或用于客户/投委会材料。
+- 需要固定数据契约、运行频率、日志、配置、权限或失败告警。
+- 轻量原型已经证明有价值，用户明确要求项目化或平台化。
 
 ## 1. 核心原则 (Core Principles)
 
@@ -34,7 +52,8 @@ description: QuantSystem 机构级量化投资系统开发与项目建设规范�
      - 原始输入来自哪里，是否真的需要复制进项目目录
      - 是否需要接入统一前端、`registry/`、`workflows/`
 2. **规划 (Planning)**:
-   - 涉及 Add/Mod/Del 功能时，必须先列出计划。
+   - 正式项目、共享模块或生产链路涉及 Add/Mod/Del 功能时，必须先列出计划。
+   - 单文件小改、轻量规则调整或研究脚本可使用 3-5 行内联计划，不新建计划文档。
    - 检查配置文件的兼容性。
    - 若任务涉及新项目或项目标准化，先阅读：
      - [architecture.md](references/architecture.md)
@@ -44,8 +63,8 @@ description: QuantSystem 机构级量化投资系统开发与项目建设规范�
      - [workflows.md](references/workflows.md)
 3. **执行 (Execution)**:
    - 用户确认后执行。
-   - 必须编写 Docstrings。
-   - 运行 Lint/Type Check 验证。
+   - 正式项目的公开函数、共享模块和数据契约必须编写 Docstrings。
+   - 按风险运行 Lint/Type Check/测试；轻量研究脚本至少运行一次可复现入口或样本校验。
 
 ### 2.2 路径规范
 - **单一权威源**: 所有路径必须基于 `main_config.py: MAIN_PATH`。

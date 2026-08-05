@@ -1,9 +1,24 @@
 ---
 name: old-coder
-description: Evidence-first development — surround the implementation with an executable spec and a gauntlet of constraints (tests, types, coverage, mutation) so line-by-line review becomes optional. Use when the user explicitly asks for high-assurance or evidence-first work ("reliable", "TDD", "prove it works", "I won't read the code"), or when the change touches high-stakes domains (money, auth, data loss, concurrency, public API). For routine changes where the user just wants normal tests, write good tests directly instead of invoking this loop.
+description: Evidence-first development for high-assurance code where the user explicitly asks for proof, an evidence report, or confidence without reading the code ("prove it works", "high assurance", "I won't read the code"), or where a change can directly cause irreversible data loss, production trading or portfolio actions, client-visible reporting errors, auth/security failures, concurrency failures, or public API breakage. Do not use for ordinary TDD, normal tests, one-off research scripts, exploratory quant analysis, data pulls, charts, or routine QuantSystem changes; use test-driven-development, verification-before-completion, quant-research-coding, or quant-develop instead.
 ---
 
 # Old Coder: Reliable Coding Under Constraint and Test
+
+## Routing Boundary
+
+Use this skill only when the requested confidence model is "prove it with
+constraints and evidence", not merely "write good code". Ordinary TDD belongs to
+`test-driven-development`; normal completion checks belong to
+`verification-before-completion`; exploratory quant scripts belong to
+`quant-research-coding`; formal QuantSystem project engineering belongs to
+`quant-develop` unless a specific high-risk module needs this additional layer.
+
+For investment work, "money" is not enough to trigger this skill. Trigger it
+when the code can directly change production positions, orders, portfolio
+weights, published client materials, irreversible data, access control, or a
+shared API contract. Research-only analysis, ad hoc backtests, charts, and data
+inspection are usually Level 1 or Level 2 work and should stay light.
 
 The human will NOT read your implementation. Their confidence comes entirely from
 two artifacts you produce: (1) an **executable specification** they approve before
@@ -180,6 +195,18 @@ The gauntlet only creates trust if it cannot be gamed. These are hard rules:
 
 Scale effort to blast radius, and say which tier you chose:
 
+- **Level 1/2 investment research work** (one-off scripts, exploratory data
+  pulls, charts, research-only backtests): do not use this skill by default.
+  Keep the work small and run the smallest meaningful verification instead.
+- **Level 3 investment workflow work** (client-visible output, recurring
+  reports, investment committee materials, shared signals, reusable portfolio
+  tools): use this skill only for the risky core or when the user asks for
+  evidence-first assurance; otherwise use focused tests, review, and fresh
+  verification.
+- **Level 4 work** (live trading, irreversible operations, regulatory or safety
+  critical systems): this skill can contribute evidence, but it is not enough by
+  itself. Require human approval, independent review, operational controls, and
+  deployment gates outside the AI session.
 - **Tier 1 — trivial** (typo, comment, config value): full suite + lint. No new
   tests required, but state why the change is untestable or already covered.
 - **Tier 2 — normal** (bug fix, small feature): full loop. Bug fixes MUST start

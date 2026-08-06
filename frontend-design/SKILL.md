@@ -53,6 +53,10 @@ canvas should follow the mode:
   scope plus table/work surface for operations.
 - Start with one or more preview HTML pages when the visual structure is still
   unsettled or the page has multiple viable layouts.
+- Save project preview artifacts inside the project at
+  `artifacts/design_preview/`, including static HTML previews and validation
+  screenshots. Use semantic versioned names such as
+  `<project-or-page>-<view>-v1.html` and keep matching screenshots beside them.
 - Treat the preview HTML as a contract for spacing, hierarchy, and data shape
   before wiring the page into the app.
 - Keep the preview simple enough that the core function is obvious without

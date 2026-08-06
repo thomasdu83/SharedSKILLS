@@ -32,6 +32,8 @@ list, or iframe/detail loading, but the interaction must support reading.
 When the report layout is still uncertain:
 
 - build one or more static preview HTML pages first
+- save previews and validation screenshots in the project under
+  `artifacts/design_preview/`, following `frontend-design`
 - use real sample data or realistic placeholders, not decorative filler
 - test the page as a screenshot and as a scrolling reading experience before
   wiring it into the final app flow

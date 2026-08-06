@@ -31,6 +31,8 @@ decorative KPI cards.
 When building a new workbench or redesigning a complex page:
 
 - build one or more static preview HTML pages before app integration
+- save previews and validation screenshots in the project under
+  `artifacts/design_preview/`, following `frontend-design`
 - preview the main workflow with realistic rows, filters, selected states, and
   detail/edit surfaces
 - keep the first preview focused on the core operation instead of every future

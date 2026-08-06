@@ -1,45 +1,46 @@
 ---
 name: frontend-page-router
-description: Use when building a frontend page, dashboard, or HTML artifact and the agent must decide whether the primary task is internal operation or external reading and explanation.
+description: Use when building a frontend page, dashboard, workbench, HTML report, score report, weekly report, portfolio page, fund platform, or finance artifact and the primary mode could be internal operation or reader-facing explanation.
 ---
 
 # Frontend Page Router
 
-Use this skill before creating structure for any finance, research, portfolio,
-risk, or fund-related page.
+Use this before creating structure for finance, research, portfolio, risk, fund,
+score, industry, macro, weekly-report, or attribution pages.
 
 ## Decision Goal
 
-Decide whether the page is:
+Choose one primary mode:
 
-- an internal operations platform
-- an external report-oriented page
-- unclear and requires a user question
+- internal operations platform
+- external or reader-facing report page
+- unclear and requires one routing question
 
-Do not skip this step.
+After classification, use the selected mode to build the preview HTML. Do not
+let an early visual mockup decide the mode.
 
 ## Classification Questions
 
-Answer these in order:
+Answer in order:
 
-1. Who uses the page most often: internal operators or external readers?
-2. What is the primary task: filter, edit, maintain, monitor, construct, or
-   explain, conclude, review, persuade?
-3. What does success look like: finishing actions faster or understanding
-   conclusions faster?
+1. Who uses it most: internal operators or readers?
+2. What is the main verb: maintain, filter, edit, construct, monitor, triage;
+   or explain, compare, conclude, review, distribute?
+3. What proves success: actions completed faster, or conclusions understood
+   faster?
 
-If two or more answers point to the same mode, use that mode.
+If two or more answers point to one mode, use it. If split evenly, ask the
+user.
 
 ## Route To Operations Platform
 
 Choose `frontend-ops-platform` when the page is mainly for:
 
 - daily internal use
-- maintenance and data updates
-- filtering and triage
-- editing and state changes
-- monitoring and exception handling
-- portfolio construction or workbench tasks
+- fund pool maintenance, tag management, status updates
+- filtering, triage, selection, editing, batch action
+- portfolio construction, versioning, monitoring, attribution workbench
+- object details, drawers, inline fields, save/delete workflows
 
 Typical keywords:
 
@@ -48,24 +49,26 @@ Typical keywords:
 - `维护`
 - `筛选`
 - `编辑`
-- `组合构建`
-- `监控`
+- `构建组合`
+- `组合监控`
+- `台账`
 - `内部使用`
 
 ## Route To Report Page
 
 Choose `frontend-report-page` when the page is mainly for:
 
-- reading and interpretation
-- external distribution
-- report delivery
-- attribution review
-- strategy explanation
-- conclusions and evidence presentation
+- static or semi-static HTML delivery
+- macro score, industry score, strategy score, fund weekly report
+- reading, interpretation, evidence, methodology, conclusions
+- external distribution, screenshot, print, archive, review
+- charts and tables whose role is to support a thesis
 
 Typical keywords:
 
 - `报告`
+- `周报`
+- `月报`
 - `外发`
 - `展示`
 - `复盘`
@@ -74,36 +77,47 @@ Typical keywords:
 - `结论`
 - `HTML 报告`
 
-## Ask The User When Unclear
+## Hybrid Rule
 
-If the prompt is ambiguous, ask a short routing question instead of mixing both
-structures. Typical ambiguous cases:
+Hybrid pages still need one primary mode:
+
+- A report with tabs, filters, sortable tables, or selectable details remains a
+  report if the interaction helps reading.
+- A workbench with KPI strips or preview reports remains an operations platform
+  if users edit, save, monitor, or maintain objects.
+- White or gray background is not a routing signal. The task decides the mode;
+  the mode then decides the canvas.
+
+## Ask When Unclear
+
+Ask one short question:
+
+`这个页面主要给内部团队日常操作，还是给读者阅读结论和证据？`
+
+Typical ambiguous prompts:
 
 - `做一个组合分析页面`
 - `做一个投后归因页面`
 - `做一个组合看板`
 - `做一个分析首页`
 
-Example clarification:
-
-`这个页面主要给内部团队日常操作，还是给外部读者阅读结论？`
-
 ## Hard Rules
 
-- Never start with visual style before page classification.
-- Never merge report-page hero blocks into an internal workbench by default.
-- Never turn a reader-facing report into a pure CRUD console.
-- If a page contains both reading and operation areas, choose one primary mode
-  and treat the other as a secondary module.
+- Never start with visual style before classification.
+- Never put a report hero into an internal workbench by default.
+- Never turn reader-facing research into a pure CRUD console.
+- Never classify by domain alone. Classify by user task.
+- Never classify by palette alone. A report can have a pale shell; a workbench
+  can have white work surfaces.
+- Never skip routing because a preview HTML already looks plausible.
 
 ## Pressure Tests
 
-Use these as self-checks:
-
 - `做一个基金池维护平台` -> operations platform
+- `做一个公募投顾模拟组合管理平台` -> operations platform
 - `做一个宏观打分 HTML 报告` -> report page
+- `做一个行业评分外发页` -> report page
+- `做一个私募基金业绩周报` -> report page
 - `做一个组合分析页面` -> ask the user
 - `做一个投后归因页面，给客户看` -> report page
 - `做一个投后归因页面，投研每天用` -> operations platform
-- `做一个组合监控台账，投研团队每天用` -> operations platform
-- `做一个基金复盘网页，准备外发` -> report page

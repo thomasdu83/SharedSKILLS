@@ -1,6 +1,6 @@
 ---
 name: quant-develop
-description: QuantSystem 机构级量化投资系统开发与项目建设规范。适用于正式项目创建、旧项目标准化改造、`project.yaml` 设计、`registry/` 与 `workflows/` 接入、数据输出契约落地，以及需要长期复用、定期运行或进入投资管理流程的数据获取、组合构建、回测分析模块。不用于一次性研究脚本、临时数据抽取、探索性图表或轻量原型；这些场景优先使用 quant-research-coding。
+description: Use when building or standardizing recurring QuantSystem projects, data contracts, portfolio construction, backtests, labels, signals, monitoring modules, or performance bottleneck work that requires explicit dependencies, point-in-time correctness, coverage preflight, audit artifacts, or downstream consumption. Prefer quant-research-coding for one-off exploration.
 ---
 
 # QuantDevelop 开发规范
@@ -33,6 +33,8 @@ QuantSystem 项目时，才使用本技能。
 - **No Print**: 严禁使用 `print()`，必须使用 `logging`。
 - **Single Project Home**: 一个项目一个主目录，生命周期只由 `project.yaml.stage` 管理，不靠搬目录。
 - **Outputs First**: 先定义主输出物、消费方和运行频率，再决定目录、入口和工作流。
+- **Point-in-Time First**: 先证明每个输入在目标 `tradingday` / `as_of_date` 可见，再讨论计算结果。
+- **Evidence Chain**: 主结果、运行参数、依赖覆盖、审计明细和验证证据必须能够关联到同一个 `run_id`。
 
 ## 2. 工作流 (Workflow)
 
@@ -40,10 +42,14 @@ QuantSystem 项目时，才使用本技能。
 1. **分析 (Analysis)**:
    - 优先使用 MCP 查询数据/代码。
    - 明确当前任务是“新项目建设”“旧项目标准化”还是“已有项目功能开发”。
-   - 明确数据源 (Parquet/DB/Excel)。
-     - **Parquet (默认)**: 适用于所有高频、时序、大批量数据（行情、因子、财务）。
+   - 明确数据源 (DB/Parquet/SQLite/Excel)。
+     - **DBSource (默认主链路)**: 适用于最新数据、研究主链路和生产主链路。
+     - **ParquetSource**: 适用于本地快照、批量历史读取和稳定回放。
      - **SQLite**: 仅限于极少量元数据、配置或轻量级关系型数据。
      - **Excel**: 仅限于手工输入或展示。
+   - 明确每个时间字段的语义：`tradingday`、`as_of_date`、`snapshot_time`、自然日或交易日。
+   - 对每个外部输入记录可用日期范围、关键字段覆盖范围和数据版本；不能只检查文件是否存在。
+   - 列出依赖图：哪些入口是独立入口，哪些入口必须先运行上游快照或特征任务。
    - 若任务涉及项目建设，先回答以下问题：
      - 项目属于 `domains/`、`platform/`、`workflows/`、`registry/` 还是 `archive/`
      - 主输出是动作/配置/评分/信号，还是状态/提醒/研究报告
@@ -51,6 +57,7 @@ QuantSystem 项目时，才使用本技能。
      - 运行频率是什么
      - 原始输入来自哪里，是否真的需要复制进项目目录
      - 是否需要接入统一前端、`registry/`、`workflows/`
+   - 若涉及标签、因子、信号、回测、风控或 fallback，先阅读 [validation.md](references/validation.md)。
 2. **规划 (Planning)**:
    - 正式项目、共享模块或生产链路涉及 Add/Mod/Del 功能时，必须先列出计划。
    - 单文件小改、轻量规则调整或研究脚本可使用 3-5 行内联计划，不新建计划文档。
@@ -64,7 +71,8 @@ QuantSystem 项目时，才使用本技能。
 3. **执行 (Execution)**:
    - 用户确认后执行。
    - 正式项目的公开函数、共享模块和数据契约必须编写 Docstrings。
-   - 按风险运行 Lint/Type Check/测试；轻量研究脚本至少运行一次可复现入口或样本校验。
+   - 按风险运行 Lint/Type Check/测试；标签、信号、风控和 PnL 模块还必须运行时点一致性、覆盖期和约束测试。
+   - 核心金融逻辑缺关键输入、覆盖不足或依赖未满足时必须中断；展示层和诊断层才允许明确标注的降级。
 
 ### 2.2 路径规范
 - **单一权威源**: 所有路径必须基于 `main_config.py: MAIN_PATH`。
@@ -77,11 +85,13 @@ QuantSystem 项目时，才使用本技能。
 3. 建标准目录与 `project.yaml`
 4. 实现 `research` / `publish` / `monitor` 中适用入口，不适用的键显式写 `null`
 5. 分离原始输入、固定资产、单次产物
-6. 先让结果正确落到 `artifacts/`，再考虑平台级 `shared_data/`
-7. 接入 `registry/`
-8. 需要日常运行时接入 `workflows/`
-9. 补最小测试与契约检查
-10. 最后再扩前端、适配层和平台化能力
+6. 按“数据快照层 - 共享特征层 - 标签/信号层”拆分职责
+7. 为每个正式入口定义 preflight、依赖覆盖和 `run_id`
+8. 先让结果正确落到 `artifacts/`，再考虑平台级 `shared_data/`
+9. 接入 `registry/`
+10. 需要日常运行时接入 `workflows/`
+11. 补最小测试、输出契约和审计检查
+12. 最后再扩前端、适配层和平台化能力
 
 ## 3. 架构规范 (Architecture)
 
@@ -146,6 +156,7 @@ class FundData:
 - **存储与命名**: 详见 [storage.md](references/storage.md)
 - **运行编排**: 详见 [workflows.md](references/workflows.md)
 - **代码审查**: 详见 [code_review.md](references/code_review.md)
+- **量化验证**: 详见 [validation.md](references/validation.md)
 - **LLM开发**: 详见 [llm_dev.md](references/llm_dev.md)
 - **Web开发**: 详见 [web.md](references/web.md)
 - **计算优化**: 详见 [compute.md](references/compute.md)

@@ -202,6 +202,11 @@ summary:
 ```text
 artifacts/
 ├─ research_runs/
+│  └─ <run_id>/
+│     ├─ outputs/
+│     ├─ audits/
+│     ├─ diagnostics/
+│     └─ logs/
 ├─ production_snapshots/
 ├─ monitor_snapshots/
 ├─ charts/
@@ -215,6 +220,32 @@ artifacts/
 - `monitor_snapshots/`：监控化后的项目内备份快照
 - `charts/`：图表资源
 - `reports/`：项目内报告、复盘、HTML 导出
+
+### 9.1 主结果与审计结果分层
+
+- `runtime_assets/` 或平台级 `shared_data/` 存放当前可消费的主结果。
+- `artifacts/research_runs/<run_id>/outputs/` 存放本次运行的输出副本。
+- `artifacts/research_runs/<run_id>/audits/` 存放筛选漏斗、拒绝原因、阈值命中、覆盖期和规则诊断。
+- 审计结果默认不写入主运行库；只有当它本身是下游消费的正式监控输出时，才进入标准快照或索引。
+- 审计结果若晋级为正式快照或索引，也必须保留 `run_id` 或等价 lineage 字段，不得只保留覆盖式最新表。
+- 审计文件必须能通过 `run_id`、项目版本和输入快照追溯到同一次运行。
+
+审计表建议至少包含：
+
+```yaml
+run_id:
+project_id:
+module:
+tradingday:
+as_of_date:
+asset_code:
+stage:
+pass_flag:
+reject_reason:
+threshold_version:
+rule_mode:
+input_snapshot:
+```
 
 ## 10. 命名反模式
 
@@ -246,4 +277,6 @@ artifacts/
 - 是否采用标准数据集命名
 - 是否使用分区目录而不是散落文件
 - 是否保留历史快照而不是只保留最新结果
+- 是否为正式运行保留 `run_id` 和审计证据
+- 是否区分严格规则结果与 fallback 结果
 - 是否让统一前端消费标准化输出而非项目内部文件

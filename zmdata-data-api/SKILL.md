@@ -1,6 +1,6 @@
 ---
 name: zmdata-data-api
-description: Use when Codex needs to answer questions, explain parameters, write Python code, or directly call documented ZM internal zmdata data APIs via CLI, including stocks, funds, fund pools, fund scoring, portfolio/PM APIs, bonds, ETFs, options, futures, indexes, macro data, exchange rates, spot data, and related ID mappings such as label_id, rankconfigid, benchID, and score fields.
+description: Use when Codex needs to answer questions, explain parameters, write Python code, or directly call documented ZM internal zmdata data APIs via CLI, including historical or as-of data for stocks, funds, fund pools, fund scoring, portfolio/PM APIs, bonds, ETFs, options, futures, indexes, macro data, exchange rates, spot data, and related ID mappings such as label_id, rankconfigid, benchID, and score fields.
 ---
 <!-- light-skill-version-check:start -->
 ## Version Check
@@ -138,6 +138,19 @@ If uncertain, search references directly with `rg`.
 4. For explanation or code-generation requests, generate minimal Python that uses documented parameters only.
 5. For actual data retrieval, prefer `scripts/zmdata_cli.py call ...` over creating ad hoc Python files.
 6. Mention reference-specific caveats, such as PM API Key requirements or rankconfigid lookup steps.
+
+## Retrieval Evidence Contract
+
+When data will feed a historical label, factor, backtest, signal, risk model, or audit, retain enough evidence to reproduce the retrieval:
+
+- API/interface name and documented reference used;
+- exact parameters, including date filters, IDs, flags, and pagination;
+- SDK/skill version when relevant;
+- returned row count, entity count, minimum/maximum date, and key missing-value counts;
+- the meaning of each date field: observation date, `as_of_date`, or retrieval `snapshot_time`;
+- whether the endpoint returns historical state or the latest current state.
+
+`--head N` is for inspection, not proof that the full result is valid. For large results, use `--out` and create a sidecar manifest containing the request parameters and coverage summary. Do not use a latest snapshot as a historical substitute unless the reference explicitly supports that interpretation.
 
 ## CLI Data Retrieval
 

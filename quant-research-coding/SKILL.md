@@ -1,6 +1,6 @@
 ---
 name: quant-research-coding
-description: Use when writing lightweight quant research code, one-off Python scripts, exploratory data pulls, quick backtests, factor checks, allocation analysis notebooks/scripts, chart/table generation, report-support data processing, or research prototypes where mistakes mainly waste time rather than directly affect production portfolios or clients. Prefer this before quant-develop for Level 1/2 work; escalate to quant-develop when the code becomes recurring, shared, platformed, or investment-process critical.
+description: Use when writing lightweight quant research code for one-off data pulls, quick backtests, factor checks, label or signal prototypes, allocation analysis, chart/table generation, report-support processing, or repeatable research helpers where mistakes mainly waste research time. Prefer this for Level 1/2 work; escalate to quant-develop when recurring, shared, platformed, client-visible, or investment-process critical.
 ---
 
 # Quant Research Coding
@@ -34,7 +34,13 @@ validation. Avoid premature architecture.
 4. Write the simplest maintainable Python that solves the research question.
 5. Add cheap safeguards:
    - check row counts, date ranges, missing values, duplicate keys, and units
+   - check the source coverage and whether each input was visible at the target date
+   - normalize date precision before joins; inspect `merge_asof` and rolling direction
+   - if optimizing speed, add simple timing around load/compute/export before changing code
+   - avoid optimizing writes when timing shows the bottleneck is data access or compute
    - print or log a small sample of the final result
+   - if the result is empty or unexpectedly large, distinguish sample reality from a rule or join error
+   - when using a fallback or relaxed threshold, test that it only triggers under its stated condition
    - save outputs with clear names when the user needs artifacts
    - avoid overwriting important files without confirmation
 6. Run a fresh verification before saying the work is complete.
@@ -57,11 +63,15 @@ validation. Avoid premature architecture.
 For quant work, prioritize checks that catch investment-research mistakes:
 
 - date alignment and lagging: no look-ahead
+- point-in-time visibility of every input, including cached or backfilled data
+- duplicate keys before `pivot`, `merge_asof`, or aggregation
 - survivorship and sample filters: state what universe was used
 - benchmark and fee assumptions: make them visible
 - NAV/return frequency: confirm daily, weekly, monthly, or irregular
 - missing data and outliers: report counts and handling
 - turnover, transaction costs, and capacity: include when relevant
+- strict-rule versus fallback-rule counts when thresholds or safety nets exist
+- performance timing when speed is part of the task: load, compute, write, and the slowest stage
 - output schema: columns, units, and date format are clear
 
 ## Escalation

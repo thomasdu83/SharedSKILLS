@@ -24,6 +24,7 @@
 | 任务意图 | 首选 skill | 常见后续 | 说明 |
 |---|---|---|---|
 | 私募管理人 / 产品事实查询 | `wisdom-manager-product-research` | `fund-wiki-research` | 先拿事实，再做判断 |
+| 私募尽调转录 / 路演材料生成同目录 Markdown | `private-fund-dd-note` | `mynotes-knowledge-manager` / `PE_ODD_Auditor` | 先整理定性尽调草稿，再决定是否入库、评分或归档 |
 | ZM 数据接口 / 代码示例 / ID 映射 | `zmdata-data-api` | `quant-develop` | 作为底层数据能力 |
 | 尽调材料入库、沉淀、查询 | `fund-wiki` | `fund-wiki-research` | 事实层与知识层分开 |
 | 基于 fund-wiki 的专题研究 | `fund-wiki-research` | `research-report-writer` | 可比池、分类、研究稿 |

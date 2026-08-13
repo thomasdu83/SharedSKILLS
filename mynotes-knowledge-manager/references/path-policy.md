@@ -40,6 +40,14 @@ Use this practical test: place the note where the user is most likely to look fo
 
 Never move, rename, delete, overwrite, or de-duplicate original source materials without explicit user confirmation in the current conversation.
 
+## Cross-Topic Material Rule
+
+When one document belongs to multiple topics, default to a single original-file location instead of keeping parallel copies in multiple theme folders.
+
+- Choose the primary home by stable retrieval: where the user is most likely to look for the original file six months later.
+- In other topic notes, use Markdown links, `source_files`, reference sections, or MOCs to point to the original.
+- Duplicate the original file only when the user explicitly requests it or when there is a clearly separate operating workflow that needs an independent local copy.
+
 ## Default Domain Hints
 
 | Content | Likely destination |

@@ -25,16 +25,19 @@ Use this skill to help the user manage `F:\Thomas\MyNotes` as an Obsidian-compat
 4. Create or update an intake note when processing new raw material. If the source is in `000 Inbox`, place the intake beside it using `<source-stem>_ai-intake.md`.
 5. Create or update the stable note in the recommended MyNotes location. Prefer updating an existing topic note over creating parallel summaries.
 6. Use document-level evidence by default: populate `source_files` with links to source documents. Do not require page/table/quote-level evidence unless the user asks.
-7. Pause for the chat-based human review gate before marking `stage: validated`, moving original materials, deleting duplicates, or finalizing investment/ODD/manager/fund conclusions.
-8. After approval, update frontmatter, links, MOC entries when warranted, and any confirmed source-material placement.
-9. Finish with a concise report: created/updated notes, unresolved review points, original-material status, and suggested next action.
+7. When the source contains a mechanism, model, algorithm, or economic logic that is hard to understand, add a plain-language explanation layer in the stable note. Prefer short intuitive descriptions, concrete scenarios, or analogies that clarify what the mechanism is really saying in practice.
+8. Pause for the chat-based human review gate before marking `stage: validated`, moving original materials, deleting duplicates, or finalizing investment/ODD/manager/fund conclusions.
+9. After approval, update frontmatter, links, MOC entries when warranted, and any confirmed source-material placement.
+10. Finish with a concise report: created/updated notes, unresolved review points, original-material status, and suggested next action.
 
 ## Mandatory Rules
 
 - User-specified destination wins over default routing unless it would break vault safety.
 - Never move, rename, delete, overwrite, or de-duplicate original source materials without explicit user confirmation in the current conversation.
+- For cross-topic materials, default to a single original-file home plus links from other topic notes or MOCs. Do not duplicate original files across themes unless the user explicitly asks or there is a clearly separate operating need.
 - Do not mark investment conclusions, manager/product judgments, ODD risk calls, or QuantSystem-affecting notes as `validated` until the user answers the review gate.
 - Keep MyNotes human-readable and Obsidian-compatible. Prefer Markdown, frontmatter, wikilinks, and stable relative vault paths.
+- For difficult methods, mechanisms, or abstract frameworks, prefer a three-layer explanation when useful: formal definition, intuitive example, and plain-language explanation. Do not force all three when the material is simple.
 - Do not make every folder a MOC. Create MOCs only at global, important-domain, or important-topic levels when they improve retrieval.
 - Treat `000 Inbox` as a buffer, not a permanent source library.
 - Treat QuantSystem as the place for code, data, backtests, models, and runnable outputs. MyNotes records the research interpretation and links to QuantSystem paths.

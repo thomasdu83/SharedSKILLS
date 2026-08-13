@@ -101,6 +101,22 @@ Default sections:
 
 Adjust sections to fit the material. Prefer conclusion-led headings for investment research.
 
+When the note covers a difficult mechanism, algorithm, or abstract framework, add an optional section such as:
+
+```markdown
+## Plain-Language Explanation
+
+Explain the mechanism in practical language. Prefer short intuitive scenarios, analogies, or behavior-based descriptions that answer "what is this really saying in the real world?"
+```
+
+For method-heavy notes, a useful layered structure is:
+
+1. Formal definition or key formulas
+2. Intuitive example or minimal worked example
+3. Plain-language explanation
+
+Use only the layers that materially improve understanding; do not add mechanical sections when the topic is already simple.
+
 ## Duplicate And Merge Rules
 
 - If no stable topic exists, create a new note.

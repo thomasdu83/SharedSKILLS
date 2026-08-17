@@ -11,6 +11,10 @@
 **当前阶段**  
 `idea / research / candidate / production / monitor_only`
 
+**内部模型状态（如适用）**
+
+区分 Research / Candidate / Challenger / Champion / Rejected，不与项目阶段混用。
+
 **总体结论**  
 `On Track / Slightly Drifting / Clearly Drifting`
 

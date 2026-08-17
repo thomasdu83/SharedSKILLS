@@ -28,6 +28,10 @@ Answer in order:
    or explain, compare, conclude, review, distribute?
 3. What proves success: actions completed faster, or conclusions understood
    faster?
+4. For quant model work, is this historical backtest or model review, or
+   finalized model tracking and daily use?
+5. If it is monitoring, does the user only inspect state and changes, or must
+   they edit, approve, publish, or maintain objects?
 
 If two or more answers point to one mode, use it. If split evenly, ask the
 user.
@@ -40,6 +44,8 @@ Choose `frontend-ops-platform` when the page is mainly for:
 - fund pool maintenance, tag management, status updates
 - filtering, triage, selection, editing, batch action
 - portfolio construction, versioning, monitoring, attribution workbench
+- finalized model tracking, run-state monitoring, publish gates, alert review
+- read-only monitoring of finalized models or grouped indicators
 - object details, drawers, inline fields, save/delete workflows
 
 Typical keywords:
@@ -51,6 +57,10 @@ Typical keywords:
 - `编辑`
 - `构建组合`
 - `组合监控`
+- `模型跟踪`
+- `指标监控`
+- `只读监控`
+- `发布门禁`
 - `台账`
 - `内部使用`
 
@@ -59,6 +69,7 @@ Typical keywords:
 Choose `frontend-report-page` when the page is mainly for:
 
 - static or semi-static HTML delivery
+- historical backtest review, model candidate review, finalized-model memo
 - macro score, industry score, strategy score, fund weekly report
 - reading, interpretation, evidence, methodology, conclusions
 - external distribution, screenshot, print, archive, review
@@ -76,6 +87,8 @@ Typical keywords:
 - `观点`
 - `结论`
 - `HTML 报告`
+- `回测评审`
+- `定型评审`
 
 ## Hybrid Rule
 
@@ -118,6 +131,14 @@ Typical ambiguous prompts:
 - `做一个宏观打分 HTML 报告` -> report page
 - `做一个行业评分外发页` -> report page
 - `做一个私募基金业绩周报` -> report page
+- `做一个历史回测 HTML 文档` -> report page
+- `做一个模型定型评审页` -> report page
+- `做一个回测结果对比页面，给投研评审` -> report page
 - `做一个组合分析页面` -> ask the user
 - `做一个投后归因页面，给客户看` -> report page
 - `做一个投后归因页面，投研每天用` -> operations platform
+- `做一个定型后模型跟踪工作台` -> operations platform
+- `做一个组合模型每日监控页面` -> operations platform
+- `做一个回测批次管理和重新运行平台` -> operations platform
+- `做一个宏观指标只读监控页` -> operations platform, `read_only_monitor` variant
+- `做一个定型模型跟踪页，只读展示建议权重和风险` -> operations platform, `read_only_monitor` variant

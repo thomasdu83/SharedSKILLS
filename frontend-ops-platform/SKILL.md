@@ -12,6 +12,10 @@ quiet control surface, not a report cover.
 
 Make the object, its state, and the next action visible at the same time.
 
+For `read_only_monitor`, the next action is an inspection or review decision,
+not an edit. Do not invent save, delete, approval, or publish controls when the
+data contract is read-only.
+
 ## Default Workbench Structure
 
 Start from this layout:
@@ -65,6 +69,8 @@ Use these defaults for finance and fund platforms:
 | tag or pool maintenance | tag tree + status filters + table + detail actions |
 | portfolio construction | rule/benchmark rail + draft table with editable weights + risk/reference side panel |
 | portfolio monitoring or attribution | parameter rail + explanation panel + pivot table/detail report |
+| finalized model tracking | model/version rail + data freshness strip + latest run state + signal/weight table + drift/risk checks + publish gate + audit log |
+| read-only monitoring | scope/filter rail + freshness strip + latest snapshot + change/risk table + evidence detail |
 | add or edit objects | right drawer with grouped form sections and sticky actions |
 
 ## Hard Constraints
@@ -73,9 +79,17 @@ Operations platforms must:
 
 - make tables, lists, forms, or editable drafts the primary surface
 - keep controls close to the rows, object, or panel they affect
-- support real filtering, sorting, selection, editing, saving, deleting, and
-  state feedback
+- support the interactions required by the workflow: filtering, sorting,
+  selection, and state feedback by default; add editing, saving, deleting, or
+  approval only when the user explicitly maintains objects
 - derive badges, counts, and status from data
+- for finalized models, expose current version, input freshness, latest run
+  result, drift from previous output, and blocking checks; add manual
+  confirmation only when the workbench owns that workflow
+- for finalized model tracking, keep recommendation weights, human decision, and
+  implemented weights visibly distinct when all three are available
+- for read-only monitoring, expose snapshot date, freshness, status, change,
+  caveat, and drill-down evidence without write controls
 - show empty, loading, error, selected, active, and hidden states
 - preserve column widths and stable row height in dense tables
 - keep default view aligned with the daily workflow
@@ -89,6 +103,9 @@ Operations platforms must not:
 - lead with decorative KPI cards instead of the active work area
 - separate controls from affected data
 - imitate a report, brochure, or landing page
+- present historical backtest evidence as the primary daily surface; candidate
+  reviews belong in static report pages unless the user explicitly asks for
+  batch management or rerun operations
 - hide required editing behind unclear icons or non-obvious gestures
 - add secondary panels, metrics, or tabs before the core workflow is usable
 
@@ -135,6 +152,8 @@ For terminal-grade tables:
 - labels are short and operational: `应用筛选`, `添加基金`, `保存新版本`
 - panel notes explain scope or consequence, not marketing value
 - button text names the action and object when ambiguity is possible
+- model-tracking actions name the gate or state they affect: `确认本期运行`,
+  `阻断发布`, `查看审计日志`
 - destructive actions use direct labels and confirmation context
 
 ## Interaction Reality Check
@@ -145,9 +164,12 @@ Before delivery, verify:
 - filters visibly change table/list scope and can reset
 - rows can be selected and details update
 - sort headers expose active direction
-- editable fields look editable and preserve layout
-- drawer forms have grouped sections and clear actions
-- save/delete actions show state feedback
+- when editing exists, editable fields look editable and preserve layout
+- read-only monitor pages do not imply that labels or status badges are buttons
+- model version, data freshness, run status, risk checks, and publish gate state
+  are visible without opening secondary screens
+- when forms exist, drawers have grouped sections and clear actions
+- when write actions exist, save/delete actions show state feedback
 - empty and loading states are not blank pages
 - the gray shell supports focus instead of competing with the active table/form
 

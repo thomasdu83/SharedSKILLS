@@ -18,6 +18,7 @@ description: Use when the user asks how far a QuantSystem project has progressed
 
 - 先重建或确认项目的**初始目标**
 - 再判断当前**真实阶段**
+- 分开判断项目整体阶段与项目内模型版本/场景/求解器状态
 - 只根据真实产出、真实链路、真实验证来判断进度
 - 不用“工作量很多”代替“目标接近完成”
 - 如果没有明确初始目标，先从需求、计划文档、`project.yaml`、主输出物中推断，并明确说明这是推断
@@ -28,6 +29,8 @@ description: Use when the user asks how far a QuantSystem project has progressed
 2. **主链路完成度**：从输入数据到策略/模型输出的闭环打通了多少
 3. **验证完成度**：测试、回测、校验、口径确认做到了多少
 4. **偏航程度**：最近工作有多少直接服务初始目标，有多少已经变成旁支扩展
+
+阶段判断时，输出建议权重、配置、评分或信号的项目属于 `production`，即使它同时有监控入口；只输出状态、变化、告警或复核线索且不生成投资建议的项目才属于 `monitor_only`。
 
 详细评分口径见 `references/review-rubric.md`。
 

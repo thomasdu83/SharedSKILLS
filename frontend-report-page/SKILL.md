@@ -63,6 +63,8 @@ Use the pattern that matches the content:
 | Content | Structure |
 | --- | --- |
 | macro or asset score report | conclusion cards + score matrix + mainline + object selector + timeline/radar + rationale + scenarios |
+| historical backtest review | model assumption strip + sample/data scope + conclusion cards + NAV/drawdown + calendar/scenario table + turnover/cost/risk exposure + robustness + manifest/reproduction note |
+| model candidate review | candidate version header + frozen parameters + promotion criteria + validation evidence + failure conditions + final review checklist |
 | industry score report | sector strip + conclusion cards + sortable total table + sector/industry filters + selected-industry detail + rationale |
 | fund weekly report | report header + period metadata + summary notes + chart blocks + sortable leaderboard/evidence tables + footnotes |
 | multi-strategy weekly report | fixed top nav + dashboard overview + strategy sidebar + one active strategy report + market environment + manager stats |
@@ -77,6 +79,8 @@ Report pages must:
 - keep charts near interpretation or labels that explain what matters
 - make sortable/filterable tables support comparison, not operations
 - include data date, scope, sample count, method, or caveat when relevant
+- for backtests, include sample period, benchmark, fee/cost assumption, rebalance
+  rule, point-in-time caveat, run id, and reproduction command when available
 - remain readable in screenshots, print, export, and static HTML
 - prefer the smallest section set that still explains the conclusion well
 
@@ -96,6 +100,8 @@ Prefer:
 - conclusion cards with labels such as strongest, weakest, fastest warming
 - narrative mainline with a left accent rule
 - score matrix, sortable evidence table, heatmap, timeline, radar, or line chart
+- NAV, drawdown, rolling risk/return, turnover, exposure, robustness, and
+  scenario blocks for backtest review reports
 - selector/filter that changes the reading scope
 - selected-object detail panel with score, trend, rank, strengths, weaknesses
 - rationale sections by dimension
@@ -137,6 +143,8 @@ Use interaction sparingly:
 
 - lead with what changed and why it matters
 - title sections by analytical role: `本期结论卡`, `评分总表`, `评分依据`
+- for backtests, prefer `模型假设`, `样本口径`, `核心回测结论`, `风险与失效条件`,
+  `复现证据`
 - write chart titles as findings when possible, not neutral widget labels
 - write chart notes as interpretation, not axis restatement
 - use brief Chinese UI labels; avoid paragraphs inside buttons or tabs
@@ -151,6 +159,8 @@ Before delivery, verify:
 - filters and tabs visibly change the reading state
 - long tables have stable headers and column widths
 - caveats, sample scope, or methodology are visible
+- historical backtest pages read as a static review document, not as a daily
+  operations console
 - mobile layout stacks without text overlap
 
 ## Anti-Patterns

@@ -45,6 +45,8 @@
 - 主要输出状态、告警、变化和复核线索
 - 不直接作为投资决策主输出
 
+`project.yaml.stage` 表示项目整体阶段，不等于项目内部某个模型版本的 Research、Candidate、Challenger、Champion 或 Rejected 状态。输出建议权重、配置、评分或信号的项目仍属于 `production`，即使它同时提供监控入口。
+
 ## 3. 四个维度的判断口径
 
 ### 目标完成度

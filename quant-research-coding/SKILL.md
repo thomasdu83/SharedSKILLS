@@ -20,15 +20,25 @@ validation. Avoid premature architecture.
 | Level | Typical work | Default bar |
 |---|---|---|
 | 1 | One-off data pull, chart, format conversion, quick calculation | Minimal script or command; inspect sample output |
-| 2 | Daily research helper, repeatable backtest, report-support table | Clear entry point, parameters near the top or in a small config, sanity checks, saved output |
+| 2 | Daily research helper, repeatable backtest, backtest review HTML, report-support table | Clear entry point, parameters near the top or in a small config, sanity checks, saved output |
 | 3 | Client/company-visible output, recurring investment-process input | Escalate to `quant-develop`; add tests, logging, contracts, review |
 | 4 | Live trading, irreversible operations, regulatory/safety critical | Do not rely on this skill; require external controls and approvals |
 
+## Research Funnel and Retention
+
+Classify the work before deciding how much structure to create:
+
+- A throwaway calculation only needs a checked sample result; do not create a project or registry entry.
+- A repeatable research script keeps its command, parameters, coverage checks, and saved output.
+- A serious backtest keeps a run manifest and static review HTML, including excluded or failed variants in the comparison batch.
+- A candidate handoff carries the hypothesis, entrypoint, parameter set, PIT/data scope, validation evidence, failure conditions, and promotion reason into `quant-develop`.
+- A recurring indicator that produces only state, change, or alerts can become a lightweight `monitor_only` project; it is not automatically a model or a Champion candidate.
+
 ## Workflow
 
-1. Classify the task as exploration, daily helper, or candidate project.
-2. Identify the smallest useful output: CSV, chart, Markdown table, JSON, or
-   notebook cell result.
+1. Classify the task as exploration, repeatable research, candidate handoff, or indicator monitoring.
+2. Identify the smallest useful output: CSV, chart, Markdown table, JSON,
+   notebook cell result, or a static HTML backtest review document.
 3. Use existing data/API skills first when relevant, especially
    `zmdata-data-api`, `wisdom-manager-product-research`, or `fund-wiki`.
 4. Write the simplest maintainable Python that solves the research question.
@@ -44,6 +54,25 @@ validation. Avoid premature architecture.
    - save outputs with clear names when the user needs artifacts
    - avoid overwriting important files without confirmation
 6. Run a fresh verification before saying the work is complete.
+
+## Backtest Review HTML
+
+For historical backtests, do not default to a frontend application. A static
+HTML document is usually the right research artifact when the user needs to
+review or share results.
+
+Include only the parts that make the backtest auditable:
+
+- model hypothesis, asset universe, benchmark, rebalance rule, and fee/cost
+  assumptions
+- sample period, data vintage, point-in-time caveats, and replication command
+- summary metrics, NAV/drawdown, calendar returns, turnover, risk exposure, and
+  scenario or robustness checks
+- parameter set, run id, output paths, failure conditions, and known limitations
+
+If the model becomes a finalized production or monitoring input, escalate to
+`quant-develop` before building interactive tracking, publish, alerting, or
+frontend integration.
 
 ## Coding Style
 
@@ -84,6 +113,10 @@ Escalate to `quant-develop` when:
 - failure needs logging, alerting, retries, contracts, or access control
 - there is a stable data contract or a need for `project.yaml`, `registry/`, or
   `workflows/`
+- the user asks for finalized model tracking, publish gates, daily monitor
+  state, or an interactive operations workbench
+- a recurring indicator needs a standard monitor snapshot or read-only tracking
+  page, even when it is not an investment model
 
 Escalate to `old-coder` only for high-assurance modules where the user asks for
 proof/evidence or the code can directly cause high-impact harm.

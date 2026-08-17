@@ -5,7 +5,7 @@ description: Use when building or standardizing recurring QuantSystem projects, 
 
 # QuantDevelop 开发规范
 
-机构级量化投资系统的核心开发规范，旨在提供清晰、统一、可维护的工程标准，并让项目从一开始就具备可治理、可接入、可复核的结构。
+面向可重复使用的 QuantSystem 项目，提供清晰、统一、可维护的工程标准。工程强度应由输出用途和风险决定，不因进入正式项目就默认建设 Registry、统一 API、复杂工作流或可编辑前端。
 
 ## 适用边界
 
@@ -25,13 +25,35 @@ QuantSystem 项目时，才使用本技能。
 - 需要固定数据契约、运行频率、日志、配置、权限或失败告警。
 - 轻量原型已经证明有价值，用户明确要求项目化或平台化。
 
+### 项目类型与生命周期边界
+
+- `project.yaml.stage` 表示项目整体阶段，不表示项目内每个模型版本的阶段。
+- 一个模型项目可以同时保留 Research、Candidate、Challenger、Champion 和 Rejected 版本；版本角色与项目阶段应在运行 manifest 或独立决议记录中区分。
+- 输出建议权重、组合配置或可直接进入投资流程的结果，使用 `production`；同一项目可以同时提供 `publish` 和 `monitor` 入口。
+- 只输出状态、变化、告警或复核线索且不产生权重/配置建议的项目，使用 `monitor_only`。
+- 非模型指标按投资问题或使用场景归组为轻量监控项目，不为每个指标复制完整模型治理链路。
+
+### 晋级与证据保留
+
+从研究脚本晋级正式项目时，至少带走假设、入口、参数、PIT/data scope、验证证据、失败条件和晋级理由。探索期临时脚本无需永久登记；正式比较批次中的失败模型必须保留结果和排除原因。
+
+### 回测与跟踪前端门禁
+
+不要把“历史回测需要可读产物”和“定型模型需要运行工作台”混为一类。
+
+- `research` 阶段的历史回测默认不接统一前端，也不建设前后端交互系统。优先交付可复现入口、运行 manifest、审计证据，以及静态 HTML 回测评审文档。
+- `candidate` 阶段可以生成静态模型卡、定型评审页或候选模型 HTML 文档，用于确认模型假设、样本外表现、失败条件和晋级标准；除非用户明确要求，不默认接入日常操作台。
+- `production` 模型定型后可以建设跟踪工作台；发布门禁和人工确认只有在该工作台实际承载这些流程时才加入。
+- `monitor_only` 默认建设只读监控视图，覆盖数据新鲜度、运行状态、变化、告警和证据下钻，不默认加入写操作。
+- 前端 preview 不是生产前端。研究期 preview 应放在 `artifacts/design_preview/` 或 `artifacts/research_runs/<run_id>/reports/`，并明确标注其静态评审用途。
+
 ## 1. 核心原则 (Core Principles)
 
 - **Fail Fast**: 参数校验在函数入口立即执行，禁止静默失败。
 - **Explicit**: 显式依赖注入，显式类型注解，显式参数传递。
 - **Config-Driven**: 业务参数（如权重、路径、阈值）必须在 YAML 配置中，禁止硬编码。
 - **No Print**: 严禁使用 `print()`，必须使用 `logging`。
-- **Single Project Home**: 一个项目一个主目录，生命周期只由 `project.yaml.stage` 管理，不靠搬目录。
+- **Single Project Home**: 一个项目一个主目录，项目整体生命周期只由 `project.yaml.stage` 管理，不靠搬目录。
 - **Outputs First**: 先定义主输出物、消费方和运行频率，再决定目录、入口和工作流。
 - **Point-in-Time First**: 先证明每个输入在目标 `tradingday` / `as_of_date` 可见，再讨论计算结果。
 - **Evidence Chain**: 主结果、运行参数、依赖覆盖、审计明细和验证证据必须能够关联到同一个 `run_id`。
@@ -56,7 +78,8 @@ QuantSystem 项目时，才使用本技能。
      - 输出是否直接服务投资决策
      - 运行频率是什么
      - 原始输入来自哪里，是否真的需要复制进项目目录
-     - 是否需要接入统一前端、`registry/`、`workflows/`
+     - 当前阶段需要静态 HTML 回测评审文档，还是定型后的交互式跟踪工作台
+     - 是否真的需要接入统一前端、`registry/`、`workflows/`
    - 若涉及标签、因子、信号、回测、风控或 fallback，先阅读 [validation.md](references/validation.md)。
 2. **规划 (Planning)**:
    - 正式项目、共享模块或生产链路涉及 Add/Mod/Del 功能时，必须先列出计划。
@@ -83,15 +106,15 @@ QuantSystem 项目时，才使用本技能。
 1. 先确定项目归属域与 `project_id`
 2. 再确定主输出物、消费方、阶段与运行频率
 3. 建标准目录与 `project.yaml`
-4. 实现 `research` / `publish` / `monitor` 中适用入口，不适用的键显式写 `null`
+4. 实现 `research` / `publish` / `monitor` 中适用入口，不适用的键显式写 `null`；研究回测期不要为了模板完整而伪造 `publish` 或 `monitor`
 5. 分离原始输入、固定资产、单次产物
 6. 按“数据快照层 - 共享特征层 - 标签/信号层”拆分职责
 7. 为每个正式入口定义 preflight、依赖覆盖和 `run_id`
 8. 先让结果正确落到 `artifacts/`，再考虑平台级 `shared_data/`
-9. 接入 `registry/`
+9. 只有跨项目检索、多人治理或统一工作流确有需要时才接入 `registry/`
 10. 需要日常运行时接入 `workflows/`
 11. 补最小测试、输出契约和审计检查
-12. 最后再扩前端、适配层和平台化能力
+12. 最后再扩前端、适配层和平台化能力；定型跟踪使用工作台，纯状态指标使用只读监控视图
 
 ## 3. 架构规范 (Architecture)
 
@@ -128,6 +151,7 @@ class FundData:
 - 输出动作、配置、评分、信号、候选准入结果，优先判为 `production`
 - 输出状态、变化、告警、复核线索，优先判为 `monitor_only`
 - 尚处于可重复研究但未形成稳定消费关系，通常为 `research`
+- 仅有历史回测、参数比较、模型定型评审或静态 HTML 说明，不代表已经进入 `production` 或 `monitor_only`
 - 仅停止日常运行、保留历史价值，才进入 `retired`
 
 ## 4. 工程标准 (Engineering)
@@ -146,7 +170,9 @@ class FundData:
 - 不要在 `src/` 中混放数据库、临时输出、最终报告。
 - 不要让 `workflows/` 承载业务实现或直接 import 项目内部函数。
 - 不要让统一前端直接消费项目内部临时文件。
+- 不要在历史回测阶段默认建设交互式前后端；静态 HTML 评审文档通常已经足够。
 - 不要把 Excel 当作核心中间层。
+- 不要把只读监控页面做成默认可编辑、可审批或可发布的管理控制台。
 
 ## 6. 参考指南 (References)
 
@@ -160,3 +186,4 @@ class FundData:
 - **LLM开发**: 详见 [llm_dev.md](references/llm_dev.md)
 - **Web开发**: 详见 [web.md](references/web.md)
 - **计算优化**: 详见 [compute.md](references/compute.md)
+- **生命周期路由**: 详见 [lifecycle-routing.md](references/lifecycle-routing.md)

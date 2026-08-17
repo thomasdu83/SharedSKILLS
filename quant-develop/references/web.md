@@ -1,16 +1,31 @@
 # Web 展示层参考
 
-QuantSystem Web 应用开发规范，包含 **FastAPI + Jinja2 架构**、**ECharts 图表规范**、**静态资源管理**与**专业量化配色**。默认视觉语言参考 `jpmorgan.com`：克制、机构化、薄分隔线、稀疏铜色强调，而不是 SaaS 落地页风格。页面默认使用中文简体，并优先只展示核心功能。
+QuantSystem Web 展示层交付规范，覆盖静态 HTML 报告、静态 preview、FastAPI + Jinja2 交互式应用、ECharts 图表规范、静态资源管理与专业量化配色。默认视觉语言参考 `jpmorgan.com`：克制、机构化、薄分隔线、稀疏铜色强调，而不是 SaaS 落地页风格。页面默认使用中文简体，并优先只展示核心功能。
 
 ---
 
-## 1. 技术栈
+## 1. Web 交付分层
+
+先判断交付形态，再选择技术栈：
+
+| 场景 | 默认交付 | 说明 |
+|---|---|---|
+| 历史回测、研究评审、模型定型说明 | 静态 HTML 报告 | 重点是假设、样本、回测表现、风险、稳健性和复现证据；不默认建设后端 |
+| 复杂布局或交互方向未定 | 静态 preview HTML | 放在 `artifacts/design_preview/`，用于确认信息架构、视觉层级和数据形态 |
+| 定型模型跟踪、监控、发布门禁、人工确认 | 交互式前端应用 | 需要状态、权限、刷新、告警、审计日志或 API 时再接后端 |
+| 工作流或统一前端消费 | 标准快照 / 索引 + 前端适配层 | 前端读取标准数据契约，不直接消费项目临时文件 |
+
+研究回测阶段不要默认使用 FastAPI。只有当页面需要动态路由、权限、运行状态、
+API、定时刷新或人工操作时，才进入 Web 应用架构。
+
+## 2. 技术栈
 
 ### 核心组件
 
-- **后端**: FastAPI
+- **静态报告**: 单文件 HTML、内联 CSS/JS、嵌入图表数据或本地静态资源
+- **交互式应用后端**: FastAPI
 - **模板**: Jinja2
-- **图表**: ECharts（交互式，默认优先）
+- **图表**: ECharts（交互式应用默认优先）
 
 ### 图表渲染优先级
 
@@ -33,7 +48,7 @@ templates = Jinja2Templates(directory="templates")
 
 ---
 
-## 2. 专业量化配色（Professional Quant）
+## 3. 专业量化配色（Professional Quant）
 
 ### 默认品牌语气
 
@@ -120,7 +135,7 @@ option = {
 
 ---
 
-## 3. 静态资源管理（本地优先）
+## 4. 静态资源管理（本地优先）
 
 ### 使用本地 CDN
 
@@ -200,7 +215,7 @@ app.mount("/static/vendor", StaticFiles(...), name="vendor")  # 永远无法命�
 
 ---
 
-## 4. 目录结构规范
+## 5. 目录结构规范
 
 ```
 QuantSystem/
@@ -230,7 +245,7 @@ QuantSystem/
 
 ---
 
-## 5. FastAPI 完整模板
+## 6. FastAPI 完整模板
 
 ```python
 import logging
@@ -301,7 +316,7 @@ if __name__ == "__main__":
 
 ---
 
-## 6. Jinja2 报告模板
+## 7. Jinja2 报告模板
 
 ```html
 <!-- templates/report.html -->
@@ -488,7 +503,7 @@ if __name__ == "__main__":
 
 ---
 
-## 7. 图表类型规范
+## 8. 图表类型规范
 
 ### 净值曲线（Line Chart）
 
@@ -547,10 +562,11 @@ const returnBarOption = {
 
 ---
 
-## 8. 检查清单
+## 9. 检查清单
 
 Web 开发完成后检查：
 
+- [ ] 已判断页面是静态回测报告、静态 preview，还是交互式跟踪应用
 - [ ] 静态资源目录: `QuantSystem/central_assets/`
 - [ ] FastAPI 挂载顺序正确（ `/static/vendor`在 `/static`前）
 - [ ] 模板使用 `url_for('vendor', path='...')` 引用资源
@@ -559,4 +575,5 @@ Web 开发完成后检查：
 - [ ] 颜色使用专业量化配色（红涨绿跌）
 - [ ] 页面风格符合 J.P. Morgan 式机构化语气：白底、细分隔线、稀疏铜色强调、极少阴影
 - [ ] 首屏直接说明主题、样本区间、核心结论，不做营销型 hero
+- [ ] 历史回测页包含假设、样本、基准、费用、复现命令和风险 caveat
 - [ ] 响应式布局（`window.resize` 处理）

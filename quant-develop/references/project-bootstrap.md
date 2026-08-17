@@ -20,7 +20,8 @@
 - 更新频率是什么：日频、周频、月频、季频、事件驱动或一次性研究
 - 输入来自哪里：数据库、Parquet、Excel、网盘、API、人工维护表
 - 原始输入是否真的需要复制进项目目录
-- 未来是否需要接入统一前端、统一 `workflows/` 或 `registry/`
+- 当前阶段需要静态 HTML 研究/回测评审文档，还是定型后的交互式跟踪工作台
+- 未来是否真的需要接入统一前端、统一 `workflows/` 或 `registry/`
 
 ## 3. 生命周期阶段判断
 
@@ -38,7 +39,18 @@
 - 输出“动作”或“配置”，优先判为 `production`
 - 输出“状态”或“提醒”，优先判为 `monitor_only`
 - 有可重跑研究入口和研究输出，但尚未形成稳定消费链路，通常为 `research`
+- 历史回测、参数比较、模型定型评审或静态 HTML 说明，不等于已经进入 `production` 或 `monitor_only`
 - 已停止主动运行、只保留历史参考，才进入 `retired`
+
+### 项目阶段与模型版本
+
+`project.yaml.stage` 只描述项目整体阶段。模型家族内部的版本、场景和求解器可以有各自的 Research、Candidate、Challenger、Champion 或 Rejected 状态，不应通过搬目录或修改项目阶段代替版本治理。
+
+`production` 适用于输出建议权重、配置、评分或信号的项目；`monitor_only` 只适用于输出状态、变化、告警和复核线索的项目。一个 `production` 项目可以同时拥有 `publish` 与 `monitor` 入口。
+
+### 研究晋级包与淘汰结果
+
+从轻量研究升级为正式项目时，至少保留：研究假设、可复跑入口、参数集、PIT/data scope、验证证据、失败条件和晋级理由。临时脚本不必登记；进入正式比较批次的失败模型必须保留 manifest、结果和排除原因，不能通过删除失败项美化比较。
 
 ## 4. 标准目录
 
@@ -54,8 +66,8 @@ domains/<domain>/<project_id>/
 │  └─ <python_package>/
 │     ├─ __init__.py
 │     ├─ run_research.py
-│     ├─ publish.py
-│     ├─ run_monitor.py
+│     ├─ publish.py          # production 阶段需要时再创建
+│     ├─ run_monitor.py      # monitor_only 阶段需要时再创建
 │     ├─ core/
 │     ├─ contracts/
 │     ├─ inputs/
@@ -105,14 +117,15 @@ runtime_entrypoints:
 - `stage` 表示生命周期阶段，`status` 表示当前运行状态，二者不可混用
 - `runtime_entrypoints` 必须显式写出 `research`、`publish`、`monitor`
 - 某类入口不适用时写 `null`，不要省略键名
+- research 回测阶段通常只有 `research`，不要为了模板完整而创建空的 `publish.py` 或 `run_monitor.py`
 - `data_dependencies` 写数据集名称，不写临时文件名
 - `storage` 写相对路径或标准数据集位置，不写机器绑定绝对路径
 
 ## 6. 标准入口
 
-- `research`：研究重跑、验证、实验复现
-- `publish`：生成正式产品快照、评分、信号、权重或结构化结果
-- `monitor`：生成监控快照、状态变化、告警或复核线索
+- `research`：研究重跑、验证、实验复现，允许生成结构化审计证据和静态 HTML 回测评审文档
+- `publish`：生成正式产品快照、评分、信号、权重或结构化结果；research / candidate 阶段默认 `null`
+- `monitor`：生成监控快照、状态变化、告警或复核线索；只有定型后跟踪或监控时填写
 
 入口要求：
 
@@ -120,7 +133,7 @@ runtime_entrypoints:
 - 路径通过配置或项目根推导
 - 参数校验 fail fast
 - 使用 `logging`
-- 输出结构化结果，而不是只生成不可解析的 Excel 或 HTML
+- 输出结构化结果；研究回测的静态 HTML 是评审文档，不能替代 manifest、审计表和可复现输出
 
 ## 7. 输入、固定资产和运行产物
 
@@ -137,7 +150,7 @@ runtime_entrypoints:
 
 ## 8. Registry 与 Workflow
 
-新项目创建后，至少考虑：
+新项目创建后，按实际消费关系考虑：
 
 - 是否需要登记到 `registry/projects.yaml`
 - 是否需要在 `registry/promotion/` 留下晋级、暂停、退役决议
@@ -171,9 +184,9 @@ runtime_entrypoints:
 7. 梳理输入、固定资产和运行产物边界
 8. 把研究结果先落到 `artifacts/research_runs/`
 9. 补最小测试
-10. 登记到 `registry`
+10. 只有确有跨项目检索、多人治理或统一工作流需求时才登记到 `registry`
 11. 需要日常运行时接入 `workflows`
-12. 需要展示时接统一前端或标准 adapter
+12. 需要展示时先做静态报告或 preview；只有定型跟踪、监控、发布或人工操作才接统一前端或标准 adapter
 
 ## 11. 验收清单
 
@@ -186,7 +199,8 @@ runtime_entrypoints:
 - 至少一个标准入口可运行
 - 结果写入 `artifacts/` 标准子目录
 - 已有最小测试或最小验证脚本
-- 已登记到 `registry`
+- 若项目需要跨项目检索或统一治理，已登记到 `registry`
+- 若仍处于 research 阶段，前端产物应是静态 HTML 评审文档或 preview，而不是交互式运行工作台
 
 晋级到正式消费前，再检查：
 

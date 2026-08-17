@@ -69,7 +69,7 @@ frontend:
 | `consumers` | 谁消费该项目输出，如前端、组合、工作流 |
 | `risk_notes` | 风险边界和失效条件 |
 | `storage` | 正式结果写入位置 |
-| `frontend` | 是否接入统一前端与接入位置 |
+| `frontend` | 是否接入统一前端与接入位置；研究回测阶段默认不启用 |
 
 ## 4. `stage` 取值规范
 
@@ -85,11 +85,13 @@ frontend:
 ### 语义约束
 
 - `idea`：允许只有笔记和原型
-- `research`：必须有可重复研究过程
-- `candidate`：必须有固化输入输出与验证
-- `production`：必须有可消费产品输出
-- `monitor_only`：必须有统一监控输出
+- `research`：必须有可重复研究过程；历史回测默认只需要静态 HTML / Markdown 评审文档
+- `candidate`：必须有固化输入输出与验证；可以有静态模型卡或定型评审页
+- `production`：必须有可消费产品输出，例如建议权重、组合配置、评分或信号；可以同时提供 `publish` 和 `monitor`
+- `monitor_only`：只输出状态、变化、告警或复核线索，不生成投资权重或配置建议；通常需要监控快照和跟踪索引
 - `retired`：必须停止日常运行并保留归档说明
+
+`project.yaml.stage` 只描述项目整体阶段。项目内部的模型版本、场景和求解器可以分别处于 Research、Candidate、Challenger、Champion 或 Rejected，不应通过修改项目阶段代替模型版本治理。
 
 ## 5. `status` 取值规范
 
@@ -119,8 +121,8 @@ frontend:
 ```yaml
 runtime_entrypoints:
   research: src/run_research.py
-  publish: src/publish.py
-  monitor: src/run_monitor.py
+  publish: null
+  monitor: null
 ```
 
 规则：
@@ -130,6 +132,9 @@ runtime_entrypoints:
 - `monitor`：监控快照、告警或状态更新入口
 
 如果某类入口不适用，可显式写 `null`，不要省略键名。
+研究回测阶段通常只有 `research` 入口，`publish` 和 `monitor` 应显式写
+`null`，不要为了模板完整而伪造生产发布或日常监控链路。
+进入 `production` 或 `monitor_only` 后，再把对应入口改为实际脚本路径。
 
 ## 7. `data_dependencies` 规范
 
@@ -154,11 +159,20 @@ data_dependencies:
 
 ## 8. `storage` 规范
 
-推荐增加正式落盘位置说明：
+推荐按阶段增加落盘位置说明。
+
+研究回测阶段：
 
 ```yaml
 storage:
   research_runs: artifacts/research_runs
+  research_reports: artifacts/research_runs/<run_id>/reports
+```
+
+定型发布或监控阶段：
+
+```yaml
+storage:
   production_snapshot_dataset: shared_data/parquet/fund/production_signal_bond_preference
   monitor_snapshot_dataset: shared_data/parquet/monitoring/monitor_snapshot_bond_preference
 ```
@@ -167,12 +181,22 @@ storage:
 
 ## 9. `frontend` 规范
 
-如果项目需要接统一前端，建议写：
+研究回测阶段默认不接统一前端：
+
+```yaml
+frontend:
+  enabled: false
+  preview_artifacts: artifacts/design_preview
+  research_report_pattern: artifacts/research_runs/<run_id>/reports/backtest_review.html
+```
+
+定型后需要只读跟踪或监控时，建议写：
 
 ```yaml
 frontend:
   enabled: true
   workspace: monitoring
+  mode: read_only_monitor
   sections:
     - product
     - monitor
@@ -182,8 +206,11 @@ frontend:
 说明：
 
 - `workspace`：统一前端工作区
+- `mode`：`read_only_monitor` 表示只读查看、筛选、刷新和下钻；只有明确存在维护或审批流程时才使用可编辑工作台
 - `sections`：该项目出现在哪些工作台分区
 - `detail_route`：项目详情页路径
+- `preview_artifacts`：静态设计预览位置，不等同于统一前端接入
+- `research_report_pattern`：研究回测阶段的静态 HTML 文档位置
 
 ## 10. `promotion_criteria` 规范
 
@@ -207,7 +234,9 @@ promotion_criteria:
   - 感觉能用
 ```
 
-## 11. 完整示例
+## 11. 阶段化示例
+
+### 11.1 研究回测阶段
 
 ```yaml
 project_id: bond-preference-factor
@@ -232,25 +261,80 @@ input_contract: fund-factor-input-v1
 output_contract: factor-output-v1
 runtime_entrypoints:
   research: src/run_research.py
-  publish: src/publish.py
-  monitor: src/run_monitor.py
+  publish: null
+  monitor: null
 promotion_criteria:
   - 样本外有效
   - 成本后收益可接受
   - 可重复运行
-consumers:
-  - unified-dashboard
-  - weekly-workflow
 risk_notes:
   - 季报披露滞后可能影响口径
 storage:
   research_runs: artifacts/research_runs
-  production_snapshot_dataset: shared_data/parquet/fund/production_signal_bond_preference
+  research_reports: artifacts/research_runs/<run_id>/reports
+frontend:
+  enabled: false
+  preview_artifacts: artifacts/design_preview
+  research_report_pattern: artifacts/research_runs/<run_id>/reports/backtest_review.html
+```
+
+### 11.2 候选定型阶段
+
+```yaml
+project_id: bond-preference-factor
+name: 债券基金偏好因子
+domain: fund.fixed_income
+owner: thomas
+stage: candidate
+status: active
+decision_frequency: monthly
+input_contract: fund-factor-input-v1
+output_contract: candidate-factor-output-v1
+runtime_entrypoints:
+  research: src/run_research.py
+  publish: null
+  monitor: null
+promotion_criteria:
+  - 候选模型配置已冻结
+  - 样本外和稳健性检查已通过
+  - 已形成定型评审 HTML
+storage:
+  research_runs: artifacts/research_runs
+  candidate_review_report: artifacts/reports/model_candidate_review.html
+frontend:
+  enabled: false
+  preview_artifacts: artifacts/design_preview
+```
+
+### 11.3 指标/状态跟踪阶段
+
+```yaml
+project_id: bond-preference-monitor
+name: 债券基金偏好指标监控
+domain: fund.fixed_income
+owner: thomas
+stage: monitor_only
+status: active
+description: 仅输出状态变化、风险提示和复核线索，不生成投资权重或配置建议
+decision_frequency: monthly
+input_contract: fund-factor-input-v1
+output_contract: monitor-output-v1
+runtime_entrypoints:
+  research: src/run_research.py
+  publish: null
+  monitor: src/run_monitor.py
+consumers:
+  - unified-dashboard
+  - monthly-workflow
+storage:
+  monitor_snapshot_dataset: shared_data/parquet/monitoring/monitor_snapshot_bond_preference
 frontend:
   enabled: true
   workspace: monitoring
+  mode: read_only_monitor
   sections:
     - monitor
+  detail_route: /projects/bond-preference-monitor
 ```
 
 ## 12. 反模式

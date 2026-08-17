@@ -17,10 +17,17 @@ Before layout, components, or visual styling, classify the page:
 1. Is the primary user operating on objects, or reading conclusions?
 2. Is success faster action, or faster understanding?
 3. Is the page used repeatedly by an internal team, or distributed as a report?
+4. For quant model work, is the project in historical backtest/research review,
+   candidate model review, or finalized tracking/monitoring?
 
 Use `frontend-page-router` for the decision. If the result is internal work,
 apply `frontend-ops-platform`. If the result is reader-facing delivery, apply
 `frontend-report-page`.
+
+Default quant model rule: historical backtests and candidate reviews are static
+HTML report pages unless the user asks for batch management or rerun controls.
+Finalized model tracking, monitoring, publish gates, and manual confirmations
+are operations platforms.
 
 If the prompt is ambiguous, ask one short question. Do not silently blend a
 workbench and a report cover.
@@ -51,6 +58,9 @@ canvas should follow the mode:
   dense workbenches.
 - Keep first-screen content functional: conclusion plus evidence for reports;
   scope plus table/work surface for operations.
+- For historical backtests, make the static HTML document answer model
+  hypothesis, sample scope, performance, risk, robustness, caveats, and
+  reproduction before considering an app shell.
 - Start with one or more preview HTML pages when the visual structure is still
   unsettled or the page has multiple viable layouts.
 - Save project preview artifacts inside the project at
@@ -78,4 +88,5 @@ Before delivery, inspect the page at desktop and mobile widths:
 - colors are not one-note blue/purple/beige
 - interactions visibly change state
 - report pages remain readable as screenshots or exports
+- backtest review pages remain useful as static HTML without backend services
 - workbench pages remain usable for repeated daily actions

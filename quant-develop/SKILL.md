@@ -47,6 +47,19 @@ QuantSystem 项目时，才使用本技能。
 - `monitor_only` 默认建设只读监控视图，覆盖数据新鲜度、运行状态、变化、告警和证据下钻，不默认加入写操作。
 - 前端 preview 不是生产前端。研究期 preview 应放在 `artifacts/design_preview/` 或 `artifacts/research_runs/<run_id>/reports/`，并明确标注其静态评审用途。
 
+### 前后端数据生命周期门禁
+
+当项目需要通过前端触发更新/计算、查询缓存状态或删除旧数据时，必须把读取、计算、删除视为同一条数据生命周期：
+
+- 前端只提交强类型、allowlist 约束的参数并消费标准 API；业务计算仍由 CLI/领域服务唯一实现，禁止在页面或 Web 路由中复制金融逻辑、拼接 SQL 或直接删文件。
+- 长计算使用独立 job store、单写入任务和 `queued/running/success/partial_success/failed` 状态；记录 `run_id`、参数、退出码、增量日志和每个日期的失败原因。任务提交与全量清理争抢同一写锁。
+- 更新前做依赖、日期覆盖、字段/唯一键、缓存新鲜度和版本 preflight；所有结果层完成且覆盖检查通过后才能标记成功，部分结果不得伪装为 ready。
+- 删除必须拆成只读 preview 与 execute；preview 返回表/日期/行数/文件影响，范围变化后失效，execute 由后端再次校验并要求 `DELETE` / `DELETE ALL` 强确认。
+- 全量清理先冻结并校验 regular file/directory、sidecar 和根目录边界，先删可重建产物、后删数据库；活动计算时返回冲突，失败立即停止并保留审计资产。成功后清理进程内缓存，重启和重复执行都要进入可解释的空状态。
+- 前端必须显式处理 loading、empty、error、queued、running、partial 和 failed；同一作用域的新请求要取消或淘汰旧响应，计算/删除成功后重新读取元数据和新鲜度。
+
+完整的请求/响应、任务、缓存、删除和验证矩阵见 [data-lifecycle.md](references/data-lifecycle.md)。
+
 ## 1. 核心原则 (Core Principles)
 
 - **Fail Fast**: 参数校验在函数入口立即执行，禁止静默失败。
@@ -186,4 +199,5 @@ class FundData:
 - **LLM开发**: 详见 [llm_dev.md](references/llm_dev.md)
 - **Web开发**: 详见 [web.md](references/web.md)
 - **计算优化**: 详见 [compute.md](references/compute.md)
+- **前后端数据生命周期与删除**: 详见 [data-lifecycle.md](references/data-lifecycle.md)
 - **生命周期路由**: 详见 [lifecycle-routing.md](references/lifecycle-routing.md)

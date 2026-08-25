@@ -32,9 +32,12 @@
 | 轻量量化研究代码 / 一次性脚本 / 探索性回测 | `quant-research-coding` | `zmdata-data-api` / `verification-before-completion` | 一级、二级默认入口 |
 | 历史回测 / 模型研究评审 / 静态 HTML 回测文档 | `quant-research-coding` | `frontend-report-page` / `research-report-writer` | 专注模型假设、样本口径、表现、风险、稳健性和复现证据，不默认做交互系统 |
 | 量化系统开发、回测、组合工程 | `quant-develop` | `systematic-debugging` | 正式项目、复用模块、工程与契约 |
+| 前后端触发数据更新/计算、缓存刷新、删除旧数据 | `quant-develop` | `frontend-ops-platform` / `verification-before-completion` | 先读 `quant-develop/references/data-lifecycle.md`，统一任务状态、预览确认、并发锁、缓存失效和空状态 |
 | 定型模型跟踪 / 监控 / 发布门禁 / 运行工作台 | `quant-develop` | `frontend-ops-platform` / `verification-before-completion` | 只有进入跟踪、监控、发布或人工操作时才做前后端交互 |
 | 非模型指标长期观察 / 只读监控 | `quant-develop`（轻量 `monitor_only`） | `frontend-ops-platform` 的 `read_only_monitor` | 按投资问题归组，不自动引入 Champion、回测或编辑审批链 |
 | MyNotes/Obsidian 知识沉淀、Inbox 处理、MOC、AI知识库管理 | `mynotes-knowledge-manager` | `pdf` / `docx` / `investment-paper-replication` / `quant-develop` | 先沉淀知识，再决定是否项目化或联动 QuantSystem |
+| 自动宏观研报评分、PDF上下文准备、结果归档到Excel/DB | `assets-score` | `macro-strategy-learning` | 只处理自动评分与归档，不负责定性周度判断或机制框架 |
+| 周度全球多资产宏观判断、情景概率、预测快照、到期复盘、黄金/流动性/政策传导等专题框架积累 | `macro-strategy-learning` | `mynotes-knowledge-manager` / `assets-score` / `research-report-writer` | 负责定性判断学习闭环；`assets-score` 仍只负责研报评分与归档 |
 | 高保障代码实现 / 证明它能跑 | `old-coder` | `test-driven-development` / `verification-before-completion` | SPEC → 测试关卡 → 证据报告 |
 | 定量报告质检与解读 | `quant-report-qa-interpreter` | `research-report-writer` | 报告审查与再表达 |
 | 投后归因报告 | `FOF_Risk_Report_Generator` | `fund-wiki-research` | 先归因，再写结论 |

@@ -109,6 +109,44 @@ Operations platforms must not:
 - hide required editing behind unclear icons or non-obvious gestures
 - add secondary panels, metrics, or tabs before the core workflow is usable
 
+## Async Data Operations and Cleanup
+
+When the workbench can trigger a calculation/update or remove old data, treat the
+interaction as a guarded state machine rather than a button click.
+
+For compute/update workflows:
+
+- keep the backend/CLI as the only calculation implementation; the browser sends
+  validated dates, frequency, scope, and allowlisted types
+- show `queued`, `running`, `success`, `partial_success`, and `failed` distinctly;
+  include the run/job id, target range, elapsed/result counts, and failed dates or
+  reasons when available
+- disable duplicate submission while a write job is active, poll incremental logs
+  for long jobs, and recover the active job after a page reload
+- refresh metadata, freshness, available dates, and the selected detail after a
+  successful run; keep the previous selection only when it still exists
+- render `missing_cache` or `empty` as an actionable data state (for example,
+  “先运行预计算”), not as a blank table or a successful zero result
+- cancel superseded requests or use request versions so a slow response cannot
+  overwrite a newer date/filter selection
+
+For destructive cleanup:
+
+- split the workflow into a read-only `预览影响` step and a separate execute step;
+  preview must show affected tables/dates/rows and, for full wipes, files, sidecars,
+  directories, and bytes
+- invalidate the preview when any scope, date, family, or relevant data version
+  changes; keep the execute button disabled until a current preview exists
+- require a direct confirmation phrase that names the scope (`DELETE` or
+  `DELETE ALL`) and repeat the same validation on the backend
+- show the exact post-operation counts and preserved assets; on conflict or partial
+  failure, keep the error visible and do not imply that all data was removed
+- after deletion, reload metadata and display an explicit empty state; do not leave
+  stale rows, selected details, cached charts, or “已计算” badges on screen
+
+The backend contract and safety checklist live in `quant-develop`'s
+`references/data-lifecycle.md`; read it when adding a new write or delete flow.
+
 ## Component Defaults
 
 Prefer:
@@ -135,6 +173,22 @@ For terminal-grade tables:
 - show active sort direction, selected row, hover row, and edited row states
 - keep row height and column widths stable when filtering, sorting, or editing
 - format nulls and unavailable data deliberately, not as accidental blanks
+
+For grouped and multi-table views:
+
+- use a two-row header when a table aggregates several metric categories (for
+  example asset, style, and industry exposure): a top row of `colspan` group
+  headers (centered) and a second row of field names
+- have the backend return a field display-name map (raw key -> label) so column
+  headers stay human-readable and consistent across views; never render raw keys
+  as column labels
+- distinguish column groups visually with one restrained background tint per
+  category, applied to the group header and its body cells; keep non-grouped
+  columns neutral
+- when several tables are stacked, prefer whole-page vertical scroll and let
+  each table render all rows (`overflow: visible; max-height: none`) instead of
+  per-table scrollbars; keep sticky headers, offsetting the second header row by
+  the header row height
 
 ## Visual Defaults
 

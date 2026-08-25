@@ -1,6 +1,6 @@
 ---
 name: assets-score
-description: Automated macro strategy research tool. Use when the user asks to analyze macro reports, score assets based on reports, or archive macro scoring results. It provides tools to extract summaries from PDFs and archive final scores to Excel/DB.
+description: Use when the user explicitly asks for automated macro-report asset scoring, PDF context preparation, or archiving quantitative score results to Excel/DB. Do not use for qualitative weekly macro judgments, scenario probabilities, prediction snapshots, maturity reviews, or durable mechanism frameworks; use macro-strategy-learning for those.
 ---
 
 # Macro Strategy Research Skill
@@ -9,6 +9,10 @@ This skill provides an interface to the Macro Strategy Research system.
 Run commands from this skill directory unless the user provides another project root.
 If this skill is not installed inside the QuantSystem tree, set `QUANT_SYSTEM_ROOT`
 to the QuantSystem project root before running scripts.
+
+## Boundary
+
+This skill is an automation layer for report extraction, prompt preparation, score generation, and Excel/DB archiving. It does not replace a time-stamped qualitative judgment, a scenario tree, a MyNotes prediction snapshot, a maturity review, or a reusable macro mechanism module. Route those tasks to `macro-strategy-learning`; use this skill only when the user wants the automated scoring/archive path.
 
 ## Tools
 

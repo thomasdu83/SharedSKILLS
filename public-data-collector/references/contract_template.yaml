@@ -1,0 +1,15 @@
+# 公开数据源契约模板（按源组织，一源一文件）
+# 位置：platform/data/data_sources/api接口/config/{source}_config.yaml
+source: <源标识，小写，如 fred>
+# base_url / xlsx_url / auth 等源级字段按源类型增减
+defaults:
+  frequency: daily      # daily / monthly / event
+  units: pct            # 单位备注
+series:
+  <SERIES_KEY>:         # 源原生代码，如 DGS10；入库 series_id 为 "SOURCE:KEY"
+    desc: <中文简述>
+    start: "1990-01-01" # 可选，全量拉取起点
+    # column: <列名>    # 表格类源（如 nyfed）的列映射
+# fields:               # 事件类源（如 fiscaldata）的字段映射：本地名 -> 远端名
+#   bid_to_cover: bid_to_cover_ratio
+# vintage 备注：本源历史值是否会被修订，本项目的取舍（默认接受最新值覆盖）

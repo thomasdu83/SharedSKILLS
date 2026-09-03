@@ -63,6 +63,7 @@ Use the pattern that matches the content:
 | Content | Structure |
 | --- | --- |
 | macro or asset score report | conclusion cards + score matrix + mainline + object selector + timeline/radar + rationale + scenarios |
+| indicator monitor report | expert-facing conclusion cards + scope/method strip + homogeneous indicator sections + event table where needed + methodology/caveat appendix |
 | historical backtest review | model assumption strip + sample/data scope + conclusion cards + NAV/drawdown + calendar/scenario table + turnover/cost/risk exposure + robustness + manifest/reproduction note |
 | model candidate review | candidate version header + frozen parameters + promotion criteria + validation evidence + failure conditions + final review checklist |
 | industry score report | sector strip + conclusion cards + sortable total table + sector/industry filters + selected-industry detail + rationale |
@@ -107,6 +108,16 @@ Prefer:
 - rationale sections by dimension
 - footnote, source, method, and caveat strip
 
+For indicator-monitor reports specifically:
+
+- make first-screen cards answer four expert questions: current reading, current status, historical position, and sample/date scope
+- treat the card's `状态` as the output of the chosen trend-description or monitoring method, not as a synonym for any one algorithm such as CUSUM
+- use status labels that carry analytical meaning such as `正常`, `上行报警中`, `已解除`, `仍锚定`, `需求偏弱`, not generic `正常/异常`
+- treat cards as reading accelerators, not mini dashboards; a card should help a knowledgeable reader decide whether to scroll
+- keep all indicator detail sections structurally homogeneous: definition, construction, interpretation, parameters, latest reading, evidence
+- when one indicator is event-frequency rather than continuous time-series, keep it inside the same report rhythm but allow table-first evidence instead of forcing a fake line chart
+- if a metric relies on a proxy rather than the original paper's exact series, place the caveat near the card or section where the reader first sees that metric
+
 For evidence tables:
 
 - right-align numeric columns and left-align names/descriptions
@@ -143,11 +154,23 @@ Use interaction sparingly:
 
 - lead with what changed and why it matters
 - title sections by analytical role: `本期结论卡`, `评分总表`, `评分依据`
+- for indicator monitors, prefer section names like `方法总述`, `在跑指标读数`, `方法学与口径`; avoid widget-like names
 - for backtests, prefer `模型假设`, `样本口径`, `核心回测结论`, `风险与失效条件`,
   `复现证据`
 - write chart titles as findings when possible, not neutral widget labels
 - write chart notes as interpretation, not axis restatement
 - use brief Chinese UI labels; avoid paragraphs inside buttons or tabs
+
+## Indicator Monitor Notes
+
+When the page monitors a small set of named indicators over time:
+
+- do not let one indicator use a radically different section shell unless the data shape truly differs
+- if an event-frequency indicator needs a table, preserve the same outer section rhythm with the other indicators so the report still reads as one document
+- for expert readers, a strong first-screen card is often more useful than a decorative hero: `当前值 + 状态 + 历史分位 + 截止日期`
+- allow different indicators to use different trend-description methods such as CUSUM, rolling z-score, percentile band, regime state, or coefficient drift; the page should unify the reading experience, not force one monitoring algorithm onto every metric
+- show formulas, units, and proxy rules in the page when they materially affect interpretation; hiding them in code or appendix weakens trust
+- static HTML must still be readable after export or screenshot, so avoid hover-only explanations for the current state
 
 ## Delivery Check
 

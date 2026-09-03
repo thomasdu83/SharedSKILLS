@@ -30,6 +30,7 @@
 | 基于 fund-wiki 的专题研究 | `fund-wiki-research` | `research-report-writer` | 可比池、分类、研究稿 |
 | fund-wiki + 当前数据层双源研究 | `fund-wiki-research` | `wisdom-manager-product-research` / `zmdata-data-api` | 适合策略/团队/绩效判断 |
 | 轻量量化研究代码 / 一次性脚本 / 探索性回测 | `quant-research-coding` | `zmdata-data-api` / `verification-before-completion` | 一级、二级默认入口 |
+| AI 辅助开发新的量化策略/模型（有无前端均可） | `ai-quant-development-router` | `quant-research-coding` / `quant-develop` / `frontend-page-router` / `verification-before-completion` | 自动识别最小可验证闭环并路由专业技能；不替代量化或前端实现规范 |
 | 历史回测 / 模型研究评审 / 静态 HTML 回测文档 | `quant-research-coding` | `frontend-report-page` / `research-report-writer` | 专注模型假设、样本口径、表现、风险、稳健性和复现证据，不默认做交互系统 |
 | 量化系统开发、回测、组合工程 | `quant-develop` | `systematic-debugging` | 正式项目、复用模块、工程与契约 |
 | 前后端触发数据更新/计算、缓存刷新、删除旧数据 | `quant-develop` | `frontend-ops-platform` / `verification-before-completion` | 先读 `quant-develop/references/data-lifecycle.md`，统一任务状态、预览确认、并发锁、缓存失效和空状态 |
@@ -101,6 +102,7 @@
 - 域技能优先于元技能。
 - 具体技能优先于通用技能。
 - 入口越短，触发越稳。
+- 新建或实质扩展量化策略/模型时，自动先进入 `ai-quant-development-router`；有无前端均适用，前端再按页面任务继续路由。
 - 研究脚本先轻量验证，项目化信号出现后再上 `quant-develop`。
 - 历史回测优先静态 HTML 评审文档；定型后跟踪才优先交互式工作台。
 - `production` 表示输出建议权重/配置/信号；`monitor_only` 只表示状态、变化、告警和复核线索。

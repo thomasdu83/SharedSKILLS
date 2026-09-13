@@ -17,7 +17,11 @@ Choose one primary mode:
 - unclear and requires one routing question
 
 After classification, use the selected mode to build the preview HTML. Do not
-let an early visual mockup decide the mode.
+let an early visual mockup decide the mode. A page with charts or statistics is
+still operational if the primary verb is maintain, edit, or triage; route to a
+report page only when the dominant task is explain, compare, or conclude.
+
+For QuantSystem pages with dense tables, filters, charts, or indicator-monitor/report sections, read `docs/templates/frontend-interaction/README.md` first; for indicator-monitor report shells, also align with `docs/templates/indicator-monitor/README.md`.
 
 ## Classification Questions
 

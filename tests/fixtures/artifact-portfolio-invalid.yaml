@@ -1,0 +1,20 @@
+artifact:
+  artifact_id: artifact-test-002
+  title: Test
+  audience: investment
+  decision_use: portfolio_input
+  as_of: 2026-09-13
+  thesis: Test thesis
+  facts: [fact-1]
+  claims: []
+  inferences: []
+  judgments: []
+  actions: []
+  risks: []
+  falsifiers: []
+  limitations: []
+  source_manifest: [source-1]
+  run_manifest: run-001
+  review_status: draft
+  owner: pm
+  reviewer:

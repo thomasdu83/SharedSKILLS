@@ -1,0 +1,33 @@
+# artifact.yaml
+# 统一研究/交付产物契约。报告、网页、Markdown、Excel 等交付物只能表达已经冻结的
+# artifact，排版阶段不得改变研究判断。
+
+schema_version: "1.0"
+
+artifact:
+  artifact_id: string      # 产物唯一标识
+  title: string            # 标题
+  audience: string         # 读者/用途
+  decision_use: string     # 引用 lifecycle.yaml 的 decision_use 枚举
+  as_of: string            # 数据/信息截止时间
+  thesis: string           # 核心论点（一句话）
+  facts: []                # 事实（引用 evidence.yaml 的 fact）
+  claims: []               # 管理人/外部陈述（manager_claim）
+  inferences: []           # 推理（inference）
+  judgments: []            # 判断（judgment，必须可追溯到 facts/inferences）
+  actions: []              # 行动建议（action，必须说明适用条件）
+  risks: []                # 风险
+  falsifiers: []           # 证伪条件
+  limitations: []          # 局限与不足
+  source_manifest: []      # 来源清单
+  run_manifest: string     # 运行 manifest（run_id、参数、输入覆盖）
+  review_status: string    # 引用 lifecycle.yaml 的 review_status 枚举
+  owner: string            # 负责人
+  reviewer: string         # 评审人
+
+# 冻结规则（不得违反）
+rules:
+  - 交付物只能表达已冻结的 artifact；排版阶段不得改变 thesis、judgments、facts 或数值。
+  - 若排版中发现研究判断需要修改，必须回到研究层冻结新版本 artifact，不能边排版边改结论。
+  - artifact_id 一旦发布即不可变；修订必须生成新 artifact_id 或明确版本号。
+  - source_manifest 与 run_manifest 必须能定位到证据和运行记录，否则不得声称"已产出证据"。

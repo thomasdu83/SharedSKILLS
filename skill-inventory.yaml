@@ -1,0 +1,399 @@
+# skill-inventory.yaml
+# SharedSKILLS 全量 Skill 资产台账；路由规则见 skill-registry.yaml。
+# 本文件由 scripts/build_skill_inventory.py 生成，不负责授权或自动修改 Skill。
+schema_version: "1.0"
+inventory_scope: full
+skill_count: 56
+skills:
+  - path: "ai-quant-development-router"
+    id: "ai-quant-development-router"
+    entry: SKILL.md
+    description: "Use when a user asks to create, build, implement, systematize, or materially extend a new quantitative strategy, model, factor, label, signal, backtest workflow, portfolio model, risk model, or its API/frontend interaction; do not use for explanations, one-off calculations, lightweight validation, simple presentation edits, or isolated bug fixes."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "archify"
+    id: "archify"
+    entry: SKILL.md
+    description: "Use when the user asks to create, convert, or polish a technical diagram such as architecture, workflow, sequence, data-flow, lifecycle/state, or Mermaid input into a validated standalone HTML artifact."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "architecture-diagram-generator/architecture-diagram"
+    id: "architecture-diagram"
+    entry: SKILL.md
+    description: "Create polished dark-themed architecture diagrams as self-contained HTML+SVG files. Use when the user asks for system, infrastructure, cloud, security, or network topology diagrams."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "assets-score"
+    id: "assets-score"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks for automated macro-report asset scoring, PDF context preparation, or archiving quantitative score results to Excel/DB. Do not use for qualitative weekly macro judgments, scenario probabilities, prediction snapshots, maturity reviews, or durable mechanism frameworks; use macro-strategy-learning for those."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "brainstorming"
+    id: "brainstorming"
+    entry: SKILL.md
+    description: "当需求尚不明确、需要设计探索、范围拆解、方案比较、较大行为变更前的用户确认，或用户希望围绕目标、方案、话题、文章、观点或材料先深入讨论、追问澄清、观点推演、论证深挖、确认边界，再输出方案、结论、评论、摘要、写作稿、研究报告或执行计划时使用；典型触发包括“在制定方案前深入讨论”“在执行方案前先讨论”“就这篇文章先讨论下”“围绕这个话题深入聊聊”“先别急着下结论”“先做论证深挖”“先帮我把这个观点想深”“先模拟一下”“先确认规则”；若设计已经确认且需要写实现步骤，使用 writing-plans；小改动、轻量文档修订和单文件调整不需要。"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "chinese-code-review"
+    id: "chinese-code-review"
+    entry: SKILL.md
+    description: "中文代码审查规范——在保持专业严谨的同时，用符合国内团队文化的方式给出有效反馈"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "chinese-commit-conventions"
+    id: "chinese-commit-conventions"
+    entry: SKILL.md
+    description: "中文 Git 提交规范，用于约定式提交的中文适配、commit message 格式、类型映射和 changelog 组织；若需要审查反馈表达方式，请用 chinese-code-review。"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "chinese-documentation"
+    id: "chinese-documentation"
+    entry: SKILL.md
+    description: "中文技术文档写作规范——排版、术语、结构一步到位，告别机翻味"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "chinese-git-workflow"
+    id: "chinese-git-workflow"
+    entry: SKILL.md
+    description: "适配国内 Git 平台和团队习惯的工作流规范——Gitee、Coding、极狐 GitLab 全覆盖"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "commodity-meso-market-report"
+    id: "commodity-meso-market-report"
+    entry: SKILL.md
+    description: "Use when working in the commodity-meso-market-monitor project and the user wants a staged workflow for CTA market environment report preparation, material checks, chart generation, interpretation text, advice tables, or Word output."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "custom-gpt-image-2"
+    id: "custom-gpt-image-2"
+    entry: SKILL.md
+    description: "Generate images through the user's custom OpenAI-compatible image endpoint at the configured base URL using gpt-image-2. Use when the user explicitly asks to use the custom gpt-image-2 endpoint, custom image API, private image gateway, or wants generation through that configured service. This skill is the generic backend capability and should not impose any specific poster style by itself."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "dispatching-parallel-agents"
+    id: "dispatching-parallel-agents"
+    entry: SKILL.md
+    description: "当面对 2 个以上彼此独立的故障、测试失败、探索性调查或信息收集任务，且无共享状态或顺序依赖时使用；已有书面实现计划并要落代码时优先使用 subagent-driven-development。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "docx"
+    id: "docx"
+    entry: SKILL.md
+    description: "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "executing-plans"
+    id: "executing-plans"
+    entry: SKILL.md
+    description: "当已有书面实现计划、需要在没有子代理或不适合子代理分派的情况下顺序执行任务并记录审查检查点时使用；若当前平台可用子代理且任务独立，优先使用 subagent-driven-development。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "finishing-a-development-branch"
+    id: "finishing-a-development-branch"
+    entry: SKILL.md
+    description: "当实现已完成、测试已通过、并且需要决定如何把工作集成到主线时使用；这是 Git/PR/合并/清理的收尾技能，不负责验证本身。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "fof-risk-report-generator"
+    id: "fof-risk-report-generator"
+    entry: SKILL.md
+    description: "Use when generating or reviewing FOF post-investment attribution, portfolio performance explanations, or reproducible text/HTML attribution artifacts."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "frontend-design"
+    id: "frontend-design"
+    entry: SKILL.md
+    description: "Use when building a finance, research, portfolio, risk, fund, score, weekly-report, dashboard, workbench, or HTML frontend and the primary page mode is not yet classified."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "frontend-ops-platform"
+    id: "frontend-ops-platform"
+    entry: SKILL.md
+    description: "Use when a frontend is mainly an internal daily workbench, management platform, maintenance tool, filter console, editing workflow, monitor, triage view, or portfolio construction platform where efficient object-level operation matters more than narrative delivery."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "frontend-page-router"
+    id: "frontend-page-router"
+    entry: SKILL.md
+    description: "Use when building a frontend page, dashboard, workbench, HTML report, score report, weekly report, portfolio page, fund platform, or finance artifact and the primary mode could be internal operation or reader-facing explanation."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "frontend-report-page"
+    id: "frontend-report-page"
+    entry: SKILL.md
+    description: "Use when a frontend is mainly a report, weekly report, score report, research delivery, attribution review, strategy page, or reader-facing HTML artifact where conclusions, evidence, methodology, and narrative clarity matter more than editing workflows."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "fund-track-tag-audit"
+    id: "fund-track-tag-audit"
+    entry: SKILL.md
+    description: "Audit and compare fund track/tag metadata in zmdata against fresher due-diligence evidence. Use when the user asks to verify whether one or more funds' zmdata赛道/标签/波动层级 are stale, need revision, or should be supplemented with richer multi-level track descriptions from manager due-diligence files."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "fund-wiki"
+    id: "fund-wiki"
+    entry: SKILL.md
+    description: "Use when the user asks to ingest/deposit/沉淀/入库/更新 fund manager due-diligence materials into fund-wiki, build LLM-readable fund/product profile wiki documents, refresh fund_profile_wiki indexes, or query/search/查询 fund-wiki by flexible natural-language criteria such as 300指增, 1000指增, CTA, WorldQuant背景, 行业暴露3%以内."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "fund-wiki-research"
+    id: "fund-wiki-research"
+    entry: SKILL.md
+    description: "Use when the user asks for a fund-wiki based investment research topic or report, including manager/product comparable pools, strategy taxonomy, sample funnels, evidence grading, core/observation/boundary pools, claim fact-checking against fund facts, research SOP, review of prior fund-wiki research outputs, internal circulation versions for other investment teams, or research artifacts under fund_profile_wiki_docs/research."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "github-project-workflow"
+    id: "github-project-workflow"
+    entry: SKILL.md
+    description: "当需要把本地项目连接到 GitHub、初始化仓库、配置 origin、首次 push、日常同步、处理 GitHub 远端错误、编写 GitHub PR 草稿或检查 QuantSystem 的 .gitignore / 数据排除策略时使用"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "investment-paper-replication"
+    id: "investment-paper-replication"
+    entry: SKILL.md
+    description: "Use when converting investment, finance, economics, asset pricing, portfolio construction, quant, macro, risk, or trading source materials into reproducible research outputs, Markdown/HTML reports, professional investment-bank-style web visualizations, and optionally production-ready research systems. Source materials may include academic papers, broker or institutional research reports, internal strategy memos, algorithm documents, white papers, product research notes, or idea documents. Use when the user asks to replicate, implement, audit, or systematize a paper, report, strategy idea, algorithm spec, research memo, or investment document."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "macro-strategy-learning"
+    id: "macro-strategy-learning"
+    entry: SKILL.md
+    description: "Use when the user asks to create, update, guide, or review weekly global multi-asset macro judgments, scenario probabilities, prediction snapshots, maturity reviews, or durable macro mechanism frameworks in MyNotes; includes 周度宏观策略、资产配置复盘、黄金、宏观流动性、政策传导、中国权益风格、海外国家权益、债券、商品和汇率专题。"
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "mcp-builder"
+    id: "mcp-builder"
+    entry: SKILL.md
+    description: "MCP 服务器构建方法论 — 系统化构建生产级 MCP 工具，让 AI 助手连接外部能力"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "mynotes-knowledge-manager"
+    id: "mynotes-knowledge-manager"
+    entry: SKILL.md
+    description: "Use when the user asks to manage, ingest, deposit,沉淀,整理,归档,处理 Inbox/intake, create or update Obsidian notes, build an AI knowledge base, maintain MOC maps, place source materials, or query/reuse knowledge inside F:\\Thomas\\MyNotes. Use for MyNotes-specific human+AI knowledge workflows involving PDFs, DOCX files, Markdown notes, temporary thoughts, research reports, investment notes, and QuantSystem link placeholders."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "old-coder"
+    id: "old-coder"
+    entry: SKILL.md
+    description: "Evidence-first development for high-assurance code where the user explicitly asks for proof, an evidence report, or confidence without reading the code (\"prove it works\", \"high assurance\", \"I won't read the code\"), or where a change can directly cause irreversible data loss, production trading or portfolio actions, client-visible reporting errors, auth/security failures, concurrency failures, or public API breakage. Do not use for ordinary TDD, normal tests, one-off research scripts, exploratory quant analysis, data pulls, charts, or routine QuantSystem changes; use test-driven-development, verification-before-completion, quant-research-coding, or quant-develop instead."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "pdf"
+    id: "pdf"
+    entry: SKILL.md
+    description: "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "PE_ODD_Auditor"
+    id: "pe-odd-auditor"
+    entry: SKILL.md
+    description: "Use when reviewing private-fund or manager operational due-diligence materials against a qualitative scoring table, including compliance, integrity, custody, governance, and evidence sufficiency checks."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "pptx"
+    id: "pptx"
+    entry: SKILL.md
+    description: "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "private-fund-dd-note"
+    id: "private-fund-dd-note"
+    entry: SKILL.md
+    description: "Use when 用户要求把私募基金/私募管理人电话尽调、录音转写稿、访谈纪要、路演 PDF/PPT/DOCX 或公开核验材料整理成定性尽调 Markdown，尤其是要求与原始材料同目录落盘、沉淀到 MyNotes，或补充中基协/官网/工商/处罚等公开核验时。"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "project-retrospective"
+    id: "project-retrospective"
+    entry: SKILL.md
+    description: "Use when the user asks for a project postmortem, 项目复盘, 总结经验, 沉淀规则, 回顾项目, retrospective, lessons learned, micro-retro, 单次任务复盘, meta-retro, 季度经验复盘, or wants to reconstruct a project from a long multi-turn conversation, implementation history, or debugging history, and extract reusable rules, failure patterns, checklists, or skill candidates. Govern the full lesson lifecycle (observed → proposed → trial → approved → applied → deprecated → reverted) instead of producing a one-off summary."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "public-data-collector"
+    id: "public-data-collector"
+    entry: SKILL.md
+    description: "当需要从互联网公开免费源获取金融/宏观数据，且目标数据在数据库（DBSource）与 zmdata 均不可获取时使用。覆盖首次接入新源/新系列的交互式契约建立流程，以及已接入系列的日常采集执行。不用于内部数据库或 zmdata 已有的数据。"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "quant-develop"
+    id: "quant-develop"
+    entry: SKILL.md
+    description: "Use when building or standardizing recurring QuantSystem projects, data contracts, portfolio construction, backtests, labels, signals, monitoring modules, or performance bottleneck work that requires explicit dependencies, point-in-time correctness, coverage preflight, audit artifacts, or downstream consumption. Prefer quant-research-coding for one-off exploration."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "quant-project-review"
+    id: "quant-project-review"
+    entry: SKILL.md
+    description: "Use when the user asks how far a QuantSystem project has progressed, what stage it is in, whether it has drifted from its original goal, or what the next smallest milestone should be."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "quant-report-qa-interpreter"
+    id: "quant-report-qa-interpreter"
+    entry: SKILL.md
+    description: "QA并解读私募定量分析报告（股票多头/市场中性/CTA）。当需要检查报告异常、按因子有效性框架做二次解读并输出Markdown/HTML时调用。"
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "quant-research-coding"
+    id: "quant-research-coding"
+    entry: SKILL.md
+    description: "Use when writing lightweight quant research code for one-off data pulls, quick backtests, factor checks, label or signal prototypes, allocation analysis, chart/table generation, report-support processing, or repeatable research helpers where mistakes mainly waste research time. Prefer this for Level 1/2 work; escalate to quant-develop when recurring, shared, platformed, client-visible, or investment-process critical."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "receiving-code-review"
+    id: "receiving-code-review"
+    entry: SKILL.md
+    description: "收到代码审查反馈后、实施建议之前使用，尤其当反馈不明确或技术上有疑问时——需要技术严谨性和验证，而非敷衍附和或盲目执行"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "requesting-code-review"
+    id: "requesting-code-review"
+    entry: SKILL.md
+    description: "完成任务、实现重要功能或合并前使用，用于验证工作成果是否符合要求"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "research-report-writer"
+    id: "research-report-writer"
+    entry: SKILL.md
+    description: "Draft, rewrite, polish, or restructure professional research reports, including investment, macro, strategy, industry, fund, policy, and business research. Use when the user wants clearer thesis, tighter structure, stronger causal hierarchy, evidence-weighted judgment, anti-grab-bag synthesis, restrained professional language, or a report style that borrows literary structure and rhythm without becoming lyrical or promotional."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "skill-creator"
+    id: "skill-creator"
+    entry: SKILL.md
+    description: "Use when users want to scaffold, package, or materially update a skill directory with SKILL.md, scripts, references, assets, validation, and distributable structure. For routing-copy quality, pressure tests, or deciding whether a skill should exist, use writing-skills first or as a companion."
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "subagent-driven-development"
+    id: "subagent-driven-development"
+    entry: SKILL.md
+    description: "当已有书面实现计划、任务可拆成相对独立的实现单元，并且当前会话可使用子代理执行和审查时使用；若没有实现计划先用 writing-plans，若只是多个独立故障排查用 dispatching-parallel-agents。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "systematic-debugging"
+    id: "systematic-debugging"
+    entry: SKILL.md
+    description: "当出现 bug、失败测试、集成异常或性能问题，需要先做根因分析再给修复方案时使用。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "test-driven-development"
+    id: "test-driven-development"
+    entry: SKILL.md
+    description: "当用户明确要求 TDD，或高风险新行为与 bug 修复需要先写失败测试时使用。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "using-git-worktrees"
+    id: "using-git-worktrees"
+    entry: SKILL.md
+    description: "当需要开始与当前工作区隔离的功能开发、执行实现计划、创建功能分支或使用 git worktree 时使用；先验证当前目录是 Git 仓库，再创建具有目录选择和安全验证的隔离工作树"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "using-superpowers"
+    id: "using-superpowers"
+    entry: SKILL.md
+    description: "当用户明确询问 Superpowers 或 skills 的使用方式、需要排查 skill 路由、或正在维护 .trae/skills 与 .trae/rules 时使用"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "verification-before-completion"
+    id: "verification-before-completion"
+    entry: SKILL.md
+    description: "在宣称工作完成、已修复或测试通过之前使用；要求先运行验证命令并确认输出，再声称成功。适用于任何任务收尾，不替代 finishing-a-development-branch 的 Git/PR 收尾流程。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "wisdom-manager-product-research"
+    id: "wisdom-manager-product-research"
+    entry: SKILL.md
+    description: "Call fofresearchsvr/ai business APIs for private-fund manager and product facts: 私募管理人、机构详情、管理人旗下产品、私募产品查询、产品要素、合同文件下载、产品净值, or manager/product disambiguation. For fund-wiki based investment synthesis or broader strategy/team/performance judgment, use fund-wiki-research after needed facts are retrieved."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "workflow-runner"
+    id: "workflow-runner"
+    entry: SKILL.md
+    description: "在 Claude Code / OpenClaw / Cursor 中直接运行 agency-orchestrator YAML 工作流——无需 API key，使用当前会话的 LLM 作为执行引擎。当用户提供 .yaml 工作流文件或要求多角色协作完成任务时触发。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "writing-plans"
+    id: "writing-plans"
+    entry: SKILL.md
+    description: "当目标和设计方向已经明确、需要把复杂多步骤任务转成可执行实现计划、跨轮次共享计划或多人协作时使用；若需求仍需探索或方案未确认，先用 brainstorming；小改动不需要单独生成计划文档"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "writing-skills"
+    id: "writing-skills"
+    entry: SKILL.md
+    description: "当需要设计或审查 skill 的触发边界、路由描述、压力测试、CSO 搜索优化或行为有效性时使用；若任务是创建目录、放置 scripts/references/assets、打包或运行脚手架，优先使用 skill-creator。"
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "xlsx"
+    id: "xlsx"
+    entry: SKILL.md
+    description: "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas"
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false
+  - path: "zm-skills-manager-local"
+    id: "zm-skills-manager-local"
+    entry: SKILL.md
+    description: "Use when users want to find, inspect, download, install, update, or upload ZM App Store Skills from an agent or IDE without opening the Hub web UI."
+    source_of_truth: SharedSKILLS
+    role: meta
+    routable: false
+  - path: "zmdata-data-api"
+    id: "zmdata-data-api"
+    entry: SKILL.md
+    description: "Use when Codex needs to answer questions, explain parameters, write Python code, or directly call documented ZM internal zmdata data APIs via CLI, including historical or as-of data for stocks, funds, fund pools, fund scoring, portfolio/PM APIs, bonds, ETFs, options, futures, indexes, macro data, exchange rates, spot data, and related ID mappings such as label_id, rankconfigid, benchID, and score fields."
+    source_of_truth: SharedSKILLS
+    role: reference
+    routable: false

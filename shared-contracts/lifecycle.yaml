@@ -1,0 +1,47 @@
+# lifecycle.yaml
+# 正交状态字段。这些字段互相独立、不能互相替代。
+# 各 Skill 在输出"已完成/可上线/已评审"等结论时，必须明确引用对应字段，不得混用。
+
+schema_version: "1.0"
+
+work_stage:
+  - idea
+  - research
+  - candidate
+  - production
+  - monitor_only
+  - retired
+
+model_role:
+  - research
+  - candidate
+  - challenger
+  - champion
+  - rejected
+
+run_status:
+  - queued
+  - running
+  - succeeded
+  - failed
+  - blocked
+
+review_status:
+  - draft
+  - reviewed
+  - approved
+
+decision_use:
+  - research_only
+  - internal_decision
+  - portfolio_input
+  - live
+
+# 正交性约束（不得违反）
+constraints:
+  - 这些字段不能互相替代：work_stage 描述项目阶段，model_role 描述模型版本角色，run_status 描述单次运行结果，review_status 描述评审状态，decision_use 描述决策用途。
+  - run_status: succeeded 只表示本次运行成功，不代表模型可以生产使用。
+  - review_status: approved 只表示评审通过，不代表模型已经进入组合（portfolio_input / live）。
+  - decision_use: research_only 不得自动升级为 portfolio_input，必须有人工晋级结论与证据。
+  - retired 模型不得无记录重新启用；重新启用必须先登记重新评估证据与人工结论。
+  - work_stage: production 不得因"代码运行成功""页面完成""一次回测通过"自动标记，必须有发布门禁与人工确认记录。

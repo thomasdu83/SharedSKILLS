@@ -1,0 +1,75 @@
+# =============================================================================
+# experience-registry.yaml —— 经验生命周期登记文件（账本）
+# =============================================================================
+#
+# 用途：
+#   登记「项目复盘（project-retrospective）」产生的可复用经验、Skill 回写提案
+#   及其生命周期状态。本文件是机器可校验的经验状态源，不是自动修改 Skill 的
+#   授权开关。
+#
+# 职责分离（本文件只负责经验生命周期，不与其他登记文件混用）：
+#   - skill-registry.yaml           ：登记有哪些 Skill、如何触发、如何路由
+#   - experience-registry.yaml      ：登记哪些经验处于观察/试用/批准/应用/回滚
+#   - project-retrospective（skill）：产生复盘结果与回写提案
+#   - skill_doctor / 校验工具       ：校验本文件格式、状态合法性、路径与引用
+#
+# =============================================================================
+# 状态（固定七态，不允许新增）
+# =============================================================================
+#   observed → proposed → trial → approved → applied
+#                                         │
+#                                         ├→ deprecated
+#                                         └→ reverted
+#
+# 状态转换规则（由 experience-registry-validator.py 强制执行）：
+#   - observed → proposed ：已从项目事实中抽象出候选经验
+#   - proposed → trial    ：在多个独立任务中重复出现，或修复过重大错误，
+#                           且已有正反用例
+#   - trial → approved    ：经过验证并完成必要的人工审核
+#   - approved → applied  ：已实际修改目标 Skill/规则/模板/脚本，并完成变更验证
+#   - applied → deprecated：后续证据表明该规则不再适用
+#   - applied → reverted  ：应用后造成回归、误路由或质量下降，已经回滚
+#   - 不允许直接从 observed 跳到 approved 或 applied
+#   - 不允许仅因完成一次项目复盘就自动修改共享 Skill
+#   - project_local 类型的经验不得进入正式共享 Skill
+#   - 废弃或回滚的经验必须保留原因、证据和关联版本，不能直接删除
+#
+# =============================================================================
+# 字段说明（每条经验至少登记以下字段）
+# =============================================================================
+#   experience_id       string   唯一标识（非空，全库唯一）
+#   title               string   经验标题
+#   description         string   经验描述
+#   source_retros       list     来源复盘列表，每项 {project_id, location}
+#   target_type         enum     分流去向：skill|template|rule|script|model_card|project_local
+#   target_path         string   目标路径（target_type != project_local 时必填）
+#   generalized_rule    string   抽象后的通用规则（不含项目特有路径/按钮名）
+#   status              enum     生命周期状态（七态之一）
+#   evidence_count      int      证据计数
+#   evidence_refs       list     证据引用列表
+#   validation_cases    list     正/反用例，每项 {kind: positive|negative, description}
+#   conflicts           list     与现有规则的冲突列表
+#   owner               string   负责人
+#   proposed_at         string   提出时间
+#   approved_at         string   批准时间
+#   applied_at          string   应用时间
+#   review_after        string   复核日期
+#   applied_version     string   应用版本
+#   supersedes          string   被本条经验取代的经验 ID
+#   superseded_by       string   取代本条经验的经验 ID
+#   decision_log        list     状态转换决策日志，每项 {from, to, at, by, reason}
+#
+# 校验规则（experience-registry-validator.py 强制执行）：
+#   - experience_id 唯一且非空
+#   - target_type / status 取值必须合法
+#   - target_type != project_local 时 target_path 必填
+#   - target_type == project_local 时 status 不得为 trial/approved/applied
+#   - trial/approved/applied 需要 >= 2 个独立项目来源（source_retros）
+#   - trial/approved/applied 需要 validation_cases 同时含 positive 与 negative
+#   - applied 需要 applied_at + applied_version + 变更验证证据 evidence_refs
+#   - deprecated/reverted 需要 decision_log 保留原因、证据与关联版本
+#   - decision_log 中的每一步转换必须符合上面的状态转换规则
+#   - 当前 status 必须与 decision_log 最后一条的 to 一致（若 decision_log 非空）
+# =============================================================================
+
+experiences: []

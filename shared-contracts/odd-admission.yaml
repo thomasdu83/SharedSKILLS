@@ -1,0 +1,22 @@
+# odd-admission.yaml
+# ODD 评分与证据状态的机器可读门禁；正式阈值仍以用户提供的制度文件为准。
+
+schema_version: "1.0"
+
+evidence_status:
+  - pass
+  - fail
+  - insufficient_evidence
+  - conflict
+
+admission_status:
+  - pass
+  - hold
+  - fail
+  - needs_review
+
+constraints:
+  - 普通扣分项的 insufficient_evidence 不得自动写成 pass 或 fail；需记录 required_evidence。
+  - 一票否决项的 insufficient_evidence 必须进入 hold/needs_review，除非用户明确选择保守风控映射。
+  - conflict 不得静默选边；必须保留冲突证据和解决责任人。
+  - 最终行动建议必须引用逐项 evidence_status，不得仅凭总分生成。

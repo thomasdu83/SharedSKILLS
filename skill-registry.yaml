@@ -1,0 +1,340 @@
+# skill-registry.yaml
+# SharedSKILLS 核心路由 Skill 注册表。
+#
+# 目的：
+# 1. 每个任务只有一个主入口 Skill（layer: router 或 domain/engineering 中优先级唯一命中者）；
+# 2. 辅助 Skill 实际输出最多两个（supports 是可选能力目录，不并列主入口）；
+# 3. 用 excludes 消除相邻 Skill 的职责竞争；用 escalates_to 指明晋级/转交方向；
+# 4. required_contracts 指向 shared-contracts/ 下的统一契约，供主入口在启动检查时声明。
+#
+# 注意：
+# - 本表只登记需要参与自动路由的核心入口及其契约关系，不声称覆盖全部资源型 Skill。
+# - `registry_scope: core_router` 时，未列入本表的 Skill 仍必须存在于磁盘并通过 frontmatter 校验；它们不会参与主入口竞争。
+# - 经验记录见 experience-registry.yaml；全库处置结论见 skill-disposition.yaml。
+
+schema_version: "1.0"
+registry_scope: core_router
+unregistered_policy: discovered_reference_only
+inventory_path: skill-inventory.yaml
+dependency_manifest: skill-dependencies.yaml
+release_manifest: skill-release.yaml
+behavior_eval_manifest: behavior-eval-registry.yaml
+delivery_contract: shared-contracts/delivery-input.yaml
+support_policy:
+  default_max: 2
+  override_requires_reason: true
+  output_max: 2
+
+skills:
+  - id: ai-quant-development-router
+    path: ai-quant-development-router
+    layer: router
+    priority: 100
+    triggers:
+      - 新建/开发/系统化一个量化策略、模型、因子、标签、信号、评分、回测流程、组合模型或风控模型
+      - 把研究想法做成可复跑项目、服务、API、报告或前端
+      - 为新模型增加回测评审页、交互页面、运行状态、监控或工作台
+      - 需要跨层增量变更（模型/API/存储/前端同时改动）时先做路由判断
+    excludes:
+      - quant-research-coding      # 一次性取数、单次计算、轻量验证不进入路由主流程
+      - systematic-debugging        # 孤立 bug 修复不进入新开发路由
+      - quant-project-review        # 只评估进度、不授权实现
+      - pe-odd-auditor              # 风控尽调不属于量化开发
+      - quant-report-qa-interpreter # 报告 QA 解读不属于量化开发
+    escalates_to:
+      - quant-research-coding       # 本轮是轻量研究时转交
+      - quant-develop               # 本轮是正式/重复/投资流程消费时转交
+    supports:
+      - frontend-page-router
+      - systematic-debugging
+      - verification-before-completion
+    dependencies:
+      - quantsystem-templates
+    support_override_reason: "保留三个候选辅助能力目录，但每次实际输出最多选择两个；前端、调试和完成前验证属于互斥的按需分支。"
+    required_contracts:
+      - shared-contracts/lifecycle.yaml
+      - shared-contracts/execution.yaml
+      - shared-contracts/route-decision.yaml
+    outputs:
+      - 主 Skill
+      - 辅助 Skill（0–2 个）
+      - 风险级别
+      - 触发依据
+      - 不触发的相邻 Skill
+      - 所需契约
+      - 停止条件
+    aliases:
+      - quant-router
+      - ai-quant-router
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: quant-research-coding
+    path: quant-research-coding
+    layer: engineering
+    priority: 20
+    triggers:
+      - 一次性取数、单次计算、快速画图、格式转换
+      - 快速因子检查、标签/信号原型、轻量回测
+      - 分配分析、报告支撑表、图表生成
+      - 可复跑的研究辅助脚本（Level 1/2）
+    excludes:
+      - quant-develop                # 重复运行、共享消费、投资流程消费不在此列
+      - ai-quant-development-router  # 新策略/新模型系统化开发不在此列
+      - fund-wiki-research           # 基于 fund-wiki 的研究综合不在此列
+      - macro-strategy-learning      # 宏观判断/预测不在此列
+    escalates_to:
+      - quant-develop                # 结果进入投资流程、被他人消费、需契约/日志/告警时升级
+    supports:
+      - zmdata-data-api
+      - fund-wiki
+    dependencies:
+      - quantsystem-templates
+    required_contracts:
+      - shared-contracts/data-freshness.yaml
+      - shared-contracts/evidence.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - research_only: true|false
+      - 数据状态（exact/proxy/latest_only/missing/unverified）
+      - 样本范围与 PIT 说明
+      - 成本假设与限制
+      - 最小可复跑入口
+    aliases:
+      - quant-research
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: quant-develop
+    path: quant-develop
+    layer: engineering
+    priority: 30
+    triggers:
+      - 可复用、重复运行、多人协作的 QuantSystem 项目
+      - 数据契约、组合构建、回测、标签/信号/监控模块标准化
+      - 输出进入组合构建、监控、客户/投委会材料或下游系统
+      - 需要 project.yaml、registry/、workflows/、preflight、run_id、审计证据
+      - 研究原型已证明价值，用户要求项目化/平台化
+    excludes:
+      - quant-research-coding        # 一次性探索、轻量回测不在此列
+      - macro-strategy-learning      # 宏观判断/预测不在此列
+      - fund-wiki-research           # fund-wiki 研究综合不在此列（除非需要 QuantSystem 代码/数据契约）
+    escalates_to: []
+    supports:
+      - zmdata-data-api
+      - old-coder
+    dependencies:
+      - quantsystem-templates
+    required_contracts:
+      - shared-contracts/lifecycle.yaml
+      - shared-contracts/data-freshness.yaml
+      - shared-contracts/artifact.yaml
+      - shared-contracts/evidence.yaml
+      - shared-contracts/execution.yaml
+      - shared-contracts/investment-feedback.yaml
+    outputs:
+      - project.yaml.stage
+      - model_role（research/candidate/challenger/champion/rejected）
+      - run_status 与 run_id
+      - preflight、运行 manifest、审计证据
+    aliases:
+      - quant-engineering
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: fund-wiki-research
+    path: fund-wiki-research
+    layer: domain
+    priority: 40
+    triggers:
+      - 基于 fund-wiki 的投资研究主题或报告
+      - 管理人/产品可比池、策略分类、样本漏斗、证据分级
+      - 核心池/观察池/边界池、claim 与 fund facts 的事实核验
+      - 研究 SOP、历史 fund-wiki 研究产物复核、内部流通版本
+    excludes:
+      - quant-research-coding        # 不依赖 fund-wiki 的通用研究不在此列
+      - quant-develop                # 需要 QuantSystem 代码/数据契约时不走此路径
+      - macro-strategy-learning      # 宏观判断不在此列
+    escalates_to:
+      - quant-develop                # 需要 QuantSystem 代码、数据契约或 platform.data 工程时转交
+    supports:
+      - fund-wiki
+      - wisdom-manager-product-research
+    dependencies:
+      - fund-wiki-runtime
+    required_contracts:
+      - shared-contracts/evidence.yaml
+      - shared-contracts/artifact.yaml
+      - shared-contracts/data-freshness.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - artifact_id
+      - 数据截止时间（as_of）
+      - universe artifact
+      - 事实层 / 研究层 / 治理层分离的结构化产物
+    aliases:
+      - fund-research
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: macro-strategy-learning
+    path: macro-strategy-learning
+    layer: domain
+    priority: 45
+    triggers:
+      - 周度全球多资产宏观判断或资产配置复盘
+      - 情景概率、预测快照、成熟度复盘
+      - 宏观机制框架的建立、更新或版本化
+      - 黄金、宏观流动性、政策传导、中国权益风格、海外权益、债券、商品、汇率专题
+    excludes:
+      - quant-research-coding        # 通用取数/因子研究不在此列
+      - quant-develop                # 组合执行/工程落地不在此列
+      - fund-wiki-research           # 管理人/产品研究不在此列
+    escalates_to: []
+    supports:
+      - mynotes-knowledge-manager
+      - assets-score
+    dependencies:
+      - mynotes-vault
+    required_contracts:
+      - shared-contracts/forecast.yaml
+      - shared-contracts/evidence.yaml
+      - shared-contracts/artifact.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - forecast 对象（含 decision_horizon、position_relevance、三情景、概率）
+      - 事实 / 机制推断 / 市场定价 / 情景 / 资产表达 / 行动 的分层
+      - 冻结快照与复盘（保留原始预测）
+    aliases:
+      - macro-research
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: project-retrospective
+    path: project-retrospective
+    layer: knowledge
+    priority: 50
+    triggers:
+      - 项目复盘、经验总结、失败模式提取
+      - 从多轮对话/实现历史重建项目并提取可复用规则
+      - 经验回写提案（转为 template / skill / rule）
+    excludes:
+      - pe-odd-auditor              # 风控尽调不在此列
+      - quant-report-qa-interpreter # 报告 QA 解读不在此列
+      - quant-develop               # 不替代工程实现
+    escalates_to: []
+    supports: []
+    dependencies:
+      - quantsystem-templates
+    required_contracts:
+      - shared-contracts/evidence.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - 经验登记（写入 experience-registry.yaml）
+      - 回写提案（须经人工确认，不自动修改共享 Skill）
+    aliases:
+      - retro
+      - retrospective
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: pe-odd-auditor
+    path: PE_ODD_Auditor
+    layer: domain
+    priority: 60
+    triggers:
+      - 私募基金/管理人运营尽调（ODD）打分
+      - 对照《定性扣分表》的合规与诚信风险嗅探
+    excludes:
+      - quant-report-qa-interpreter # 定量报告 QA 不在此列
+      - frontend-report-page        # 普通报告排版不得自动触发
+      - project-retrospective       # 经验复盘不在此列
+    escalates_to: []
+    supports: []
+    dependencies: []
+    required_contracts:
+      - shared-contracts/evidence.yaml
+      - shared-contracts/odd-admission.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - 四态审计判定（pass/fail/insufficient_evidence/conflict）
+      - 证据强度分层
+    aliases:
+      - odd-auditor
+      - PE_ODD_Auditor
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: quant-report-qa-interpreter
+    path: quant-report-qa-interpreter
+    layer: domain
+    priority: 65
+    triggers:
+      - 私募定量分析报告（股票多头/市场中性/CTA）的 QA
+      - 按因子有效性框架的二次解读
+    excludes:
+      - pe-odd-auditor             # 定性 ODD 尽调不在此列
+      - frontend-report-page       # 普通报告排版不得自动触发
+      - project-retrospective      # 经验复盘不在此列
+    escalates_to: []
+    supports: []
+    dependencies:
+      - public-data-network
+    required_contracts:
+      - shared-contracts/evidence.yaml
+      - shared-contracts/artifact.yaml
+      - shared-contracts/quant-report-admission.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - 报告异常检查结论
+      - 风险等级 1–5（短路互斥）
+    aliases:
+      - report-qa
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: fof-risk-report-generator
+    path: fof-risk-report-generator
+    layer: delivery
+    priority: 70
+    triggers:
+      - 生成或复核 FOF 投后归因报告、组合表现解释或可复现 HTML/文字归因产物
+    excludes:
+      - quant-report-qa-interpreter
+      - frontend-report-page
+      - project-retrospective
+    escalates_to: []
+    supports: []
+    dependencies: []
+    required_contracts:
+      - shared-contracts/evidence.yaml
+      - shared-contracts/artifact.yaml
+      - shared-contracts/execution.yaml
+    outputs:
+      - 归因区间与 as_of
+      - 母层/策略层/赛道层/子基金层/因子层证据
+      - artifact_id 与输出路径
+    aliases:
+      - FOF_Risk_Report_Generator
+      - fof-risk-report
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+

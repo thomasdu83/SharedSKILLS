@@ -1,0 +1,956 @@
+# skill-disposition.yaml
+# SharedSKILLS 全库处置台账（第四阶段）。
+#
+# 用途：
+# 1. 对 56 个 SKILL.md 逐一给出处置结论（improved / audited_no_change / needs_update /
+#    candidate_merge / candidate_split / deprecated_candidate / blocked_by_decision）。
+# 2. 区分“前三阶段已改进”与“仅审计未改”，避免把盘点误当成全部改进完成。
+# 3. 建立 Batch A–D 实施队列；本轮只做低风险文档性/结构性修改，其余进入后续批次或人工决策。
+#
+# 说明：
+# - source_hash 为 SKILL.md 当前内容的 SHA-256 前 16 位（用于后续版本锁定与漂移检测）。
+# - current_version 取 skill-registry.yaml 或 SKILL.md 内显式版本；未标注版本者记为 unversioned。
+# - 本文件不修改 skill-audit-report.md，不修改 .trae、QuantSystem 业务代码、数据或生产信号。
+# - 2026-09-11 追补：本轮已落地部分 SharedSKILLS 结构/契约修订；未处理缓存删除、目录迁移及 .trae。
+
+schema_version: "1.0"
+generated_at: "2026-09-10"
+
+skills:
+  - id: pe-odd-auditor
+    path: PE_ODD_Auditor
+    category: domain
+    current_version: "v0.4"
+    source_hash: 9ae17c2364537425
+    disposition: improved
+    priority: P0
+    reason: "Phase 1 已将证据判定改为四态(pass/fail/insufficient_evidence/conflict)，删除'默认满足/推定违背'反转表述，insufficient_evidence 的映射交由人工政策选项，'名称无风险字样'降级为弱线索。核心评分矛盾已消除。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["skill_doctor --json 无 fail", "四态判定不再出现默认满足/推定违背"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: ai-quant-development-router
+    path: ai-quant-development-router
+    category: router
+    current_version: "1.0"
+    source_hash: 42e319ef05e8556e
+    disposition: improved
+    priority: P0
+    reason: "Phase 2 加入唯一主入口、excludes/escalates_to、七字段输出契约与 required_contracts；路由边界已机器化。"
+    required_changes: []
+    dependencies: [quant-research-coding, quant-develop, frontend-page-router]
+    conflicts: ["引用 docs/templates/indicator-monitor 等仓库外模板，尚未以 manifest 显式声明为外部依赖(P1)"]
+    acceptance_checks: ["七字段输出契约完整", "excludes 生效"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: quant-research-coding
+    path: quant-research-coding
+    category: engineering
+    current_version: "1.0"
+    source_hash: 39c7427f54911c00
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 加入 data-freshness/evidence 契约与 research_only 输出，区分轻量研究与正式工程。"
+    required_changes: []
+    dependencies: [zmdata-data-api, fund-wiki]
+    conflicts: []
+    acceptance_checks: ["research_only 字段输出", "data_status 五态标记"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: quant-develop
+    path: quant-develop
+    category: engineering
+    current_version: "1.0"
+    source_hash: e48d8834ed1e7d0c
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 加入 lifecycle/artifact/evidence 契约与 model_role 状态，补齐研究→候选→生产的晋级语义。"
+    required_changes: []
+    dependencies: [zmdata-data-api, old-coder, test-driven-development]
+    conflicts: ["model_role 从 candidate 到 production 的晋级仍需人工批准，属运行期门禁而非本轮修改"]
+    acceptance_checks: ["model_role 状态机字段", "run_status/run_id 证据"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: quant-report-qa-interpreter
+    path: quant-report-qa-interpreter
+    category: domain
+    current_version: "1.0"
+    source_hash: bdd1cc4b6cd8bc91
+    disposition: improved
+    priority: P0
+    reason: "Phase 1 已修复入池/风险等级的分数边界冲突：得分==65 标为边界待复核，风险等级 1–5 互斥短路，纯回测/证据缺失/证据冲突拆为独立原因字段。"
+    required_changes: []
+    dependencies: []
+    conflicts: ["得分==65 的最终制度解释仍待人工确认；当前统一输出边界待复核且不自动通过"]
+    acceptance_checks: ["入池/风险等级短路互斥", "得分==65 不自动通过"]
+    human_review_required: true
+    target_batch: none
+    status: completed
+
+  - id: macro-strategy-learning
+    path: macro-strategy-learning
+    category: domain
+    current_version: "1.0"
+    source_hash: 720c9d5c68bb5cd2
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 加入 forecast/evidence/artifact 契约，固定信息截止、情景概率与冻结快照。"
+    required_changes: []
+    dependencies: [mynotes-knowledge-manager, assets-score]
+    conflicts: []
+    acceptance_checks: ["forecast 对象(三情景/概率/信息截止)", "复盘不覆盖原始预测"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: project-retrospective
+    path: project-retrospective
+    category: knowledge
+    current_version: "1.0"
+    source_hash: 6e040b999d263972
+    disposition: improved
+    priority: P1
+    reason: "Phase 1/1.5 加入 experience-registry 七态状态机与输出模板，回写提案与人工确认分离。"
+    required_changes: []
+    dependencies: []
+    conflicts: ["micro-retro/project-retro/meta-retro 三级反馈尚未实现(P2，属扩展而非本轮必需)"]
+    acceptance_checks: ["回写提案不自动改共享 Skill", "七态状态机可验证"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: frontend-page-router
+    path: frontend-page-router
+    category: router
+    current_version: "1.0"
+    source_hash: 00223ddc05f7a987
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 明确 report/ops 二分与 unclear 分支，页面模式判断稳定。"
+    required_changes: []
+    dependencies: [frontend-report-page, frontend-ops-platform]
+    conflicts: ["引用 docs/templates 仓库外模板未 manifest(P1)"]
+    acceptance_checks: ["report/ops 唯一判定", "unclear 分支先问"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: frontend-report-page
+    path: frontend-report-page
+    category: delivery
+    current_version: "1.0"
+    source_hash: 81289787c2a32ac3
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 收敛为报告型页面规范，先结论后证据的阅读顺序。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["结论/证据/风险分层", "可打印/截图/外发"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: frontend-ops-platform
+    path: frontend-ops-platform
+    category: delivery
+    current_version: "1.0"
+    source_hash: 60c19f985dd4278f
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 收敛为内部工作台规范，表格/密集列表优先，去除 hero 与装饰卡片。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["默认视图服务日常流程", "控件靠近目标对象"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: systematic-debugging
+    path: systematic-debugging
+    category: engineering
+    current_version: "1.0"
+    source_hash: d586b16ecfe20e47
+    disposition: improved
+    priority: P1
+    reason: "Phase 2 加入路由 excludes，与量化开发路由解耦。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["复现→根因→单修复顺序"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: fund-wiki-research
+    path: fund-wiki-research
+    category: domain
+    current_version: "1.0"
+    source_hash: ac2054bc41f5921d
+    disposition: improved
+    priority: P0
+    reason: "已补齐 SharedSKILLS 包装入口，显式解析外部 fund-wiki 后端、docs-root，并对旧版引擎配置字段提供兼容执行路径。"
+    required_changes: []
+    dependencies: [fund-wiki, wisdom-manager-product-research, zmdata-data-api]
+    conflicts: []
+    acceptance_checks: ["包装入口帮助可用", "指定项目根目录与临时 docs-root 的端到端构建通过"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: fof-risk-report-generator
+    path: fof-risk-report-generator
+    category: delivery
+    current_version: "unversioned"
+    source_hash: e630e02515313708
+    disposition: improved
+    priority: P0
+    reason: "frontmatter canonical name 已与目录对齐，并保留旧名兼容别名；运行产物目录隔离规则已写入技能。源码目录中的缓存与历史产物仍作为资产治理待清理项。"
+    required_changes: []
+    dependencies: []
+    conflicts: ["缓存与历史 HTML 产物的删除/迁移仍需单独资产保留决策"]
+    acceptance_checks: ["name==目录名", "运行产物不再写回源码目录"]
+    human_review_required: true
+    target_batch: none
+    status: completed
+
+  - id: chinese-git-workflow
+    path: chinese-git-workflow
+    category: governance
+    current_version: "unversioned"
+    source_hash: aebae92d5899c5b5
+    disposition: needs_update
+    priority: P3
+    reason: "skill_doctor 报告 3 个未解析脚本引用(scripts/deploy-staging.sh、notify-failure.sh、deploy-production.sh)。"
+    required_changes: ["补齐缺失脚本或删除/标注为示例引用"]
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["skill_doctor 未解析路径归零或显式声明示例"]
+    human_review_required: false
+    target_batch: D
+    status: proposed
+
+  - id: dispatching-parallel-agents
+    path: dispatching-parallel-agents
+    category: engineering
+    current_version: "unversioned"
+    source_hash: ccbb9dd66363fc97
+    disposition: needs_update
+    priority: P3
+    reason: "skill_doctor 报告未解析引用 agents/agent-tool-abort.test.ts。"
+    required_changes: ["补齐测试文件或删除引用"]
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["skill_doctor 未解析路径归零"]
+    human_review_required: false
+    target_batch: D
+    status: proposed
+
+  - id: skill-creator
+    path: skill-creator
+    category: governance
+    current_version: "unversioned"
+    source_hash: 5171eada65bead14
+    disposition: needs_update
+    priority: P2
+    reason: "skill_doctor 报告 11 个未解析示例资源(references/api_docs.md、finance.md、schema.md、mnda.md、policies.md、scripts/run_task.py、rotate_pdf.py、assets/logo.png、font.ttf、hello-world/、slides.pptx)，属 Anthropic 模板示例被剥离后残留的引用。"
+    required_changes: ["恢复示例资源或将示例引用标注为 illustrative 且 non-required"]
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["示例引用不再被误判为必需依赖"]
+    human_review_required: false
+    target_batch: D
+    status: proposed
+
+  - id: frontend-design
+    path: frontend-design
+    category: delivery
+    current_version: "unversioned"
+    source_hash: 4bff201a6ba96834
+    disposition: candidate_merge
+    priority: P2
+    reason: "作为兼容入口，与 frontend-page-router/report/ops 职责重叠，audit A.3 指出二者可能同时触发。建议并入 frontend-page-router 或明确为别名。"
+    required_changes: []
+    dependencies: [frontend-page-router, frontend-report-page, frontend-ops-platform]
+    conflicts: ["合并方向需人工决策"]
+    acceptance_checks: ["合并后无重复入口"]
+    human_review_required: true
+    target_batch: blocked
+    status: proposed
+
+  - id: architecture-diagram-generator/architecture-diagram
+    path: architecture-diagram-generator/architecture-diagram
+    category: delivery
+    current_version: "unversioned"
+    source_hash: a8dc11b2a648d906
+    disposition: candidate_merge
+    priority: P2
+    reason: "与 archify 同为架构/流程图生成，职责高度重复，建议合并保留其一。"
+    required_changes: []
+    dependencies: [archify]
+    conflicts: ["合并方向需人工决策"]
+    acceptance_checks: ["合并后单一图表入口"]
+    human_review_required: true
+    target_batch: blocked
+    status: proposed
+
+  - id: investment-paper-replication
+    path: investment-paper-replication
+    category: domain
+    current_version: "unversioned"
+    source_hash: dd7cf4cf53929bf2
+    disposition: candidate_merge
+    priority: P1
+    reason: "与 ai-quant-development-router 均可承担项目编排，audit A.3 指出入口重复；建议明确编排边界或合并。"
+    required_changes: []
+    dependencies: [ai-quant-development-router]
+    conflicts: ["合并/边界划分需人工决策"]
+    acceptance_checks: ["单一路由入口"]
+    human_review_required: true
+    target_batch: blocked
+    status: proposed
+
+  - id: writing-skills
+    path: writing-skills
+    category: governance
+    current_version: "unversioned"
+    source_hash: dc86130041793a68
+    disposition: candidate_split
+    priority: P2
+    reason: "正文 1311 词，同时覆盖设计、审查、CSO 搜索优化、压力测试与行为有效性，职责过宽(见 skill-audit-report)。建议按'设计/审查/压力测试'拆分。"
+    required_changes: []
+    dependencies: [skill-creator]
+    conflicts: ["拆分方式需人工决策；并含未解析引用 agents/skills/ 与 scripts/references/assets"]
+    acceptance_checks: ["拆分后单 skill 职责单一"]
+    human_review_required: true
+    target_batch: blocked
+    status: proposed
+
+  - id: archify
+    path: archify
+    category: delivery
+    current_version: "unversioned"
+    source_hash: ded1b094cfd91686
+    disposition: audited_no_change
+    priority: P2
+    reason: "架构/流程图生成与校验，路径可解析，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: assets-score
+    path: assets-score
+    category: domain
+    current_version: "unversioned"
+    source_hash: ad8bfa33992f225f
+    disposition: audited_no_change
+    priority: P2
+    reason: "宏观报告自动评分，职责清晰，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: brainstorming
+    path: brainstorming
+    category: router
+    current_version: "unversioned"
+    source_hash: 6c3790c75acb9fc4
+    disposition: audited_no_change
+    priority: P2
+    reason: "需求探索与方案比较入口，可稳定执行；description 混入流程属 P2 命名打磨，非本轮必需。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: chinese-code-review
+    path: chinese-code-review
+    category: governance
+    current_version: "unversioned"
+    source_hash: 3310f217fabdc4a1
+    disposition: audited_no_change
+    priority: P3
+    reason: "中文代码审查规范，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: chinese-commit-conventions
+    path: chinese-commit-conventions
+    category: governance
+    current_version: "unversioned"
+    source_hash: cc5abff68a85face
+    disposition: audited_no_change
+    priority: P3
+    reason: "中文提交规范，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: chinese-documentation
+    path: chinese-documentation
+    category: governance
+    current_version: "unversioned"
+    source_hash: ac06ac69ccc79b29
+    disposition: audited_no_change
+    priority: P3
+    reason: "中文文档写作规范，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: commodity-meso-market-report
+    path: commodity-meso-market-report
+    category: domain
+    current_version: "unversioned"
+    source_hash: cb5c50c95ca70a6a
+    disposition: audited_no_change
+    priority: P2
+    reason: "CTA 市场中观报告流程，职责清晰；宏观概率→仓位→归因连接属 P2 增强，非本轮必需。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: custom-gpt-image-2
+    path: custom-gpt-image-2
+    category: delivery
+    current_version: "unversioned"
+    source_hash: c36db54f1e2f34cc
+    disposition: audited_no_change
+    priority: P3
+    reason: "自定义 gpt-image-2 端点生图，职责单一，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: docx
+    path: docx
+    category: delivery
+    current_version: "unversioned"
+    source_hash: dac798a092d63121
+    disposition: audited_no_change
+    priority: P2
+    reason: "Word 文档处理，ooxml 脚本路径可解析；manifest 化属全局 P2 增强，非本轮必需。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: executing-plans
+    path: executing-plans
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 35b0803780484e72
+    disposition: audited_no_change
+    priority: P3
+    reason: "顺序执行实现计划，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: finishing-a-development-branch
+    path: finishing-a-development-branch
+    category: governance
+    current_version: "unversioned"
+    source_hash: 389a0f2080cf6d0e
+    disposition: audited_no_change
+    priority: P3
+    reason: "开发分支收尾流程，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: fund-track-tag-audit
+    path: fund-track-tag-audit
+    category: domain
+    current_version: "unversioned"
+    source_hash: 4d05e1dfa5259233
+    disposition: audited_no_change
+    priority: P2
+    reason: "基金赛道/标签元数据审计，职责清晰；含 __html_preview 缓存产物需后续清理。"
+    required_changes: []
+    dependencies: [fund-wiki]
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: fund-wiki
+    path: fund-wiki
+    category: knowledge
+    current_version: "unversioned"
+    source_hash: 8849d4a24ae35ee4
+    disposition: audited_no_change
+    priority: P1
+    reason: "基金尽调材料入库与 wiki 构建，engine/scripts 齐全可解析；含 __pycache__ 需后续清理。"
+    required_changes: []
+    dependencies: [zmdata-data-api]
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: github-project-workflow
+    path: github-project-workflow
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 137e43a178eb2825
+    disposition: audited_no_change
+    priority: P3
+    reason: "GitHub 仓库初始化/同步流程，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: mcp-builder
+    path: mcp-builder
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 7306ea27d8584d4c
+    disposition: audited_no_change
+    priority: P3
+    reason: "MCP 服务器构建方法论，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: mynotes-knowledge-manager
+    path: mynotes-knowledge-manager
+    category: knowledge
+    current_version: "unversioned"
+    source_hash: 3d839e44a812657f
+    disposition: audited_no_change
+    priority: P2
+    reason: "MyNotes 知识库入库与 MOC 维护，职责清晰，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: old-coder
+    path: old-coder
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 8c0de2e4aa6e87ea
+    disposition: audited_no_change
+    priority: P2
+    reason: "高保障代码的证据优先开发，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: pdf
+    path: pdf
+    category: delivery
+    current_version: "unversioned"
+    source_hash: 5153af1c832ef5b7
+    disposition: audited_no_change
+    priority: P3
+    reason: "PDF 处理，路径可解析，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: pptx
+    path: pptx
+    category: delivery
+    current_version: "unversioned"
+    source_hash: 5b282b8989c7aee4
+    disposition: audited_no_change
+    priority: P2
+    reason: "演示文稿处理，脚本路径可解析；manifest 化属全局 P2 增强，非本轮必需。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: private-fund-dd-note
+    path: private-fund-dd-note
+    category: domain
+    current_version: "unversioned"
+    source_hash: b8ef86e24fafa6c3
+    disposition: improved
+    priority: P1
+    reason: "私募电话尽调纪要整理，证据分层与 review gate 成熟；已将正式 ODD 路由引用统一为 canonical id，并保留旧名兼容别名。"
+    required_changes: []
+    dependencies: [pe-odd-auditor]
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: public-data-collector
+    path: public-data-collector
+    category: domain
+    current_version: "unversioned"
+    source_hash: b87dc04ce1851b23
+    disposition: audited_no_change
+    priority: P1
+    reason: "公开免费数据源接入，内部源优先，职责清晰，暂无需修改。"
+    required_changes: []
+    dependencies: [zmdata-data-api]
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: quant-project-review
+    path: quant-project-review
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 77c4fe8a37ac32b3
+    disposition: audited_no_change
+    priority: P2
+    reason: "QuantSystem 项目进度评估，职责单一，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: receiving-code-review
+    path: receiving-code-review
+    category: governance
+    current_version: "unversioned"
+    source_hash: d2abac33cee08226
+    disposition: audited_no_change
+    priority: P3
+    reason: "接收代码审查反馈，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: requesting-code-review
+    path: requesting-code-review
+    category: governance
+    current_version: "unversioned"
+    source_hash: 383fc823c8e14363
+    disposition: audited_no_change
+    priority: P3
+    reason: "请求代码审查，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: research-report-writer
+    path: research-report-writer
+    category: delivery
+    current_version: "unversioned"
+    source_hash: 7023571081e98929
+    disposition: audited_no_change
+    priority: P2
+    reason: "研究报告写作，职责清晰；description 混入流程与'消费冻结 artifact'属 P2 打磨，非本轮必需。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: subagent-driven-development
+    path: subagent-driven-development
+    category: engineering
+    current_version: "unversioned"
+    source_hash: bbd8b225c0143b2a
+    disposition: audited_no_change
+    priority: P3
+    reason: "子代理驱动开发，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: test-driven-development
+    path: test-driven-development
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 999c1d55a96ddd3d
+    disposition: audited_no_change
+    priority: P3
+    reason: "测试驱动开发，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: using-git-worktrees
+    path: using-git-worktrees
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 287229ed583972ea
+    disposition: audited_no_change
+    priority: P3
+    reason: "Git worktree 隔离开发，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: using-superpowers
+    path: using-superpowers
+    category: governance
+    current_version: "unversioned"
+    source_hash: 3fecd8b0ab522b21
+    disposition: audited_no_change
+    priority: P3
+    reason: "Superpowers/skill 路由排查与维护，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: verification-before-completion
+    path: verification-before-completion
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 59a4307366d408f3
+    disposition: audited_no_change
+    priority: P2
+    reason: "完成前验证，稳定；description 混入流程属 P2 打磨，非本轮必需。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: wisdom-manager-product-research
+    path: wisdom-manager-product-research
+    category: domain
+    current_version: "unversioned"
+    source_hash: 87ade9218d7976a9
+    disposition: audited_no_change
+    priority: P1
+    reason: "管理人/产品研究，事实/研究分层清晰；含 docs/light-skill-version-check.md 外部引用需 manifest(P2)。"
+    required_changes: []
+    dependencies: [fund-wiki]
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: zmdata-data-api
+    path: zmdata-data-api
+    category: domain
+    current_version: "unversioned"
+    source_hash: dc95eb6f243b8961
+    disposition: audited_no_change
+    priority: P0
+    reason: "ZM 内部数据 API 权威参考，references/ 为唯一事实源，接口/参数/枚举不自行臆造；稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: ["含 .light-skill-update-cache.json 缓存与 docs/light-skill-version-check.md 外部引用，manifest 化属 P2 增强，本轮不处理"]
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: zm-skills-manager-local
+    path: zm-skills-manager-local
+    category: engineering
+    current_version: "unversioned"
+    source_hash: 9ce16b7c19cd2e34
+    disposition: needs_update
+    priority: P2
+    reason: "frontmatter name=zm-skills-manager 与目录名 zm-skills-manager-local 不一致；含 .light-skill-update-cache.json 缓存。"
+    required_changes: ["统一 frontmatter name 与目录名（方向需人工确认）", "登记/清理 .light-skill-update-cache.json 缓存（本轮不删）"]
+    dependencies: []
+    conflicts: ["是否重命名需人工决策"]
+    acceptance_checks: ["name 与目录名一致"]
+    human_review_required: true
+    target_batch: D
+    status: proposed
+
+  - id: writing-plans
+    path: writing-plans
+    category: governance
+    current_version: "unversioned"
+    source_hash: 696d11c13b8235b2
+    disposition: audited_no_change
+    priority: P2
+    reason: "实现计划编写，范围门槛与 Git 安全约束清晰，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: [brainstorming]
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: workflow-runner
+    path: workflow-runner
+    category: engineering
+    current_version: "unversioned"
+    source_hash: d1594cbd1f951a3f
+    disposition: audited_no_change
+    priority: P3
+    reason: "YAML 多角色工作流执行器，5 步流程清晰，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: ["依赖外部 agency-agents-zh 角色目录，属运行时依赖，未作为仓库内资源"]
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+  - id: xlsx
+    path: xlsx
+    category: delivery
+    current_version: "unversioned"
+    source_hash: eef11f091ab6e942
+    disposition: audited_no_change
+    priority: P2
+    reason: "电子表格处理，recalc.py 存在，稳定，暂无需修改。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: []
+    human_review_required: false
+    target_batch: none
+    status: completed
+
+summary:
+  total_skills: 56
+  improved: 14
+  audited_no_change: 34
+  needs_update: 4
+  candidate_merge: 3
+  candidate_split: 1
+  deprecated_candidate: 0
+  blocked_by_decision: 0
+  p0_count: 6
+  p1_count: 13
+  p2_count: 19
+  p3_count: 18
+
+# 分批实施队列（Batch A–D）。target_batch 已在各条目登记，此处汇总排序依据与允许修改范围。
+# Batch A 的原始队列记录了首轮待处理项；已完成项以各条目的 status、source_hash 和
+# acceptance_checks 为准，缓存删除、目录迁移和需要用户政策选择的事项仍保留在队列中。
+batches:
+  - id: A
+    label: "P0 高风险投资规则和数据证据"
+    scope: [fund-wiki-research, fof-risk-report-generator]
+    allowed_files: []
+    note: "fund-wiki-research 包装入口与旧版引擎兼容已完成；fof-risk-report-generator 已统一 canonical name。缓存与历史 HTML 的删除/迁移仍需资产保留决策。"
+
+  - id: B
+    label: "量化研究、基金研究、宏观和知识沉淀"
+    scope: []
+    allowed_files: []
+    note: "本批 P0/P1 相关 Skill 已 improved 或 audited_no_change，无新增待改项。"
+
+  - id: C
+    label: "报告、网页、文档、表格和交付 Skill"
+    scope: []
+    allowed_files: []
+    note: "候选合并/拆分（frontend-design、architecture-diagram、writing-skills 等）需人工决策，blocked_by_decision。"
+
+  - id: D
+    label: "工程协作、Git、插件、MCP 和辅助 Skill"
+    scope: [chinese-git-workflow, dispatching-parallel-agents, skill-creator, zm-skills-manager-local]
+    allowed_files: []
+    note: "chinese-git-workflow（3 个未解析脚本）、dispatching-parallel-agents（1 个未解析测试文件）、skill-creator（11 个未解析示例资源）均涉及缺失文件，无法补造；zm-skills-manager-local 为命名决策。本轮不修改。"

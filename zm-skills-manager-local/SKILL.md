@@ -1,5 +1,5 @@
 ---
-name: zm-skills-manager
+name: zm-skills-manager-local
 description: Use when users want to find, inspect, download, install, update, or upload ZM App Store Skills from an agent or IDE without opening the Hub web UI.
 ---
 <!-- light-skill-version-check:start -->
@@ -41,4 +41,3 @@ python3 scripts/skills_manager.py upload ./my-skill --name "My Skill" --owner "T
 ```
 
 If multiple target IDE skills directories exist and the user did not specify `--target` or `--dest`, ask which target to use. User-uploaded Skills are available immediately and are marked with `sourceKind=uploaded` plus the `分享` tag.
-

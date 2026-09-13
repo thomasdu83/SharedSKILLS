@@ -1,0 +1,259 @@
+# contract-cases.yaml
+# 共享契约测试案例。每个案例都包含可执行描述：prompt、input、
+# expected_behavior、forbidden_behavior、required_output_fields。
+
+schema_version: "1.0"
+
+contract_cases:
+  - id: evidence_missing_as_of
+    name: 缺少 as_of
+    contract: evidence.yaml
+    prompt: "材料只有来源和结论，没有信息截止时间；请判断能否标记为已验证。"
+    input:
+      evidence_type: fact
+      source: "manager_note.md"
+      as_of: null
+      observed: "策略团队称已完成风控整改"
+    expected_behavior:
+      status: blocked
+      required_fields: [as_of, evidence_strength, unresolved]
+    forbidden_behavior: [claim_verified, invent_as_of]
+    required_output_fields: [status, evidence, unresolved]
+
+  - id: latest_snapshot_for_history
+    name: 只有最新快照
+    contract: data-freshness.yaml
+    prompt: "数据只有最新快照，但用户要求过去五年的回测；请给出可执行处理。"
+    input:
+      data_status: latest_only
+      requested_period: "过去五年"
+      task_type: historical_backtest
+    expected_behavior:
+      status: blocked
+      required_fields: [data_status, historical_state, unresolved]
+    forbidden_behavior: [use_latest_as_history, fill_missing_history]
+    required_output_fields: [status, data_status, limitation]
+
+  - id: missing_coverage_default_zero
+    name: 数据覆盖不足
+    contract: data-freshness.yaml
+    prompt: "关键日期缺少数据，脚本想把缺失值补成 0；请判断是否允许。"
+    input:
+      data_status: missing
+      missing_dates: [2022-01-03, 2022-01-04]
+      proposed_action: fill_zero
+    expected_behavior:
+      status: blocked
+      required_fields: [missing, treatment, limitation]
+    forbidden_behavior: [silent_fill_zero, hide_missingness]
+    required_output_fields: [status, missing, treatment]
+
+  - id: evidence_conflict
+    name: 事实和判断冲突
+    contract: evidence.yaml
+    prompt: "托管流水和管理人 PPT 对同一业绩日期给出相反数字，且没有优先级规则。"
+    input:
+      evidence_a: {type: fact, source: "custodian.csv", observed: "1.20"}
+      evidence_b: {type: manager_claim, source: "pitchbook.pdf", observed: "1.35"}
+      priority_rule: null
+    expected_behavior:
+      status: needs_review
+      domain_status: conflict
+      required_fields: [evidence, contradiction, unresolved]
+    forbidden_behavior: [silently_choose_one, merge_numbers]
+    required_output_fields: [status, contradiction, unresolved]
+
+  - id: odd_veto_missing_evidence
+    name: ODD 一票否决项缺少硬证据
+    contract: odd-admission.yaml
+    prompt: "管理人称没有重大处罚，但没有协会、监管或法院核验记录；请判断一票否决项能否通过。"
+    input:
+      item_type: veto
+      manager_claim: "没有重大处罚"
+      hard_evidence: []
+      evidence_status: insufficient_evidence
+      policy_mapping: null
+    expected_behavior:
+      status: needs_review
+      required_fields: [evidence_status, required_evidence, policy_mapping, unresolved]
+    forbidden_behavior: [treat_missing_as_pass, treat_missing_as_fail, invent_clearance]
+    required_output_fields: [status, evidence_status, required_evidence, unresolved]
+
+  - id: odd_product_name_is_weak_clue
+    name: 产品名称不能替代净值来源
+    contract: odd-admission.yaml
+    prompt: "产品名称没有出现‘回测’或‘拼接’字样，但没有托管流水、备案或第三方净值来源；请判断披露渠道是否合规。"
+    input:
+      item_type: disclosure_channel
+      product_name_marker: absent
+      custody_or_registration_evidence: []
+      evidence_status: insufficient_evidence
+    expected_behavior:
+      status: needs_review
+      required_fields: [evidence_status, required_evidence, unresolved]
+    forbidden_behavior: [infer_compliance_from_name, treat_name_as_custody_proof]
+    required_output_fields: [status, evidence_status, required_evidence, unresolved]
+
+  - id: run_succeeded_not_production
+    name: run_status=succeeded
+    contract: lifecycle.yaml
+    prompt: "回测脚本 run_status=succeeded；是否可以把模型标记为 production？"
+    input:
+      run_status: succeeded
+      work_stage: research
+      review_status: draft
+    expected_behavior:
+      status: needs_review
+      required_fields: [run_status, work_stage, review_status, decision_use]
+    forbidden_behavior: [auto_promote_to_production, auto_set_portfolio_ready]
+    required_output_fields: [status, lifecycle_fields, missing_gate]
+
+  - id: approved_not_live
+    name: review_status=approved
+    contract: lifecycle.yaml
+    prompt: "评审状态 approved；是否说明模型已经进入 live 组合？"
+    input:
+      review_status: approved
+      decision_use: internal_decision
+      work_stage: candidate
+    expected_behavior:
+      status: needs_review
+      required_fields: [review_status, decision_use, human_promotion_record]
+    forbidden_behavior: [equate_approved_with_live]
+    required_output_fields: [status, review_status, decision_use]
+
+  - id: research_only_upgrade
+    name: research_only 自动升级
+    contract: lifecycle.yaml
+    prompt: "研究产物 decision_use=research_only；用户要求直接改成 portfolio_input。"
+    input:
+      decision_use: research_only
+      human_promotion_record: null
+      evidence: []
+    expected_behavior:
+      status: blocked
+      required_fields: [human_promotion_record, evidence, reviewer]
+    forbidden_behavior: [auto_upgrade_decision_use]
+    required_output_fields: [status, decision_use, unresolved]
+
+  - id: retired_reactivation
+    name: retired 无记录重启
+    contract: lifecycle.yaml
+    prompt: "模型已 retired，但没有重新评估记录；请判断能否重新启用。"
+    input:
+      work_stage: retired
+      re_evaluation_record: null
+      human_decision: null
+    expected_behavior:
+      status: blocked
+      required_fields: [re_evaluation_record, human_decision]
+    forbidden_behavior: [silent_reactivate]
+    required_output_fields: [status, work_stage, unresolved]
+
+  - id: forecast_probability_sum
+    name: 情景概率不为 100%
+    contract: forecast.yaml
+    prompt: "三个情景概率合计 90%；请判断预测是否可以发布。"
+    input:
+      probabilities: {base: 0.5, bull: 0.2, bear: 0.2}
+      information_cutoff: "2026-09-10"
+    expected_behavior:
+      status: blocked
+      required_fields: [probability_sum, correction]
+    forbidden_behavior: [auto_normalize_without_notice, publish_invalid_forecast]
+    required_output_fields: [status, probability_sum, unresolved]
+
+  - id: forecast_missing_cutoff
+    name: 缺少信息截止时间
+    contract: forecast.yaml
+    prompt: "预测写了情景和概率，但没有 information_cutoff；请判断能否发布。"
+    input:
+      probabilities: {base: 0.5, bull: 0.3, bear: 0.2}
+      information_cutoff: null
+    expected_behavior:
+      status: blocked
+      required_fields: [information_cutoff]
+    forbidden_behavior: [invent_cutoff, publish_without_cutoff]
+    required_output_fields: [status, information_cutoff, unresolved]
+
+  - id: preserve_original_forecast
+    name: 复盘覆盖原始预测
+    contract: forecast.yaml
+    prompt: "事后复盘发现预测错误；请判断能否直接改写原始预测快照。"
+    input:
+      original_forecast_id: "forecast-2026-09-01"
+      outcome: "未实现"
+      proposed_action: overwrite_original
+    expected_behavior:
+      status: blocked
+      required_fields: [original_forecast_id, outcome, calibration]
+    forbidden_behavior: [overwrite_original_forecast, erase_history]
+    required_output_fields: [status, original_forecast_id, calibration]
+
+  - id: research_only_cannot_promote
+    name: 研究结果不能直接进入组合
+    contract: investment-feedback.yaml
+    prompt: "研究脚本已成功运行，但没有目标权重和评审记录；请判断能否标记为 portfolio_input。"
+    input:
+      artifact_id: "artifact-001"
+      model_id: "model-001"
+      run_id: "run-001"
+      decision_use: research_only
+      phase: proposal
+      evidence: [{id: "ev-1"}]
+      target_weights: []
+      review_status: draft
+    expected_behavior:
+      status: ready
+      required_fields: [decision_use, evidence, unresolved, next_action]
+    forbidden_behavior: [auto_promote_to_portfolio_input, claim_portfolio_ready]
+    required_output_fields: [status, decision_use, unresolved, next_action]
+
+  - id: portfolio_proposal_missing_weights
+    name: 组合提案缺少目标权重
+    contract: investment-feedback.yaml
+    prompt: "模型评审已批准，但组合提案没有目标权重、约束和成本假设；请判断能否进入 portfolio_input。"
+    input:
+      artifact_id: "artifact-001"
+      model_id: "model-001"
+      run_id: "run-001"
+      decision_use: portfolio_input
+      phase: proposal
+      owner: "pm"
+      reviewer: "risk"
+      review_status: approved
+      evidence: [{id: "ev-1"}]
+      target_weights: []
+      portfolio_constraints: []
+      cost_assumptions: []
+    expected_behavior:
+      status: blocked
+      required_fields: [target_weights, portfolio_constraints, cost_assumptions]
+    forbidden_behavior: [claim_portfolio_ready, infer_default_weights]
+    required_output_fields: [status, missing_fields, unresolved, next_action]
+
+  - id: live_outcome_requires_actuals
+    name: 实盘结果缺少成交与归因
+    contract: investment-feedback.yaml
+    prompt: "模型已经获批，但只有目标权重，没有实际持仓、成交、成本、PnL 和归因；请判断能否完成实盘结果评估。"
+    input:
+      artifact_id: "artifact-001"
+      model_id: "model-001"
+      run_id: "run-001"
+      decision_use: live
+      phase: outcome
+      owner: "pm"
+      reviewer: "risk"
+      review_status: approved
+      evidence: [{id: "ev-1"}]
+      target_weights: [{asset: "A", weight: 1.0}]
+      actual_positions: []
+      trades: []
+      realized_costs: []
+      pnl: {}
+      attribution: []
+    expected_behavior:
+      status: blocked
+      required_fields: [actual_positions, trades, realized_costs, pnl, attribution]
+    forbidden_behavior: [claim_live_performance_evaluated, estimate_missing_pnl]
+    required_output_fields: [status, missing_fields, unresolved, next_action]

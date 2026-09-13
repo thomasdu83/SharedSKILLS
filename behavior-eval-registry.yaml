@@ -1,0 +1,44 @@
+# behavior-eval-registry.yaml
+# GPT-5.4+ 行为回归登记册。这里只登记执行状态，不把格式校验冒充为模型验收。
+# 真实模型输入/输出应放在用户指定的审计目录，并由 run 记录引用。
+
+schema_version: "1.0"
+
+baseline:
+  model_family: GPT
+  minimum_version: "5.4"
+  required_run_fields:
+    - run_id
+    - suite_id
+    - case_id
+    - model_id
+    - started_at
+    - input_ref
+    - output_ref
+    - automatic_checks
+    - human_review
+    - result
+  run_template: behavior-eval-run-template.yaml
+
+statuses:
+  - pending
+  - executed
+  - reviewed
+  - failed
+
+suites:
+  - id: routing
+    case_file: tests/routing-cases.yaml
+    purpose: 主入口唯一性、边界路由与越界动作
+  - id: pressure
+    case_file: tests/pressure-cases.yaml
+    purpose: PIT、证据不足、冲突、生命周期和外部依赖压力场景
+  - id: retrospective
+    case_file: tests/retro-cases.yaml
+    purpose: 经验登记、晋级、回滚与项目内保留边界
+  - id: contracts
+    case_file: tests/contract-cases.yaml
+    purpose: 共享契约的阻断、复核和禁止行为
+
+# 尚未执行真实模型行为回归。登记为空是明确状态，不代表验收通过。
+runs: []

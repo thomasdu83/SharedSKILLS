@@ -1,0 +1,64 @@
+# SharedSKILLS 外部依赖清单。
+# 路径属于 QuantSystem、MyNotes、网络盘或运行环境时，必须在这里说明来源和缺失处理。
+
+schema_version: "1.0"
+
+dependencies:
+  - id: quantsystem-templates
+    kind: repository_path
+    provider: F:/Thomas/QuantSystem
+    paths:
+      - docs/templates/indicator-monitor/
+      - docs/templates/frontend-interaction/
+      - docs/superpowers/plans/
+      - docs/retrospectives/
+    required_by:
+      - ai-quant-development-router
+      - frontend-page-router
+      - frontend-report-page
+      - frontend-ops-platform
+      - quant-develop
+      - quant-research-coding
+      - project-retrospective
+      - writing-plans
+      - requesting-code-review
+      - subagent-driven-development
+    missing_policy: warning
+    verification: "检查 provider 路径存在，并由 QuantSystem 的项目检查确认模板版本"
+
+  - id: mynotes-vault
+    kind: repository_path
+    provider: F:/Thomas/MyNotes
+    paths:
+      - 投资研究/
+    required_by:
+      - macro-strategy-learning
+      - mynotes-knowledge-manager
+      - private-fund-dd-note
+    missing_policy: blocked
+    verification: "确认 vault 根目录和目标笔记路径可写，并保留 note id"
+
+  - id: fund-wiki-runtime
+    kind: runtime_environment
+    provider: fund-wiki / zmdata / network share
+    paths:
+      - fund_profile_wiki_docs/
+      - zmdata API
+    required_by:
+      - fund-wiki
+      - fund-wiki-research
+      - fund-track-tag-audit
+      - wisdom-manager-product-research
+    missing_policy: blocked
+    verification: "运行对应 health check 或 API 身份/连通性检查；不得用缓存替代未核验事实"
+
+  - id: public-data-network
+    kind: external_service
+    provider: public internet sources
+    paths: []
+    required_by:
+      - public-data-collector
+      - quant-report-qa-interpreter
+      - private-fund-dd-note
+    missing_policy: needs_review
+    verification: "记录 URL、抓取时间、原始摘录和失败原因"

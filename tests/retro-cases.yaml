@@ -1,0 +1,61 @@
+# retro-cases.yaml
+# 经验回写测试用例。用于覆盖经验晋级、项目内保留、废弃与回滚的边界。
+# 供 run_skill_evals.py 校验格式，也供未来复盘行为评估使用。
+
+schema_version: "1.0"
+
+cases:
+  - id: single_observation
+    input:
+      independent_projects: 1
+      repeated_pattern: false
+      major_error_fixed: false
+    expected:
+      status: observed|proposed
+      writeback_allowed: false
+
+  - id: repeated_stable_pattern
+    input:
+      independent_projects: 2
+      repeated_pattern: true
+      generalized_rule: true
+      positive_case: true
+      negative_case: true
+    expected:
+      status: trial
+      writeback_allowed: proposal_only
+
+  - id: non_generalizable_detail
+    input:
+      project_specific: true
+      path_specific: true
+      generalized_rule: false
+    expected:
+      status: observed
+      destination: project_document
+
+  - id: rule_causes_regression
+    input:
+      existing_rule: true
+      new_rule_causes_misrouting: true
+    expected:
+      status: deprecated|reverted
+      requires: regression_evidence
+
+  - id: template_not_ready
+    input:
+      stable_directory_shape: false
+      stable_config_center: false
+      stable_output_pattern: false
+    expected:
+      template_worthy: false
+
+  - id: two_projects_without_pos_neg
+    input:
+      independent_projects: 2
+      repeated_pattern: true
+      generalized_rule: true
+      positive_case: false
+    expected:
+      status: proposed
+      writeback_allowed: false

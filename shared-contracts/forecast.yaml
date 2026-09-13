@@ -1,0 +1,30 @@
+# forecast.yaml
+# 预测与宏观判断的共同字段。所有宏观预测/情景判断必须接入本契约。
+
+schema_version: "1.0"
+
+forecast:
+  forecast_id: string         # 预测唯一标识
+  information_cutoff: string  # 信息截止时间（必须记录）
+  decision_horizon: string    # 决策/预测期限
+  universe: string            # 覆盖的资产/标的范围
+  benchmark: string           # 基准
+  scenarios: []               # 情景列表（最多三个，互斥可理解）
+  probabilities: []           # 与 scenarios 一一对应的概率，总和必须为 100%
+  market_pricing: string      # 当前市场定价（市场隐含了什么）
+  asset_mapping: []           # 各资产在情景下的条件表达
+  stance: string              # 立场/观点
+  falsifiers: []              # 证伪条件
+  confidence: string          # 置信度（过程质量与结果质量分开评估）
+  review_date: string         # 复盘日期（区别于决策期限）
+  outcome: string             # 事后结果（复盘时填写，不覆盖原始预测）
+  calibration: string         # 校准记录
+
+# 约束（不得违反）
+constraints:
+  - 情景概率总和必须为 100%。
+  - 必须记录 information_cutoff（信息截止时间），否则预测不得发布。
+  - 必须区分 decision_horizon（预测期限）与 review_date（复盘期限）。
+  - 事后复盘不能覆盖原始预测：原始预测冻结保存，复盘在 outcome/calibration 中追加。
+  - 结果质量（outcome 是否兑现）与过程质量（推理是否合规）分开评估。
+  - 单次预测错误不得直接修改正式框架；只能生成 framework change candidate。

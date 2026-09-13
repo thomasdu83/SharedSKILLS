@@ -1,7 +1,9 @@
 ---
-name: "FOF_Risk_Report_Generator"
-description: "把投后归因规范落成可执行输出（文字/HTML）。当用户要一键生成FOF投后归因报告、复盘材料或需要可复现的落盘产物时调用。"
+name: fof-risk-report-generator
+description: Use when generating or reviewing FOF post-investment attribution, portfolio performance explanations, or reproducible text/HTML attribution artifacts.
 ---
+
+兼容别名：`FOF_Risk_Report_Generator`。Skill 根目录只保存源码和说明；运行产物必须写入用户指定的输出目录，不要把 HTML、缓存或运行日志写回本目录。
 <!-- light-skill-version-check:start -->
 ## Version Check
 
@@ -43,7 +45,7 @@ For details, read `docs/light-skill-version-check.md`.
 ### 1) 生成 HTML（默认）
 
 ```bash
-python run.py
+python run.py --output-html <output-dir>\fof-risk-report.html
 ```
 
 ### 2) 仅生成文字版（不落盘 HTML）

@@ -1,0 +1,26 @@
+# 行为回归单条运行记录模板。复制后填入真实模型执行信息，再登记到
+# behavior-eval-registry.yaml 的 runs 列表；不要把示例值当作执行证据。
+
+run_id: ""
+suite_id: "routing|pressure|retrospective|contracts"
+case_id: ""
+model_id: ""
+model_version: "5.4"
+started_at: "2026-09-13T00:00:00+08:00"
+status: pending
+input_ref: "path/to/input-or-transcript"
+output_ref: "path/to/model-output"
+automatic_checks:
+  route_decision: not_run
+  contract_validation: not_run
+  forbidden_behavior_scan: not_run
+human_review:
+  status: not_reviewed
+  reviewer: ""
+  score: null
+  notes: ""
+result:
+  decision: ""
+  violations: []
+  failure_classification: ""
+  next_action: ""

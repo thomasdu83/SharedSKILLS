@@ -13,6 +13,11 @@ evidence without losing the thread.
 Lead with the thesis on a white research canvas, then make the evidence
 navigable.
 
+For QuantSystem indicator-monitor reports or reports with dense tables,
+filters, and charts, read `docs/templates/indicator-monitor/README.md` and
+`docs/templates/frontend-interaction/README.md` first, then load only the
+component specifications needed by the page.
+
 ## Default Structure
 
 For finance research reports, start with:

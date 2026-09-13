@@ -37,6 +37,42 @@ QuantSystem 项目时，才使用本技能。
 
 从研究脚本晋级正式项目时，至少带走假设、入口、参数、PIT/data scope、验证证据、失败条件和晋级理由。探索期临时脚本无需永久登记；正式比较批次中的失败模型必须保留结果和排除原因。
 
+### 统一生命周期字段与晋级门禁
+
+本 skill 的生命周期字段统一遵循 `../shared-contracts/lifecycle.yaml`，不得自行另起一套状态名。
+
+- `work_stage`（项目阶段）：`idea → research → candidate → production → monitor_only → retired`。
+- `model_role`（模型版本角色）：`research / candidate / challenger / champion / rejected`。
+  - `candidate`：达到晋级标准、等待评审的候选版本；
+  - `challenger`：进入样本外/并行比较、试图取代现任冠军的版本；
+  - `champion`：当前被组合采用的现任版本；
+  - `rejected`：比较批次中被排除的版本（结果和排除原因必须保留）。
+- `run_status`（单次运行）：`queued / running / succeeded / failed / blocked`，只描述运行结果，不描述模型可用性。
+- `review_status`（评审）：`draft / reviewed / approved`。
+- `decision_use`（决策用途）：`research_only / internal_decision / portfolio_input / live`。
+
+任何晋级（如 `candidate → champion`、`research_only → portfolio_input`）都必须同时记录证据、人工结论和评审记录；三者缺一，不得晋级。
+
+不得因"代码运行成功""页面完成""一次回测通过"就标记 `production` 或 `portfolio_ready`。`run_status: succeeded` 不等于 `production`，`review_status: approved` 不等于 `live`。
+
+### 研究到组合的反馈闭环
+
+当输出进入 `portfolio_input` 或 `live`，必须同时遵守
+`../shared-contracts/investment-feedback.yaml`。该契约把研究结果、目标权重、组合约束、成本假设、实际持仓、成交、实际成本、PnL 与归因拆成独立证据，禁止用“回测成功”“信号排名”或“页面完成”替代组合评估。
+
+- `proposal` 阶段必须有冻结的 `artifact_id`、`run_id`、`target_weights`、`portfolio_constraints`、`cost_assumptions`、证据和已批准的评审记录。
+- `execution` 阶段必须保存 `actual_positions`、`trades` 和 `realized_costs`；没有这些字段只能返回 `blocked`。
+- `outcome` 阶段还必须保存 `pnl` 与 `attribution`，并把预测过程质量与实际结果质量分开记录。
+- `lifecycle_action=pause|retire` 必须引用已定义的 `kill_conditions` 和对应证据；单次运行失败不能自动退役模型，最终动作仍需人工决定。
+
+确定性字段检查可运行：
+
+```text
+python ../scripts/investment_feedback.py --json '<normalized payload>'
+```
+
+该脚本只校验结构化输入，不推断权重、收益或容量，也不代替投委会或责任人的批准。
+
 ### 回测与跟踪前端门禁
 
 不要把“历史回测需要可读产物”和“定型模型需要运行工作台”混为一类。
@@ -82,7 +118,7 @@ QuantSystem 项目时，才使用本技能。
 - **Point-in-Time First**: 先证明每个输入在目标 `tradingday` / `as_of_date` 可见，再讨论计算结果。
 - **Evidence Chain**: 主结果、运行参数、依赖覆盖、审计明细和验证证据必须能够关联到同一个 `run_id`。
 - **Metadata Single Source**: 指标定义、参数、数据源、解释口径应由单一元数据源驱动；报告层只消费快照，不重复维护业务定义。
-- **Semantic Correctness Before Visualization**: 先校正字段语义、单位、名义/实际口径、事件归属，再谈图表和卡片展示。
+- **Semantic Correctness Before Visualization**: 先校正字段语义、单位、名义/实际口径、事件归属，再谈图表和卡片展示。对滚动指标先固定窗口、最小观测数、去重和缺失语义；窗口不足时保持缺失，不要用 0 或伪趋势补齐。
 
 ## 2. 工作流 (Workflow)
 
@@ -107,6 +143,10 @@ QuantSystem 项目时，才使用本技能。
      - 当前阶段需要静态 HTML 回测评审文档，还是定型后的交互式跟踪工作台
      - 是否真的需要接入统一前端、`registry/`、`workflows/`
    - 若涉及标签、因子、信号、回测、风控或 fallback，先阅读 [validation.md](references/validation.md)。
+   - 若任务涉及指标监控 HTML 报告或数据密集型前端，先读仓库模板资源：
+     - `docs/templates/indicator-monitor/README.md`，再按需下钻同目录的 `template-spec.md`、`template-checklist.md`、`config.example.yaml`、`report-outline.example.md`
+     - `docs/templates/frontend-interaction/README.md`，再按需下钻同目录的表格、筛选器、图表和通用交互规范
+   - 这些模板用于先定项目方案、目录、配置、报告骨架和交互约束，不替代具体项目的 `README.md`、`project.yaml` 和业务实现。
 2. **规划 (Planning)**:
    - 正式项目、共享模块或生产链路涉及 Add/Mod/Del 功能时，必须先列出计划。
    - 单文件小改、轻量规则调整或研究脚本可使用 3-5 行内联计划，不新建计划文档。

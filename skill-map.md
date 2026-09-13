@@ -32,7 +32,7 @@
 | 轻量量化研究代码 / 一次性脚本 / 探索性回测 | `quant-research-coding` | `zmdata-data-api` / `verification-before-completion` | 一级、二级默认入口 |
 | AI 辅助开发新的量化策略/模型（有无前端均可） | `ai-quant-development-router` | `quant-research-coding` / `quant-develop` / `frontend-page-router` / `verification-before-completion` | 自动识别最小可验证闭环并路由专业技能；不替代量化或前端实现规范 |
 | 历史回测 / 模型研究评审 / 静态 HTML 回测文档 | `quant-research-coding` | `frontend-report-page` / `research-report-writer` | 专注模型假设、样本口径、表现、风险、稳健性和复现证据，不默认做交互系统 |
-| 量化系统开发、回测、组合工程 | `quant-develop` | `systematic-debugging` | 正式项目、复用模块、工程与契约 |
+| 量化系统开发、回测、组合工程 | `quant-develop` | `systematic-debugging` | 正式项目、复用模块、工程与契约；进入组合时必须接 `investment-feedback` |
 | 前后端触发数据更新/计算、缓存刷新、删除旧数据 | `quant-develop` | `frontend-ops-platform` / `verification-before-completion` | 先读 `quant-develop/references/data-lifecycle.md`，统一任务状态、预览确认、并发锁、缓存失效和空状态 |
 | 定型模型跟踪 / 监控 / 发布门禁 / 运行工作台 | `quant-develop` | `frontend-ops-platform` / `verification-before-completion` | 只有进入跟踪、监控、发布或人工操作时才做前后端交互 |
 | 非模型指标长期观察 / 只读监控 | `quant-develop`（轻量 `monitor_only`） | `frontend-ops-platform` 的 `read_only_monitor` | 按投资问题归组，不自动引入 Champion、回测或编辑审批链 |
@@ -43,7 +43,7 @@
 | 定量报告质检与解读 | `quant-report-qa-interpreter` | `research-report-writer` | 报告审查与再表达 |
 | 投后归因报告 | `FOF_Risk_Report_Generator` | `fund-wiki-research` | 先归因，再写结论 |
 | 策略标签 / 赛道审计 | `fund-track-tag-audit` | `fund-wiki` | 适合标签修正与证据核对 |
-| ODD 审计 | `PE_ODD_Auditor` | `docx` / `pptx` / `pdf` | 风控与合规穿透 |
+| ODD 审计 | `pe-odd-auditor`（兼容别名 `PE_ODD_Auditor`） | `docx` / `pptx` / `pdf` | 风控与合规穿透 |
 | 研究报告写作 | `research-report-writer` | `docx` / `pptx` / `xlsx` | 负责表达和结构 |
 | 论文 / 策略复现 | `investment-paper-replication` | `quant-develop` / `research-report-writer` | 先复现，再落地 |
 
@@ -106,6 +106,13 @@
 - 研究脚本先轻量验证，项目化信号出现后再上 `quant-develop`。
 - 历史回测优先静态 HTML 评审文档；定型后跟踪才优先交互式工作台。
 - `production` 表示输出建议权重/配置/信号；`monitor_only` 只表示状态、变化、告警和复核线索。
+- 没有冻结研究产物、目标权重、组合约束、成本假设、实际持仓、成交和归因证据时，只能输出研究或待复核状态，不得声称已完成组合评估、实盘执行或模型退役。
 - 项目阶段与模型版本状态分开；Registry 按跨项目治理需求启用，不作为所有项目的默认前置条件。
 - 只读监控页面默认提供筛选、刷新和下钻，不增加编辑、审批或发布按钮。
 - 普通 TDD 不触发 `old-coder`；只有用户明确要证据报告或高保障时才触发。
+
+## 统一执行结果
+
+核心入口完成启动检查后，都应按 `shared-contracts/execution.yaml` 返回最小结果：
+`status`、`decision`、`evidence`、`limitations`、`unresolved`、`next_action`。
+`blocked`、`needs_review` 和 `draft` 是可交付的真实状态，不能被改写成“已完成”或“已验证”。

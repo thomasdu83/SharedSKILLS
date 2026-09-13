@@ -10,7 +10,9 @@ quiet control surface, not a report cover.
 
 ## Core Principle
 
-Make the object, its state, and the next action visible at the same time.
+Make the object, its state, and the next action visible at the same time. Keep analysis, calculation, and destructive actions inside the relevant object page or row; avoid global toolbars when the action scope is narrower.
+
+For QuantSystem workbenches with dense tables, filters, charts, or read-only monitor panes, read `docs/templates/frontend-interaction/README.md` first; for indicator-monitor style report shells, also align with `docs/templates/indicator-monitor/README.md`.
 
 For `read_only_monitor`, the next action is an inspection or review decision,
 not an edit. Do not invent save, delete, approval, or publish controls when the

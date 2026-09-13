@@ -21,7 +21,7 @@ description: Use when 用户要求把私募基金/私募管理人电话尽调、
 不要在以下情形使用本技能：
 
 - 只做 MyNotes 归档、改路径、改 frontmatter、改标签时，使用 `mynotes-knowledge-manager`
-- 需要正式 ODD 评分、按扣分表打分时，使用 `PE_ODD_Auditor`
+- 需要正式 ODD 评分、按扣分表打分时，使用 `pe-odd-auditor`（兼容别名 `PE_ODD_Auditor`）
 - 需要将内容入库到 fund-wiki 或做基金池研究时，使用 `fund-wiki` 或 `fund-wiki-research`
 
 ## 必读引用

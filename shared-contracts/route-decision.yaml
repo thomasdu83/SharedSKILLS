@@ -1,0 +1,22 @@
+# 统一主入口路由决策记录。
+# 该对象记录模型如何选择 Skill，不是关键词脚本，也不替代领域 Skill 的执行契约。
+
+schema_version: "1.0"
+
+route_decision:
+  primary_skill: string
+  support_skills: []
+  task_class: string
+  risk_level: 1|2|3|4
+  trigger_evidence: []
+  excluded_skills: []
+  escalation: string|null
+  unresolved: []
+
+constraints:
+  - primary_skill 必须是 skill-registry.yaml 中 status=active 且 routable=true 的 Skill。
+  - support_skills 默认最多两个；超过两个时必须给出选择理由和调用顺序，实际输出仍不得超过两个。
+  - support_skills 不得包含 primary_skill，也不得包含 primary_skill 的 excludes 项。
+  - trigger_evidence 必须说明用户请求中的触发事实；不能只写“关键词命中”。
+  - 没有唯一主入口或存在相互冲突的高风险信号时，必须输出 unresolved 并进入 needs_review，不能静默拼接多个主 Skill。
+  - escalation 只能指向注册表中存在的 Skill，且必须符合目标 Skill 的触发边界。

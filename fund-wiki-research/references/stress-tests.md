@@ -60,7 +60,7 @@ User asks to test a market-neutral research workflow. New research reports exist
 
 Expected behavior:
 
-- Run `build_research_index.py --json`.
+- Run `fund-wiki-research\scripts\build_research_index.py --json --docs-root "<fund_profile_wiki_docs>"`.
 - Re-run `query_fund_wiki.py ... --research-only`.
 - Compare research note count and returned artifacts before/after refresh when possible.
 - Report stale research index as a process/tooling gap, not as an absence of research work.

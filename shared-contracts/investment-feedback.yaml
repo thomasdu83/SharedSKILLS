@@ -1,0 +1,44 @@
+# 研究结论到组合决策、执行和结果反馈的最小闭环契约。
+# 本契约只定义证据门槛，不替代具体组合引擎、交易系统或投委会政策。
+
+schema_version: "1.0"
+
+input:
+  artifact_id: string          # 冻结的研究/模型产物
+  model_id: string             # 模型或策略的稳定标识
+  run_id: string               # 生成本次研究/决策快照的运行标识
+  decision_use: research_only|internal_decision|portfolio_input|live
+  phase: proposal|execution|outcome
+  owner: string
+  reviewer: string|null
+  review_status: draft|reviewed|approved
+  evidence: []                 # evidence.yaml 引用或等价结构化证据
+  target_weights: []           # proposal 阶段进入组合前必须有
+  portfolio_constraints: []    # 风险预算、集中度、流动性等约束
+  cost_assumptions: []         # 费用、滑点、冲击和容量假设
+  actual_positions: []         # execution/outcome 阶段的实际持仓快照
+  trades: []                   # execution/outcome 阶段的订单/成交记录
+  realized_costs: []           # execution/outcome 阶段的实际成本
+  pnl: {}                      # outcome 阶段的收益与基准
+  attribution: []              # 策略/资产/因子/交易等归因
+  lifecycle_action: none|continue|degrade|pause|retire
+  kill_conditions: []          # pause/retire 必须能追溯到已定义条件
+  forecast: {}                 # 可选：预测快照、实现结果与校准记录
+
+output:
+  status: ready|needs_review|blocked
+  decision: string
+  decision_use: string
+  phase: string
+  missing_fields: []
+  unresolved: []
+  evidence: []
+  next_action: string
+
+constraints:
+  - research_only 只能说明研究结果，不能自动变成 portfolio_input 或 live。
+  - portfolio_input/live 的 proposal 必须同时有 target_weights、portfolio_constraints、cost_assumptions、evidence、review_status=approved 和 reviewer。
+  - execution/outcome 阶段必须有 actual_positions、trades、realized_costs；outcome 还必须有 pnl 与 attribution。
+  - 没有 target_weights、实际持仓、成交和成本时，不得声称已完成组合评估或执行评估。
+  - lifecycle_action=pause/retire 必须有 kill_conditions 和对应证据；单次运行失败不能自动退役模型。
+  - forecast 的过程质量和 outcome 的结果质量必须分开记录，复盘不得覆盖原始 forecast。

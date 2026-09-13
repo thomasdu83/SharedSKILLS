@@ -1,0 +1,43 @@
+# delivery-input.yaml
+# 交付 Skill 的输入分级契约。交付层消费冻结研究结果，不重新产生投资判断。
+
+schema_version: "1.0"
+
+profiles:
+  investment_conclusion:
+    required_fields:
+      - artifact_id
+      - review_status
+      - as_of
+      - source_manifest
+      - run_manifest
+      - facts
+      - judgments
+      - limitations
+    allowed_review_status:
+      - reviewed
+      - approved
+    rule: 只能重排和呈现 artifact；需要改判断时退回研究层生成新 artifact。
+
+  format_conversion:
+    required_fields:
+      - input_artifact_or_file
+      - output_path
+      - format_validation
+    rule: 只验证格式转换结果，不新增或修改研究结论。
+
+  visual_expression:
+    required_fields:
+      - artifact_id
+      - review_status
+      - as_of
+      - source_manifest
+    allowed_review_status:
+      - reviewed
+      - approved
+    rule: 只负责视觉表达；不得生成未在 artifact 中存在的事实、判断或行动。
+
+constraints:
+  - artifact_id 一旦发布不可变；研究判断变化必须产生新 artifact_id。
+  - 交付结果必须保留 artifact_id、as_of、source_manifest 和 run_manifest（若适用）。
+  - 缺少冻结 artifact 或 review_status 不满足 profile 时，返回 needs_review 或 blocked，不得声称交付已验证。

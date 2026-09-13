@@ -5,6 +5,9 @@ description: "QA并解读私募定量分析报告（股票多头/市场中性/CT
 
 # 定量报告质检与解读（Quant Report QA & Interpretation）
 
+机器可读契约：`../shared-contracts/evidence.yaml`、`../shared-contracts/quant-report-admission.yaml`、`../shared-contracts/execution.yaml`。
+确定性判定实现：`../scripts/quant_report_admission.py`；它只接受已抽取并规范化的字段，不替代报告证据抽取。
+
 ## 适用场景
 
 当用户提供单一产品/管理人定量分析报告（通常为docx/markdown，包含指标、打分、场景因子等）并要求：
@@ -41,7 +44,7 @@ description: "QA并解读私募定量分析报告（股票多头/市场中性/CT
 2. **有效因子结论（A类）**：挑选1–3个最关键的A类因子/分项得分，说明其对“可持续性/Alpha”的指向
 3. **描述/约束因子结论（B类）**：用1–2个B类指标说明“事故型/尾部风险约束”或“仅作描述”的原因
 4. **近期场景匹配结论（C类）**：结合互联网信息用1-2句话说明当前所处的场景与该产品“场景应对能力/场景短板”的匹配度与影响
-5. **入池与风险等级一句话**：仅基于制度门槛“定量得分>65 + 净值长度≥52周”判定是否符合入池标准
+5. **入池与风险等级一句话**：仅基于制度门槛“定量得分>65 + 净值长度≥52周”判定是否符合入池标准（得分==65 为边界待复核，不自动通过）
 
 写作要求：
 - 仅一段话，但需要注意分句，不用分点、不用小标题
@@ -88,24 +91,53 @@ description: "QA并解读私募定量分析报告（股票多头/市场中性/CT
 - **净值长度达标**：净值长度≥52周（名单细则 P71、P80）
 - **入池得分达标**：全区间归一化后的定量得分总分>65（名单细则 P74、P83）
 
-执行规则（必须）：
+#### 数据抽取规则（必须）
 1. 从报告中抽取“定量得分总分”的数值与口径说明；若报告未明确其为“全区间归一化定量总分”，标注“口径待确认”，但仍以报告给出的总分作为暂用值并提示需系统口径复核。
 2. 从报告中抽取净值长度：
    - 优先使用报告明确写出的“净值长度（周）/起止日期”计算周数；
-   - 若无法抽取，则判为“净值长度缺数据=不达标（投前不通过）”。
-3. 入池标准判定：
-   - 同时满足：得分>65 且 净值长度≥52周 → “通过”
-   - 否则 → “不通过”（缺数据也视为不通过，并标注需补齐项）
-4. 风险等级判定（仅基于得分与净值长度，低→高）：
-   - 1级（低）：得分≥65 且 净值长度≥52周
-   - 2级（中低）：得分≥65 且 （实盘净值长度≥39周，但小于52周、或者净值需进行拼接）
-   - 3级（中）：得分<65 或者 净值长度<52周 且 无法提供足够托管净值
-   - 4级（中高）：得分<65 或者 净值长度严重不足
-   - 5级（高/不入池）：仅纯回测或模拟盘业绩，无实盘验证；无法提供任何有效的业绩替代材料
+   - 若无法抽取，则判为“净值长度缺数据”（即命中 `证据缺失`，不达标）。
+
+#### 分数边界（得分==65 为边界待复核）
+制度文本同时出现“入池要求得分>65”与“风险1级写得分≥65”，对“得分==65”存在边界冲突。本技能**不自行选择解释**，统一按以下规则处理并标注待确认：
+
+- `得分 > 65`：得分达标。
+- `得分 == 65`：**边界待复核**，既不算“得分达标”，也不算“得分不足”；是否入池由人工依据制度复核后决定，进入“待确认事项”。
+- `得分 < 65`：得分不足。
+
+#### 入池与风险判定（正交字段，先做完整性检查）
+不要把“入池标准”和“风险等级”压成一个数字。先输出以下输入字段：
+
+```yaml
+score: number|null
+score_basis: confirmed|provisional|unknown
+nav_weeks: number|null
+nav_source: live_custody|live_stitched|simulated|backtest|unknown
+evidence_state: complete|missing|conflict
+severe_short_history: true|false|unknown  # 只能来自制度已定义的阈值
+```
+
+按以下固定顺序处理：
+
+1. `evidence_state=conflict`，`score_basis=unknown`，或 `score/nav_weeks` 任一缺失：`admission_status=待确认`，`risk_level=待确认`；列出待补证据，不猜测。
+2. `score==65`：`admission_status=边界待复核`，`risk_level=待确认`；不把它当作 `score<65` 或 `score>65`。
+3. `nav_source in {backtest, simulated}`：`admission_status=不通过`，`risk_level=5`，主原因为 `纯回测` 或 `模拟盘`。
+4. `score_basis=provisional`：`admission_status=待确认`，`risk_level=待确认`，不得正式通过。
+5. `score>65` 且 `nav_weeks>=52` 且 `nav_source=live_custody`：`admission_status=通过`，`risk_level=1`。
+6. `score>=65` 且（`39<=nav_weeks<52` 或 `nav_source=live_stitched`）：`admission_status=不通过`，`risk_level=2`，主原因为 `净值长度不足` 或 `净值拼接`。
+7. `score<65` 且 `severe_short_history=true`：`admission_status=不通过`，`risk_level=4`。
+8. `score<65`，或 `nav_weeks<52` 且 `nav_source!=live_custody`：`admission_status=不通过`，`risk_level=3`。
+9. `score>=65` 且 `nav_weeks<52` 且 `nav_source=live_custody`：`admission_status=不通过`，`risk_level=3`，主原因为 `净值长度不足`。
+10. 仍未命中上述规则：`admission_status=待确认`，`risk_level=待确认`，列出未覆盖的输入组合；不得猜测或自动通过。
+
+以上顺序是互斥短路规则，覆盖所有已知输入组合。`severe_short_history` 只能由制度已定义的阈值计算；若阈值未定义，应填 `unknown`，并在报告中列为待确认，不得自行创造新的周数阈值。该字段为 `unknown` 时，仍可按第 7、8 条给出“净值长度不足”的等级，但不得声称完成了 3/4 级的制度细分。
+
+`score_basis=provisional` 时不得输出“正式通过”；最多输出“暂定结果，待口径复核”。证据缺失/冲突是完整性状态，不能被静默改写成某一个风险等级。报告必须同时保留 `admission_status`、`risk_level`、`primary_reason` 和 `unresolved` 字段。
 
 输出格式（必须，写在报告中对应章节）：
-- 入池标准：通过/不通过
-- 风险等级：1/2/3/4/5（低→高）
+- 入池标准：通过 / 不通过 / 边界待复核 / 待确认
+- 风险等级：1 / 2 / 3 / 4 / 5 / 待确认（低→高）
+- 主原因字段：得分不足 / 净值长度不足 / 纯回测 / 模拟盘 / 净值拼接 / 证据缺失 / 证据冲突
+- 必须同时输出：`score_basis`、`nav_source`、`severe_short_history`、`unresolved`
 
 
 
@@ -159,6 +191,7 @@ description: "QA并解读私募定量分析报告（股票多头/市场中性/CT
 - 所有“关键结论”必须对应至少一条可追溯证据（页码/段落/行/Slide/表格）
 - 出现冲突信息必须标注“待确认”并列出需要补充的证据
 - 不能凭空补全数据；只能做“合理性检查与疑点提示”
+- 报告生成成功、公式计算成功或文件格式正确，不构成“通过入池”“portfolio_ready”“production”的依据；入池与生产结论只能由 Step 2.5 的得分+净值长度判定，且得分==65、证据缺失、证据冲突时不得自动通过。
 
 ## 示例指令
 - `检查并解读 D:\...\创奥投资...CTA...docx，输出markdown到同目录`

@@ -41,8 +41,14 @@ Classify the work before deciding how much structure to create:
    notebook cell result, or a static HTML backtest review document.
 3. Use existing data/API skills first when relevant, especially
    `zmdata-data-api`, `wisdom-manager-product-research`, or `fund-wiki`.
-4. Write the simplest maintainable Python that solves the research question.
-5. Add cheap safeguards:
+4. For repeatable indicator monitoring or an HTML report, read the matching
+   repository template before implementation:
+   - `docs/templates/indicator-monitor/README.md` and only the needed
+     specification, checklist, config example, or report outline.
+   - `docs/templates/frontend-interaction/README.md` and only the needed
+     table, filter, chart, or common-interaction specification.
+5. Write the simplest maintainable Python that solves the research question.
+6. Add cheap safeguards:
    - check row counts, date ranges, missing values, duplicate keys, and units
    - check the source coverage and whether each input was visible at the target date
    - normalize date precision before joins; inspect `merge_asof` and rolling direction
@@ -53,7 +59,7 @@ Classify the work before deciding how much structure to create:
    - when using a fallback or relaxed threshold, test that it only triggers under its stated condition
    - save outputs with clear names when the user needs artifacts
    - avoid overwriting important files without confirmation
-6. Run a fresh verification before saying the work is complete.
+7. Run a fresh verification before saying the work is complete.
 
 ## Backtest Review HTML
 
@@ -102,6 +108,24 @@ For quant work, prioritize checks that catch investment-research mistakes:
 - strict-rule versus fallback-rule counts when thresholds or safety nets exist
 - performance timing when speed is part of the task: load, compute, write, and the slowest stage
 - output schema: columns, units, and date format are clear
+
+## 输出契约
+
+本 skill 只适用于 Level 1/2 研究工作。每个研究脚本的完成报告必须显式标注：
+
+- `research_only: true`（默认）；只有在用户明确要求并升级到 `quant-develop` 后才可写 `false`。
+- **数据状态**：按 `../shared-contracts/data-freshness.yaml` 标注 `exact/proxy/latest_only/missing/unverified`。
+- **样本范围**：universe、起始与结束日期、缺失率。
+- **PIT**：每个输入在目标日期的可见性说明。
+- **成本假设**：费用、换手、容量等显式假设。
+- **限制**：known limitations 与未验证事项。
+
+硬约束：
+
+- 研究脚本运行成功不等于 `portfolio_ready`；不得因"结果跑出来了"就宣称可进入组合。
+- 不把轻量研究强行包装成完整项目；只有出现升级信号（见下）才转 `quant-develop`。
+- 研究结果不得直接覆盖事实层（如 `fund-wiki` 的 `product_profiles`/`manager_profiles`）或生产配置；需要变更时走 review output 或正式工程门禁。
+- `latest_only` 数据只能支撑当前描述，不得支撑历史回测或历史判断。
 
 ## Escalation
 

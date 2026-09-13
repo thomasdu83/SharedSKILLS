@@ -13,6 +13,16 @@ description: Use when a user asks to create, build, implement, systematize, or m
 
 > 每轮只推进一个可运行、可检查、可解释的最小闭环；迭代速度服从数据语义、金融逻辑和风险门禁。
 
+## 主入口身份
+
+本 skill 是"新量化开发任务"的统一主入口（登记见 `../skill-registry.yaml`，`layer: router`）。
+
+- 每个任务只选一个主入口 Skill；本 skill 命中时即为唯一主入口，不得再并列另一个主入口。
+- 辅助 Skill 最多两个，从 `supports` 中按需选择，且必须写在输出契约的"辅助 Skill"字段中。
+- 一次性取数、单次计算、轻量验证不是本 skill 的主入口场景，转给 `quant-research-coding`。
+- 可复用、重复运行、共享消费、投资流程消费的正式工程转给 `quant-develop`。
+- 报告页与工作台属于交付分支，不因任务"涉及报告/网页/表格"就自动成为主入口；先确定量化主入口，再按需路由 `frontend-page-router`。
+
 ## 触发边界
 
 ### 强触发
@@ -49,6 +59,24 @@ description: Use when a user asks to create, build, implement, systematize, or m
 4. 本轮是否达到人工确认、继续、回退、升级或暂停的条件。
 
 不要在本 skill 中重复实现量化计算、API、前端组件或测试细节。专业规则由被路由的 skill 负责。
+
+## 输出契约
+
+路由结果同时按 `../shared-contracts/route-decision.yaml` 记录，供后续校验器复核。
+
+每次路由判断结束，必须显式输出以下字段（缺一不可）：
+
+- **主 Skill**：唯一主入口（本 skill 或转交后的目标）；
+- **辅助 Skill**：0–2 个，从 `supports` 中选择；
+- **风险级别**：按 `quant-research-coding` 的 Level 1–4 或等价的工程风险分级标注；
+- **触发依据**：为什么命中该主入口；
+- **不触发的相邻 Skill**：列出被 `excludes` 排除的相邻 Skill 及其不触发原因；
+- **所需契约**：从 `../shared-contracts/` 中列出本轮必须遵守的契约（至少 `lifecycle.yaml`）；
+- **停止条件**：本轮在何种情况下必须停止、回退或等待人工确认。
+
+未给出以上七项，不得宣称完成路由。
+
+当本轮要先输出项目方案再落地，且项目包含指标监控 HTML 报告或数据密集型前端时，先把 `docs/templates/indicator-monitor/` 或 `docs/templates/frontend-interaction/` 的模板纳入最小闭环，再进入实现 skill。
 
 ## 启动检查
 

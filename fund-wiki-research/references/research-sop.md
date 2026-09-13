@@ -66,8 +66,8 @@ Label this output as structured index aggregation, not standard query hits.
 For recall-first research, refresh the research index before relying on historical research artifacts:
 
 ```powershell
-python scripts\build_research_index.py --json
-python scripts\query_fund_wiki.py "<topic + research terms>" --limit 100 --context-budget 40000 --json --research-only
+python fund-wiki-research\scripts\build_research_index.py --json --docs-root "<fund_profile_wiki_docs>"
+python fund-wiki\scripts\query_fund_wiki.py "<topic + research terms>" --limit 100 --context-budget 40000 --json --research-only
 ```
 
 Use topic terms plus research terms such as `可比池`, `核心池`, `观察池`, `边界池`, `策略细分`, `全库覆盖`, `正式报告`, or `研究结论`.

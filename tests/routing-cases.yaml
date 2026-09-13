@@ -1,0 +1,65 @@
+# routing-cases.yaml
+# SharedSKILLS 路由测试案例。
+# 用途：人工/脚本审阅路由是否正确，防止主入口竞争与越界。
+# 本文件是契约测试的输入，不驱动生产路由。
+
+schema_version: "1.0"
+
+positive_cases:
+  - name: 一次性取数或快速因子检查
+    input: 用户要求快速拉取某因子数据并做单次检查
+    expected_primary: quant-research-coding
+    expected_supports: []
+    reason: Level 1/2 轻量研究，不进入正式工程
+  - name: 重复运行并进入投资流程
+    input: 用户要求把已证明价值的回测固化为每周运行并输出给投委会
+    expected_primary: quant-develop
+    expected_supports: []
+    reason: 重复运行 + 投资流程消费，需 project.yaml / registry / preflight
+  - name: 新策略或新模型开发
+    input: 用户要求新建一个量化策略模型
+    expected_primary: ai-quant-development-router
+    expected_supports: []
+    reason: 新量化开发主入口，先路由再实现
+  - name: 基于 fund-wiki 的比较研究
+    input: 用户要求做管理人可比池研究并核验 claim 与 fund facts
+    expected_primary: fund-wiki-research
+    expected_supports: []
+    reason: fund-wiki 研究综合，事实层/研究层分离
+  - name: 周度宏观判断或预测复盘
+    input: 用户要求更新周度宏观情景概率并复盘上周预测
+    expected_primary: macro-strategy-learning
+    expected_supports: []
+    reason: 宏观判断与预测快照，接入 forecast 契约
+  - name: 项目完成后的经验复盘
+    input: 用户要求复盘刚完成的项目并提取可复用规则
+    expected_primary: project-retrospective
+    expected_supports: []
+    reason: 经验复盘与回写提案，不直接改共享 Skill
+
+boundary_cases:
+  - name: 一次性研究不能自动升级为 quant-develop
+    input: 用户只要求做一次因子检查，无重复运行/共享消费意图
+    forbidden_primary: quant-develop
+    expected_primary: quant-research-coding
+    reason: 没有升级信号，不得默认项目化
+  - name: 正式模型不能降级为临时脚本
+    input: 已是 production 的模型做修改，不得退回一次性脚本
+    forbidden_primary: quant-research-coding
+    expected_primary: quant-develop
+    reason: 正式模型改动须走工程契约与晋级记录
+  - name: 研究报告不能直接修改事实层
+    input: 研究结论与 product_profiles 冲突
+    forbidden_action: 直接写回 product_profiles / manager_profiles
+    expected_action: 生成 review output，标记 conflict 或 insufficient_evidence
+    reason: 研究层不得覆盖事实层
+  - name: 宏观预测不能替代组合执行记录
+    input: 用户要求把宏观 stance 落到组合
+    forbidden_primary: macro-strategy-learning
+    expected_primary: quant-develop
+    reason: 组合执行/权重落地属于工程层，不属于宏观判断层
+  - name: 项目复盘不能自动修改共享 Skill
+    input: 复盘提出改进某个共享 Skill
+    forbidden_action: 直接修改共享 Skill
+    expected_action: 生成回写提案，人工确认后另行执行
+    reason: 经验回写必须留人，不得自动落地

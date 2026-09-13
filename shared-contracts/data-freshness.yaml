@@ -1,0 +1,37 @@
+# data-freshness.yaml
+# 数据新鲜度与历史状态契约。所有涉及取数、回测、判断的 Skill 必须记录数据状态，
+# 不得静默补值或把"最新快照"当成"历史状态"使用。
+
+schema_version: "1.0"
+
+data_status:
+  - exact          # 精确对齐目标日期/口径
+  - proxy          # 使用代理口径，需记录代理映射与偏差来源
+  - latest_only    # 只有最新快照，无历史
+  - missing        # 缺失
+  - unverified     # 存在但未核验
+
+historical_state:
+  - supported      # 支持历史回测/历史判断
+  - unsupported    # 不支持历史回测/历史判断
+  - unknown        # 历史状态未知
+
+# 每次取数/研究必须记录的覆盖与来源信息
+coverage:
+  start: string          # 覆盖起始日期
+  end: string            # 覆盖结束日期
+  entities: string       # 覆盖实体/样本范围
+  missing_rate: string   # 缺失率（不可为 0 就省略，需记录）
+source: string           # 实际使用的数据源
+as_of: string            # 数据截止/观察时间
+snapshot_time: string    # 快照生成时间
+fallback_used: string    # 是否使用 fallback（true/false 或源名称）
+fallback_reason: string  # 使用 fallback 的原因
+
+# 语义约束（不得违反）
+constraints:
+  - latest_only 只能支持"当前描述"或"当前状态判断"；不得支持历史回测或历史判断。
+  - missing 与 unverified 不得被静默转换成 0 或默认值；必须显式标记并说明处理方式。
+  - fallback_used 必须记录实际使用的源和原因，不得只写"已 fallback"而无源。
+  - proxy 口径必须同时保留：代理映射规则、偏差来源说明、报告中的显式 caveat。
+  - historical_state 必须与 data_status 一致：latest_only 不得声明为 supported。

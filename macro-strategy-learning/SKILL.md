@@ -38,6 +38,8 @@ The objective is not a persuasive weekly essay. It is an auditable set of time-s
 
 ## Required output
 
+预测输出接入 `../shared-contracts/forecast.yaml`。每个预测必须显式给出 `decision_horizon`（决策/预测期限）与 `position_relevance`（对组合或持仓的相关性与影响方向），并与 `information_cutoff`、`review_date`、三情景及概率、`falsifiers`、`calibration` 一起冻结。事实、机制推断、市场定价、情景、资产表达和行动必须分层表达，不得互相混用；事后复盘只追加 `outcome`/`calibration`，不得覆盖原始预测。
+
 For a forecast, produce or update a MyNotes weekly snapshot with: one-sentence view, change from prior week, macro state, dominant causal chain, pricing, three scenarios, multi-asset map, stance, falsifiers, and frozen metadata.
 
 For a maturity review, preserve the original judgment, score the forecast against the stated window and baselines, locate the broken causal link, and create transferable lessons plus framework-change candidates.

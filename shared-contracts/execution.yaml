@@ -1,0 +1,22 @@
+# execution.yaml
+# 跨领域 Skill 的最小执行结果契约。它约束“能否继续”和“证据是否足够”，
+# 不替代各领域的 evidence/data/lifecycle/artifact 契约。
+
+schema_version: "1.0"
+
+result:
+  status: ready|draft|needs_review|blocked|failed
+  decision: string
+  evidence: []
+  limitations: []
+  unresolved: []
+  next_action: string
+
+constraints:
+  - blocked 表示缺少继续执行所需的输入或前置条件，不得包装成成功结果。
+  - needs_review 表示可以提供暂定分析，但关键结论必须由人工或上游门禁确认。
+  - ready 只能用于满足本 Skill 所声明的最低证据与验证要求的结果。
+  - decision 必须能追溯到 evidence；没有证据时使用 draft 或 needs_review。
+  - next_action 必须说明补证、复核、升级或停止中的一种明确动作。
+  - `status` 只表示本次执行结果，不承载领域判定或经验生命周期；例如
+    `conflict`、`insufficient_evidence`、`proposed` 和 `applied` 必须放在对应领域字段中。

@@ -37,10 +37,10 @@ Keep these checks separate from fund-wiki research evidence, and include the dat
 
 ## Use Fund-Wiki First
 
-For every research task that depends on fund-wiki coverage, first run or request the standard fund-wiki query path:
+For every research task that depends on fund-wiki coverage, first run or request the standard fund-wiki query path from the `SharedSKILLS` root:
 
 ```powershell
-python scripts\query_fund_wiki.py "<research recall query>" --limit 100 --json
+python fund-wiki\scripts\query_fund_wiki.py "<research recall query>" --limit 100 --json
 ```
 
 Use `manager_results` for manager-level discovery and `results` for product-level evidence. If the user asks for a full-universe study, document the full fund-wiki coverage and the recall query before writing conclusions.
@@ -48,7 +48,7 @@ Use `manager_results` for manager-level discovery and `results` for product-leve
 For taxonomy, full-universe, comparable-pool, or other recall-heavy research, prefer the explicit research recall mode when available:
 
 ```powershell
-python scripts\query_fund_wiki.py "<broad recall terms>" --limit 100 --context-budget 40000 --json --intent-mode research_recall
+python fund-wiki\scripts\query_fund_wiki.py "<broad recall terms>" --limit 100 --context-budget 40000 --json --intent-mode research_recall
 ```
 
 Research recall mode is for evidence discovery, not formal membership. If the normal query returns a surprising `recognized_product`, product-name `hard_filters`, or obviously narrow results for a broad strategy term such as `alpha`, `套利`, `ETF套利`, `量化对冲`, or `高频alpha`, rerun with `--intent-mode research_recall` and/or aggregate directly from `indexes/product_profiles.jsonl` using normalized fields (`primary_strategy_tags`, `secondary_strategy_tags`, `direct_strategy_tags`, `product_line`, `strategy_facets`, evidence snippets). Label this as structured index aggregation.
@@ -56,8 +56,8 @@ Research recall mode is for evidence discovery, not formal membership. If the no
 For recall-first research, also refresh and query the research layer:
 
 ```powershell
-python scripts\build_research_index.py --json
-python scripts\query_fund_wiki.py "<research topic + comparable pool terms>" --limit 100 --context-budget 40000 --json --research-only
+python fund-wiki-research\scripts\build_research_index.py --json --docs-root "<fund_profile_wiki_docs>"
+python fund-wiki\scripts\query_fund_wiki.py "<research topic + comparable pool terms>" --limit 100 --context-budget 40000 --json --research-only
 ```
 
 If the normal fact-layer query returns a `research_index_jsonl` path but `research_context_budget_chars` is `0`, do not assume prior research was searched. Run the explicit `--research-only` query above and report the number of research artifacts returned.
@@ -71,6 +71,10 @@ Stale or refreshed research index:
 Intent mode and hard filters:
 Structured index aggregation, if used:
 ```
+
+### Research-index dependency contract
+
+`fund-wiki-research\scripts\build_research_index.py` is the only supported entry point from this library. It resolves a separate fund-wiki backend through `--project-root`, `FPW_PROJECT_ROOT`, or an installed sibling project and returns `status: error` with candidate paths when the backend is unavailable. Do not execute `scripts\build_research_index.py` from the current working directory and do not invent a backend path. A successful wrapper run proves only that the index was rebuilt; it does not prove that the research evidence is current or decision-ready.
 
 For full-universe, strategy taxonomy, or comparable-pool work, write the sample funnel or universe snapshot as a separate artifact under `research/universes/` in addition to any formal report. It should preserve query commands, structured filter rules, counts, and review flags so the research can be reproduced.
 
@@ -117,6 +121,15 @@ Governance layer:
 ```
 
 If a name appears in research artifacts but not in fact-layer results, label it as a research-layer lead or pending review. If a name appears in fact-layer results but not in prior research, label it as a new fact-layer candidate not covered by historical research.
+
+## Unified Evidence and Artifact Contract
+
+研究结论必须引用统一证据对象（`../shared-contracts/evidence.yaml`），每个判断挂到 `fact` / `manager_claim` / `inference` / `judgment` 上并保留 `source`、`as_of`、`evidence_strength`。
+
+- 身份解析不确定时使用 `insufficient_evidence`，不得用"无异常"代替。
+- 两条证据互相矛盾且无法裁定优先级时标记 `conflict`，不得静默选边。
+
+每个研究产物必须带 `artifact_id`、数据截止时间（`as_of`）和 universe artifact（`research/universes/` 下的快照或索引），三者缺一不可（对应 `../shared-contracts/artifact.yaml` 与 `data-freshness.yaml`）。研究层内容不能直接写回事实层；只能生成 review output 供治理层处理。研究报告只输出基于事实和证据的判断，不得把研究线索写成产品事实。
 
 ## Standard Outputs
 

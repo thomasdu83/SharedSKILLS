@@ -1,0 +1,26 @@
+# quant-report-admission.yaml
+# 定量报告入池/风险判定的正交输入输出契约。
+
+schema_version: "1.0"
+
+input:
+  score: number|null
+  score_basis: confirmed|provisional|unknown
+  nav_weeks: number|null
+  nav_source: live_custody|live_stitched|simulated|backtest|unknown
+  evidence_state: complete|missing|conflict
+  severe_short_history: true|false|unknown
+
+output:
+  admission_status: pass|fail|borderline|needs_review
+  risk_level: 1|2|3|4|5|needs_review
+  primary_reason: string
+  unresolved: []
+
+constraints:
+  - score==65 必须输出 admission_status=borderline、risk_level=needs_review。
+  - score 或 nav_weeks 缺失、evidence_state=missing/conflict、score_basis=unknown 时不得自动通过。
+  - backtest/simulated 不得被标记为 risk_level=1 或 admission_status=pass。
+  - score_basis=provisional 不得输出正式 admission_status=pass。
+  - severe_short_history=unknown 时不得自行创造制度阈值；可标记净值不足，但 3/4 级细分需复核。
+  - 未命中既有组合时必须输出 needs_review，并列出 unresolved，不得静默选择风险等级。

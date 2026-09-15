@@ -25,6 +25,29 @@ support_policy:
   override_requires_reason: true
   output_max: 2
 
+routing_policy:
+  # 这是模型路由协议，不是自动运行的关键词引擎；校验器仅校验决策结构。
+  selection_order:
+    - 先归一兼容别名；用户明确指定能力且与任务相符时遵从指定。
+    - 按主交付物选择领域；研究、入库、预测、工程任务优先于附带的网页排版。
+    - 新建量化模型由 ai-quant-development-router 统筹；来源复现为辅助能力。
+    - 仅审读来源和复现差距由 investment-paper-replication 负责。
+    - 仅把已有结果排成页面由 frontend-page-router 负责；不启动研究重算。
+    - 点名分析师的一次性咨询由对应分析师负责；宏观预测快照仍归 macro-strategy-learning。
+    - 明确中金视角且未点名时按最具体主题选一位分析师；普通概念解释不强制调用远程接口。
+    - 同等匹配且会改变主路径时记录 unresolved 并澄清；priority 只在相同意图内作参考，不能跨领域抢占。
+  analyst_default_topics:
+    港股和中概股: cicc-research-analyst-kevin-skill
+    A股策略和主题配置: cicc-research-analyst-lqs-skill
+    黄金贵金属和跨资产配置: cicc-research-analyst-lz-skill
+    全球通胀和国际金融: cicc-research-analyst-myl-skill
+    中国债市和机构流动性: cicc-research-analyst-wll-skill
+    中国经济制度和产业传导: cicc-research-analyst-zp-skill
+  scope:
+    - 每个阶段一个 primary，0–2 个 support；角色表示本阶段职责，不表示 Agent。
+    - handoff 后生成下一阶段 route_decision，不把全过程用到的所有 Skill 塞进 supports。
+    - 普通解释或尚未注册的通用任务可以不产生核心路由记录；不得伪造 primary。
+
 skills:
   - id: ai-quant-development-router
     path: ai-quant-development-router
@@ -37,7 +60,6 @@ skills:
       - 需要跨层增量变更（模型/API/存储/前端同时改动）时先做路由判断
     excludes:
       - quant-research-coding      # 一次性取数、单次计算、轻量验证不进入路由主流程
-      - systematic-debugging        # 孤立 bug 修复不进入新开发路由
       - quant-project-review        # 只评估进度、不授权实现
       - pe-odd-auditor              # 风控尽调不属于量化开发
       - quant-report-qa-interpreter # 报告 QA 解读不属于量化开发
@@ -48,9 +70,10 @@ skills:
       - frontend-page-router
       - systematic-debugging
       - verification-before-completion
+      - investment-paper-replication
     dependencies:
       - quantsystem-templates
-    support_override_reason: "保留三个候选辅助能力目录，但每次实际输出最多选择两个；前端、调试和完成前验证属于互斥的按需分支。"
+    support_override_reason: "页面、调试、验证与来源复现均为按阶段选用能力，每次最多两个。"
     required_contracts:
       - shared-contracts/lifecycle.yaml
       - shared-contracts/execution.yaml
@@ -66,7 +89,7 @@ skills:
     aliases:
       - quant-router
       - ai-quant-router
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     role: primary
     routable: true
@@ -76,7 +99,7 @@ skills:
     layer: engineering
     priority: 20
     triggers:
-      - 一次性取数、单次计算、快速画图、格式转换
+      - 一次性取数、单次计算、快速画图、研究数据格式转换；不含已有结果的纯页面排版
       - 快速因子检查、标签/信号原型、轻量回测
       - 分配分析、报告支撑表、图表生成
       - 可复跑的研究辅助脚本（Level 1/2）
@@ -104,7 +127,7 @@ skills:
       - 最小可复跑入口
     aliases:
       - quant-research
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     role: primary
     routable: true
@@ -193,7 +216,7 @@ skills:
       - 周度全球多资产宏观判断或资产配置复盘
       - 情景概率、预测快照、成熟度复盘
       - 宏观机制框架的建立、更新或版本化
-      - 黄金、宏观流动性、政策传导、中国权益风格、海外权益、债券、商品、汇率专题
+      - 明确要求建立或更新持久宏观机制框架；普通解释、点名专家咨询不触发
     excludes:
       - quant-research-coding        # 通用取数/因子研究不在此列
       - quant-develop                # 组合执行/工程落地不在此列
@@ -202,6 +225,13 @@ skills:
     supports:
       - mynotes-knowledge-manager
       - assets-score
+      - cicc-research-analyst-kevin-skill
+      - cicc-research-analyst-lqs-skill
+      - cicc-research-analyst-lz-skill
+      - cicc-research-analyst-myl-skill
+      - cicc-research-analyst-wll-skill
+      - cicc-research-analyst-zp-skill
+    support_override_reason: "分析师仅在需要观点来源时选择，最多两项辅助；不默认调用全部角色。"
     dependencies:
       - mynotes-vault
     required_contracts:
@@ -215,7 +245,7 @@ skills:
       - 冻结快照与复盘（保留原始预测）
     aliases:
       - macro-research
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     role: primary
     routable: true
@@ -338,3 +368,269 @@ skills:
     role: primary
     routable: true
 
+  - id: fund-wiki
+    path: fund-wiki
+    layer: knowledge
+    priority: 41
+    triggers:
+      - 入库、沉淀、更新或查询 fund-wiki 材料与产品画像
+    excludes: [fund-wiki-research]
+    escalates_to: [fund-wiki-research]
+    supports: [zmdata-data-api]
+    dependencies: [fund-wiki-runtime]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [artifact_id, source_manifest, index_status]
+    aliases: [fund-wiki-ingest]
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: wisdom-manager-product-research
+    path: wisdom-manager-product-research
+    layer: domain
+    priority: 42
+    triggers:
+      - 查询私募管理人、产品要素、合同条款或产品净值
+    excludes: [fund-wiki-research]
+    escalates_to: [fund-wiki-research]
+    supports: []
+    dependencies: [fund-wiki-runtime]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [事实结果, source_status, ambiguity]
+    aliases: [fund-product-facts]
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: public-data-collector
+    path: public-data-collector
+    layer: domain
+    priority: 43
+    triggers:
+      - 内部 DBSource 与 zmdata 均无数据时采集公开免费数据源
+    excludes: [zmdata-data-api]
+    escalates_to: [quant-develop]
+    supports: []
+    dependencies: [public-data-network]
+    required_contracts: [shared-contracts/data-freshness.yaml, shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [series_contract, source_url, fetched_at]
+    aliases: [public-data]
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: frontend-page-router
+    path: frontend-page-router
+    layer: router
+    priority: 80
+    triggers:
+      - 创建或修改金融研究前端且需要判断工作台与报告页模式
+    excludes: []
+    escalates_to: []
+    supports: [frontend-ops-platform, frontend-report-page]
+    dependencies: [quantsystem-templates]
+    required_contracts: [shared-contracts/delivery-input.yaml, shared-contracts/execution.yaml]
+    outputs: [page_mode, evidence, selected_specialist]
+    aliases: [frontend-design, frontend-router]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: archify
+    path: archify
+    layer: delivery
+    priority: 81
+    triggers:
+      - 创建、转换或验证架构、工作流、时序、数据流和生命周期图
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: []
+    required_contracts: [shared-contracts/delivery-input.yaml, shared-contracts/execution.yaml]
+    outputs: [diagram_type, validation, output_path]
+    aliases: [architecture-diagram, technical-diagram]
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: investment-paper-replication
+    path: investment-paper-replication
+    layer: domain
+    priority: 82
+    triggers:
+      - 审读投资来源、列复现缺口或审计已有复现；新模型开发只作为辅助方法
+    excludes: [ai-quant-development-router]
+    escalates_to: [ai-quant-development-router]
+    supports: [zmdata-data-api, research-report-writer]
+    dependencies: []
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/artifact.yaml, shared-contracts/execution.yaml]
+    outputs: [replication_spec, assumptions, gaps, delivery_mode]
+    aliases: [paper-replication]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: systematic-debugging
+    path: systematic-debugging
+    layer: engineering
+    priority: 83
+    triggers:
+      - 出现 bug、失败测试、集成异常或性能问题，需要根因分析
+    excludes: [ai-quant-development-router]
+    escalates_to: [quant-develop]
+    supports: [verification-before-completion]
+    dependencies: []
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [root_cause, fix_scope, verification]
+    aliases: [debugging]
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+  - id: cicc-research-analyst-kevin-skill
+    path: cicc-research-analyst-kevin-skill
+    layer: domain
+    priority: 90
+    triggers:
+      - 用户点名Kevin/刘刚，或明确要求港股、中概股、海外市场、全球资产配置的中金分析师视角
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [cicc-research-gateway]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [分析师视角, 查询时间, 接口状态, 不确定性]
+    aliases: [kevin, liu-gang]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: cicc-research-analyst-lqs-skill
+    path: cicc-research-analyst-lqs-skill
+    layer: domain
+    priority: 91
+    triggers:
+      - 用户点名李求索，或明确要求A股市场策略、行业配置、制度与主题投资的中金分析师视角
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [cicc-research-gateway]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [分析师视角, 查询时间, 接口状态, 不确定性]
+    aliases: [li-qiusuo, lqs]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: cicc-research-analyst-lz-skill
+    path: cicc-research-analyst-lz-skill
+    layer: domain
+    priority: 92
+    triggers:
+      - 用户点名李昭，或明确要求黄金、贵金属、大类资产、美国利率汇率与国际货币体系的中金分析师视角
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [cicc-research-gateway]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [分析师视角, 查询时间, 接口状态, 不确定性]
+    aliases: [li-zhao, lz]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: cicc-research-analyst-myl-skill
+    path: cicc-research-analyst-myl-skill
+    layer: domain
+    priority: 93
+    triggers:
+      - 用户点名缪延亮，或明确要求全球宏观、宏观调控、国际金融与通胀的中金分析师视角
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [cicc-research-gateway]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [分析师视角, 查询时间, 接口状态, 不确定性]
+    aliases: [miao-yanliang, myl]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: cicc-research-analyst-wll-skill
+    path: cicc-research-analyst-wll-skill
+    layer: domain
+    priority: 94
+    triggers:
+      - 用户点名韦璐璐，或明确要求宏观利率、流动性、债券、资管产品与固收市场的中金分析师视角
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [cicc-research-gateway]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [分析师视角, 查询时间, 接口状态, 不确定性]
+    aliases: [wei-lulu, wll]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: cicc-research-analyst-zp-skill
+    path: cicc-research-analyst-zp-skill
+    layer: domain
+    priority: 95
+    triggers:
+      - 用户点名周彭，或明确要求中国经济运行、资金配置、产业演化与资产定价传导的中金分析师视角
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [cicc-research-gateway]
+    required_contracts: [shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
+    outputs: [分析师视角, 查询时间, 接口状态, 不确定性]
+    aliases: [zhou-peng, zp]
+    version: "1.1.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: frontend-report-page
+    path: frontend-report-page
+    layer: delivery
+    priority: 0
+    triggers: [由 frontend-page-router 选定页面模式后使用]
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [quantsystem-templates]
+    required_contracts: [shared-contracts/delivery-input.yaml, shared-contracts/execution.yaml]
+    outputs: [preview, validation, output_path]
+    aliases: []
+    version: "1.0.0"
+    status: active
+    role: support
+    routable: false
+
+  - id: frontend-ops-platform
+    path: frontend-ops-platform
+    layer: delivery
+    priority: 0
+    triggers: [由 frontend-page-router 选定页面模式后使用]
+    excludes: []
+    escalates_to: []
+    supports: []
+    dependencies: [quantsystem-templates]
+    required_contracts: [shared-contracts/delivery-input.yaml, shared-contracts/execution.yaml]
+    outputs: [preview, validation, output_path]
+    aliases: []
+    version: "1.0.0"
+    status: active
+    role: support
+    routable: false

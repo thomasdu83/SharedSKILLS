@@ -3,12 +3,12 @@
 # 本文件由 scripts/build_skill_inventory.py 生成，不负责授权或自动修改 Skill。
 schema_version: "1.0"
 inventory_scope: full
-skill_count: 56
+skill_count: 62
 skills:
   - path: "ai-quant-development-router"
     id: "ai-quant-development-router"
     entry: SKILL.md
-    description: "Use when a user asks to create, build, implement, systematize, or materially extend a new quantitative strategy, model, factor, label, signal, backtest workflow, portfolio model, risk model, or its API/frontend interaction; do not use for explanations, one-off calculations, lightweight validation, simple presentation edits, or isolated bug fixes."
+    description: "Use when creating or materially extending a quantitative strategy, model, factor, label, signal, backtest, portfolio or risk model, including source-paper implementations; exclude explanations, one-off calculations, page-only edits and isolated bugs."
     source_of_truth: SharedSKILLS
     role: primary
     routable: true
@@ -17,12 +17,12 @@ skills:
     entry: SKILL.md
     description: "Use when the user asks to create, convert, or polish a technical diagram such as architecture, workflow, sequence, data-flow, lifecycle/state, or Mermaid input into a validated standalone HTML artifact."
     source_of_truth: SharedSKILLS
-    role: reference
-    routable: false
+    role: primary
+    routable: true
   - path: "architecture-diagram-generator/architecture-diagram"
     id: "architecture-diagram"
     entry: SKILL.md
-    description: "Create polished dark-themed architecture diagrams as self-contained HTML+SVG files. Use when the user asks for system, infrastructure, cloud, security, or network topology diagrams."
+    description: "Use when an older workflow explicitly references architecture-diagram; new technical diagrams use archify."
     source_of_truth: SharedSKILLS
     role: reference
     routable: false
@@ -68,6 +68,48 @@ skills:
     source_of_truth: SharedSKILLS
     role: reference
     routable: false
+  - path: "cicc-research-analyst-kevin-skill"
+    id: "cicc-research-analyst-kevin-skill"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks 刘刚（Kevin） for an analyst perspective, or asks for a CICC perspective on 港股、中概股与海外权益; not for generic explanations or weekly forecast bookkeeping."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "cicc-research-analyst-lqs-skill"
+    id: "cicc-research-analyst-lqs-skill"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks 李求索 for an analyst perspective, or asks for a CICC perspective on A股市场策略、行业配置与主题投资; not for generic explanations or weekly forecast bookkeeping."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "cicc-research-analyst-lz-skill"
+    id: "cicc-research-analyst-lz-skill"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks 李昭 for an analyst perspective, or asks for a CICC perspective on 黄金贵金属与跨资产配置; not for generic explanations or weekly forecast bookkeeping."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "cicc-research-analyst-myl-skill"
+    id: "cicc-research-analyst-myl-skill"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks 缪延亮 for an analyst perspective, or asks for a CICC perspective on 全球宏观、通胀与国际金融; not for generic explanations or weekly forecast bookkeeping."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "cicc-research-analyst-wll-skill"
+    id: "cicc-research-analyst-wll-skill"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks 韦璐璐 for an analyst perspective, or asks for a CICC perspective on 中国债市、宏观利率与机构流动性; not for generic explanations or weekly forecast bookkeeping."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
+  - path: "cicc-research-analyst-zp-skill"
+    id: "cicc-research-analyst-zp-skill"
+    entry: SKILL.md
+    description: "Use when the user explicitly asks 周彭 for an analyst perspective, or asks for a CICC perspective on 中国经济制度、资金配置与产业传导; not for generic explanations or weekly forecast bookkeeping."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
   - path: "commodity-meso-market-report"
     id: "commodity-meso-market-report"
     entry: SKILL.md
@@ -120,7 +162,7 @@ skills:
   - path: "frontend-design"
     id: "frontend-design"
     entry: SKILL.md
-    description: "Use when building a finance, research, portfolio, risk, fund, score, weekly-report, dashboard, workbench, or HTML frontend and the primary page mode is not yet classified."
+    description: "Use when the user explicitly names frontend-design or an older workflow references this compatibility name; resolve to frontend-page-router."
     source_of_truth: SharedSKILLS
     role: reference
     routable: false
@@ -129,21 +171,21 @@ skills:
     entry: SKILL.md
     description: "Use when a frontend is mainly an internal daily workbench, management platform, maintenance tool, filter console, editing workflow, monitor, triage view, or portfolio construction platform where efficient object-level operation matters more than narrative delivery."
     source_of_truth: SharedSKILLS
-    role: reference
+    role: support
     routable: false
   - path: "frontend-page-router"
     id: "frontend-page-router"
     entry: SKILL.md
-    description: "Use when building a frontend page, dashboard, workbench, HTML report, score report, weekly report, portfolio page, fund platform, or finance artifact and the primary mode could be internal operation or reader-facing explanation."
+    description: "Use when creating or changing a finance/research page, workbench, dashboard or HTML report, including formatting existing results; frontend-design is a compatibility alias."
     source_of_truth: SharedSKILLS
-    role: reference
-    routable: false
+    role: primary
+    routable: true
   - path: "frontend-report-page"
     id: "frontend-report-page"
     entry: SKILL.md
     description: "Use when a frontend is mainly a report, weekly report, score report, research delivery, attribution review, strategy page, or reader-facing HTML artifact where conclusions, evidence, methodology, and narrative clarity matter more than editing workflows."
     source_of_truth: SharedSKILLS
-    role: reference
+    role: support
     routable: false
   - path: "fund-track-tag-audit"
     id: "fund-track-tag-audit"
@@ -157,8 +199,8 @@ skills:
     entry: SKILL.md
     description: "Use when the user asks to ingest/deposit/沉淀/入库/更新 fund manager due-diligence materials into fund-wiki, build LLM-readable fund/product profile wiki documents, refresh fund_profile_wiki indexes, or query/search/查询 fund-wiki by flexible natural-language criteria such as 300指增, 1000指增, CTA, WorldQuant背景, 行业暴露3%以内."
     source_of_truth: SharedSKILLS
-    role: reference
-    routable: false
+    role: primary
+    routable: true
   - path: "fund-wiki-research"
     id: "fund-wiki-research"
     entry: SKILL.md
@@ -176,14 +218,14 @@ skills:
   - path: "investment-paper-replication"
     id: "investment-paper-replication"
     entry: SKILL.md
-    description: "Use when converting investment, finance, economics, asset pricing, portfolio construction, quant, macro, risk, or trading source materials into reproducible research outputs, Markdown/HTML reports, professional investment-bank-style web visualizations, and optionally production-ready research systems. Source materials may include academic papers, broker or institutional research reports, internal strategy memos, algorithm documents, white papers, product research notes, or idea documents. Use when the user asks to replicate, implement, audit, or systematize a paper, report, strategy idea, algorithm spec, research memo, or investment document."
+    description: "Use when auditing investment papers/reports, assessing reproducibility gaps or applying source-replication methodology. For building a new quant model it is a support to ai-quant-development-router; it is primary for source-only review."
     source_of_truth: SharedSKILLS
-    role: reference
-    routable: false
+    role: primary
+    routable: true
   - path: "macro-strategy-learning"
     id: "macro-strategy-learning"
     entry: SKILL.md
-    description: "Use when the user asks to create, update, guide, or review weekly global multi-asset macro judgments, scenario probabilities, prediction snapshots, maturity reviews, or durable macro mechanism frameworks in MyNotes; includes 周度宏观策略、资产配置复盘、黄金、宏观流动性、政策传导、中国权益风格、海外国家权益、债券、商品和汇率专题。"
+    description: "Use when creating or reviewing weekly multi-asset macro judgments, scenario probabilities, frozen forecast snapshots, maturity reviews or durable mechanism frameworks in MyNotes. Exclude generic concept explanations and one-off named-analyst consultations."
     source_of_truth: SharedSKILLS
     role: primary
     routable: true
@@ -248,8 +290,8 @@ skills:
     entry: SKILL.md
     description: "当需要从互联网公开免费源获取金融/宏观数据，且目标数据在数据库（DBSource）与 zmdata 均不可获取时使用。覆盖首次接入新源/新系列的交互式契约建立流程，以及已接入系列的日常采集执行。不用于内部数据库或 zmdata 已有的数据。"
     source_of_truth: SharedSKILLS
-    role: reference
-    routable: false
+    role: primary
+    routable: true
   - path: "quant-develop"
     id: "quant-develop"
     entry: SKILL.md
@@ -274,7 +316,7 @@ skills:
   - path: "quant-research-coding"
     id: "quant-research-coding"
     entry: SKILL.md
-    description: "Use when writing lightweight quant research code for one-off data pulls, quick backtests, factor checks, label or signal prototypes, allocation analysis, chart/table generation, report-support processing, or repeatable research helpers where mistakes mainly waste research time. Prefer this for Level 1/2 work; escalate to quant-develop when recurring, shared, platformed, client-visible, or investment-process critical."
+    description: "Use when writing lightweight quant research code for data pulls, calculations, factor/signal checks, quick backtests or research helpers (Level 1/2). Exclude page-only formatting of existing results; escalate investment-process or shared recurring outputs to quant-develop."
     source_of_truth: SharedSKILLS
     role: primary
     routable: true
@@ -318,8 +360,8 @@ skills:
     entry: SKILL.md
     description: "当出现 bug、失败测试、集成异常或性能问题，需要先做根因分析再给修复方案时使用。"
     source_of_truth: SharedSKILLS
-    role: meta
-    routable: false
+    role: primary
+    routable: true
   - path: "test-driven-development"
     id: "test-driven-development"
     entry: SKILL.md
@@ -353,8 +395,8 @@ skills:
     entry: SKILL.md
     description: "Call fofresearchsvr/ai business APIs for private-fund manager and product facts: 私募管理人、机构详情、管理人旗下产品、私募产品查询、产品要素、合同文件下载、产品净值, or manager/product disambiguation. For fund-wiki based investment synthesis or broader strategy/team/performance judgment, use fund-wiki-research after needed facts are retrieved."
     source_of_truth: SharedSKILLS
-    role: reference
-    routable: false
+    role: primary
+    routable: true
   - path: "workflow-runner"
     id: "workflow-runner"
     entry: SKILL.md

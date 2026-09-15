@@ -1,6 +1,6 @@
 # Delivery Preview Gate
 
-Use this gate before implementation for any non-trivial source replication/adaptation, report, frontend, or system build. The purpose is to confirm the final artifact before expensive coding begins.
+Use a delivery preview to resolve unsettled scope or presentation in non-trivial source work. Reuse approvals already given in the task. When this Skill supports a quant project, the selected primary owns phase transitions; this reference does not introduce a second approval gate.
 
 ## When Required
 
@@ -11,7 +11,7 @@ Require a preview when:
 - the source's data or methodology is ambiguous
 - the user-facing presentation could affect investment interpretation
 
-You may skip the gate only when the user asks for a small direct edit, a quick answer, or explicitly says to implement immediately.
+Proceed with authorized work when the delivery direction is already established. Small direct edits and quick answers do not require a separate preview. Ask only about unresolved choices that materially change the scope.
 
 ## Report Preview
 

@@ -1,9 +1,12 @@
 ---
 name: macro-strategy-learning
-description: Use when the user asks to create, update, guide, or review weekly global multi-asset macro judgments, scenario probabilities, prediction snapshots, maturity reviews, or durable macro mechanism frameworks in MyNotes; includes 周度宏观策略、资产配置复盘、黄金、宏观流动性、政策传导、中国权益风格、海外国家权益、债券、商品和汇率专题。
+description: Use when creating or reviewing weekly multi-asset macro judgments, scenario probabilities, frozen forecast snapshots, maturity reviews or durable mechanism frameworks in MyNotes. Exclude generic concept explanations and one-off named-analyst consultations.
 ---
 
 # Macro Strategy Learning
+
+单次点名分析师或明确中金观点咨询使用对应 `cicc-research-analyst-*`；普通概念解释不启动本流程。
+周度预测/复盘仍由本 Skill 主导，需要时只把对应分析师作为观点来源辅助。
 
 ## Core contract
 

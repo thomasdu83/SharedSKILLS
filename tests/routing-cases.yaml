@@ -6,6 +6,81 @@
 schema_version: "1.0"
 
 positive_cases:
+  - name: 页面维护主入口
+    input: 做一个基金池维护平台
+    expected_primary: frontend-page-router
+    expected_supports: [frontend-ops-platform]
+    reason: 独立页面按内部操作任务选择模式
+  - name: 旧前端入口归一
+    input: 用 frontend-design 把现有已验证回测排成静态HTML，不重算
+    expected_primary: frontend-page-router
+    expected_supports: [frontend-report-page]
+    forbidden_primary: quant-research-coding
+    reason: 兼容名称归一，纯展示不启动研究计算
+  - name: 架构图唯一入口
+    input: 画云服务架构图，旧流程叫 architecture-diagram
+    expected_primary: archify
+    reason: 旧架构图入口归一
+  - name: 论文新模型只有一个总控
+    input: 按论文实现全新动量模型，后续每天运行
+    expected_primary: ai-quant-development-router
+    expected_supports: [investment-paper-replication]
+    reason: 新开发优先，来源方法辅助，工程化在后续阶段转交
+  - name: 只审读论文
+    input: 只审读论文并列出可复现性缺口，不写代码
+    expected_primary: investment-paper-replication
+    reason: 来源审读不启动新模型流程
+  - name: Kevin点名咨询
+    input: Kevin怎么看港股
+    expected_primary: cicc-research-analyst-kevin-skill
+    reason: 点名一次性咨询不进入宏观快照
+  - name: 李求索点名咨询
+    input: 李求索怎么看A股行业配置
+    expected_primary: cicc-research-analyst-lqs-skill
+    reason: 角色意图明确
+  - name: 李昭点名咨询
+    input: 李昭怎么看黄金
+    expected_primary: cicc-research-analyst-lz-skill
+    reason: 角色意图明确
+  - name: 缪延亮点名咨询
+    input: 缪延亮怎么看全球通胀
+    expected_primary: cicc-research-analyst-myl-skill
+    reason: 角色意图明确
+  - name: 韦璐璐点名咨询
+    input: 韦璐璐怎么看中国债市流动性
+    expected_primary: cicc-research-analyst-wll-skill
+    reason: 角色意图明确
+  - name: 周彭点名咨询
+    input: 周彭怎么看中国产业政策传导
+    expected_primary: cicc-research-analyst-zp-skill
+    reason: 角色意图明确
+  - name: 中金黄金视角默认专题
+    input: 用中金观点分析黄金，未点名分析师
+    expected_primary: cicc-research-analyst-lz-skill
+    reason: 明确中金视角，按最具体专题只选一位
+  - name: 周度预测可以引用分析师
+    input: 做本周情景概率并冻结预测快照，顺带参考刘刚观点
+    expected_primary: macro-strategy-learning
+    expected_supports: [cicc-research-analyst-kevin-skill]
+    reason: 主交付物是预测快照，分析师只是来源
+  - name: 产品合同事实查询
+    input: 查询私募产品合同条款
+    expected_primary: wisdom-manager-product-research
+    reason: 事实查询不启动研究综合
+  - name: 三家管理人材料入库
+    input: 将三家管理人的尽调材料存入 fund-wiki
+    expected_primary: fund-wiki
+    reason: 入库不启动研究综合
+  - name: 孤立脚本故障
+    input: 排查这个脚本的孤立bug
+    expected_primary: systematic-debugging
+    reason: 仅调试，未授权新模型开发
+  - name: 普通概念无需远程角色
+    input: 黄金涨跌影响因素有哪些
+    forbidden_primary: macro-strategy-learning
+    forbidden_action: 自动调用远程分析师或生成周度快照
+    expected_action: 直接解释概念，按需查证，无需核心路由记录
+    reason: 没有中金来源或持久机制框架需求
   - name: 一次性取数或快速因子检查
     input: 用户要求快速拉取某因子数据并做单次检查
     expected_primary: quant-research-coding

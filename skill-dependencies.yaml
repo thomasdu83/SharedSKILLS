@@ -4,6 +4,20 @@
 schema_version: "1.0"
 
 dependencies:
+  - id: cicc-research-gateway
+    kind: external_service
+    provider: https://www.research.cicc.com
+    paths: []
+    required_by:
+      - cicc-research-analyst-kevin-skill
+      - cicc-research-analyst-lqs-skill
+      - cicc-research-analyst-lz-skill
+      - cicc-research-analyst-myl-skill
+      - cicc-research-analyst-wll-skill
+      - cicc-research-analyst-zp-skill
+    missing_policy: needs_review
+    verification: "确认 APP_ID/APP_SECRET、网关可达性、SSE 完整返回；不以缓存代替查询"
+
   - id: quantsystem-templates
     kind: repository_path
     provider: F:/Thomas/QuantSystem

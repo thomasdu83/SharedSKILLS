@@ -21,6 +21,8 @@ def load_registry(root: Path) -> dict:
 
 def validate(decision: dict, registry: dict) -> dict:
     errors: list[str] = []
+    if not isinstance(decision, dict):
+        return {"status": "fail", "errors": ["路由决策必须是对象"]}
     skills = registry.get("skills", [])
     by_id = {str(s.get("id")): s for s in skills if isinstance(s, dict)}
     declared_supports = {
@@ -48,6 +50,9 @@ def validate(decision: dict, registry: dict) -> dict:
         supports = []
     if len(supports) > 2:
         errors.append("support_skills 实际输出最多两个")
+    normalized_supports = [aliases.get(str(s), str(s)) for s in supports]
+    if len(normalized_supports) != len(set(normalized_supports)):
+        errors.append("support_skills 归一后重复")
     for support in supports:
         sid = aliases.get(str(support), str(support))
         declared_by_primary = {
@@ -69,8 +74,20 @@ def validate(decision: dict, registry: dict) -> dict:
             errors.append(f"缺少路由字段：{field}")
     if decision.get("risk_level") not in (1, 2, 3, 4, "1", "2", "3", "4"):
         errors.append("risk_level 必须为 1–4")
+    evidence = decision.get("trigger_evidence")
+    if not isinstance(evidence, list) or not evidence or any(not isinstance(x, str) or not x.strip() for x in evidence):
+        errors.append("trigger_evidence 必须包含非空触发依据")
+    escalation = decision.get("escalation")
+    escalation_id = aliases.get(str(escalation), str(escalation)) if escalation else None
+    if escalation_id:
+        allowed = {aliases.get(str(x).split("#", 1)[0].strip(), str(x).split("#", 1)[0].strip())
+                   for x in (entry.get("escalates_to", []) or [])} if entry else set()
+        target = by_id.get(escalation_id, {})
+        if escalation_id not in allowed or target.get("status") != "active" or str(target.get("routable")).lower() != "true":
+            errors.append("escalation 必须是主入口声明的 active/routable 升级目标")
 
-    return {"status": "pass" if not errors else "fail", "errors": errors}
+    normalized = dict(decision, primary_skill=primary_id, support_skills=normalized_supports, escalation=escalation_id)
+    return {"status": "pass" if not errors else "fail", "errors": errors, "normalized_decision": normalized}
 
 
 def main() -> int:

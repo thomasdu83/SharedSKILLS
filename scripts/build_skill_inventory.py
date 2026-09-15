@@ -14,6 +14,11 @@ import json
 import re
 from pathlib import Path
 
+try:
+    from skill_doctor import parse_yaml_simple
+except ImportError:
+    from scripts.skill_doctor import parse_yaml_simple
+
 
 def discover(root: Path) -> list[Path]:
     return sorted(
@@ -38,16 +43,14 @@ def frontmatter(path: Path) -> tuple[str, str]:
     return values.get("name", ""), values.get("description", "")
 
 
-def registered_paths(root: Path) -> set[str]:
-    """Read registry paths without requiring a third-party YAML parser."""
+def registered_paths(root: Path) -> dict[str, dict]:
+    """Read each registered role; registration alone does not imply primary."""
     registry = root / "skill-registry.yaml"
     if not registry.exists():
-        return set()
-    text = registry.read_text(encoding="utf-8-sig")
-    return {
-        value.replace("\\", "/")
-        for value in re.findall(r"^\s+path:\s*[\"']?([^\"'\n]+)", text, re.MULTILINE)
-    }
+        return {}
+    data = parse_yaml_simple(registry.read_text(encoding="utf-8-sig")) or {}
+    return {str(s["path"]).replace("\\", "/"): s
+            for s in data.get("skills", []) if isinstance(s, dict) and s.get("path")}
 
 
 META_SKILLS = {
@@ -73,7 +76,9 @@ def build(root: Path) -> str:
         rel = directory.relative_to(root).as_posix()
         leaf = directory.name
         if rel in registered:
-            role, routable = "primary", "true"
+            entry = registered[rel]
+            role = str(entry.get("role", "reference"))
+            routable = str(entry.get("routable", False)).lower()
         elif leaf in META_SKILLS:
             role, routable = "meta", "false"
         else:

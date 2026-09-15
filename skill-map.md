@@ -2,13 +2,45 @@
 
 这份库的目标不是“把所有技能都记住”，而是让 AI 先命中正确的主线，再少量下钻。
 
-## 使用原则
+## 先选一个主入口
 
-1. 先判断任务属于哪一类，再加载 skill。
-2. 同类冲突时，优先更具体的 domain skill。
-3. 元技能只在维护 skill 库本身时使用。
-4. 参考类 skill 只在需要时再读，避免预加载全文。
-5. 编程任务先判断风险等级；一级、二级默认轻量，只有信号明确时才升级到项目化或高保障流程。
+按用户意图和本阶段主交付物选择；canonical id、兼容别名和允许的辅助见 `skill-registry.yaml`。
+注册表是模型读取的协议，`validate_route_decision.py` 校验结果结构，不会自动执行关键词分类。
+
+| 用户主要要什么 | 主入口 |
+|---|---|
+| 新建量化策略/模型，包括按论文实现 | `ai-quant-development-router`；论文方法为辅助 |
+| 轻量取数/计算/研究验证 | `quant-research-coding` |
+| 原型正式化、共享定期运行 | `quant-develop` |
+| 产品要素/合同/净值事实 | `wisdom-manager-product-research` |
+| 尽调材料入库/查询 | `fund-wiki`；综合研究才进入 `fund-wiki-research` |
+| 周度宏观判断、预测快照、到期复盘、持久机制框架 | `macro-strategy-learning` |
+| 仅排版已有结果，或独立构建页面 | `frontend-page-router` → 选 report 或 ops |
+| 技术图表 | `archify` |
+| 仅审读来源、列复现缺口、审计已有复现 | `investment-paper-replication` |
+| 孤立 bug/失败测试 | `systematic-debugging` |
+
+- `frontend-design` → `frontend-page-router`，`architecture-diagram` → `archify`。旧名只作兼容，不形成第二个主入口。
+- 每阶段一主、0–2 辅；转交后生成下一阶段记录，不一次预加载整个技能链。
+- 已有页面结果的排版不重新计算模型。研究/工程任务附带网页时，页面技能只作交付辅助。
+- 普通解释无需硬套流程；未知/歧义保留 unresolved，不捏造合法入口。
+
+## 分析师咨询
+
+点名咨询选对应分析师；未点名但明确需要中金视角时按最具体主题选一位。
+
+| 分析师 | 默认专题 | Skill |
+|---|---|---|
+| 刘刚 Kevin | 港股、中概股、海外权益 | `cicc-research-analyst-kevin-skill` |
+| 李求索 | A股策略、行业与主题配置 | `cicc-research-analyst-lqs-skill` |
+| 李昭 | 黄金贵金属、跨资产配置 | `cicc-research-analyst-lz-skill` |
+| 缪延亮 | 全球宏观、通胀、国际金融 | `cicc-research-analyst-myl-skill` |
+| 韦璐璐 | 中国债市、利率和机构流动性 | `cicc-research-analyst-wll-skill` |
+| 周彭 | 中国经济制度、资金配置、产业传导 | `cicc-research-analyst-zp-skill` |
+
+明确点名优先于默认专题映射。跨专题同等匹配时澄清，普通概念解释不自动调用远程接口。
+周度预测仍以 `macro-strategy-learning` 为主；点名观点是可选辅助来源，不能替代冻结快照和复盘。
+六个 Skill 调用中金点睛服务，依赖统一登记；`active` 表示规则可用，不代表远程服务已通过实测。
 
 ## 编程风险分层
 
@@ -41,11 +73,11 @@
 | 周度全球多资产宏观判断、情景概率、预测快照、到期复盘、黄金/流动性/政策传导等专题框架积累 | `macro-strategy-learning` | `mynotes-knowledge-manager` / `assets-score` / `research-report-writer` | 负责定性判断学习闭环；`assets-score` 仍只负责研报评分与归档 |
 | 高保障代码实现 / 证明它能跑 | `old-coder` | `test-driven-development` / `verification-before-completion` | SPEC → 测试关卡 → 证据报告 |
 | 定量报告质检与解读 | `quant-report-qa-interpreter` | `research-report-writer` | 报告审查与再表达 |
-| 投后归因报告 | `FOF_Risk_Report_Generator` | `fund-wiki-research` | 先归因，再写结论 |
+| 投后归因报告 | `fof-risk-report-generator` | `fund-wiki-research` | 先归因，再写结论 |
 | 策略标签 / 赛道审计 | `fund-track-tag-audit` | `fund-wiki` | 适合标签修正与证据核对 |
 | ODD 审计 | `pe-odd-auditor`（兼容别名 `PE_ODD_Auditor`） | `docx` / `pptx` / `pdf` | 风控与合规穿透 |
 | 研究报告写作 | `research-report-writer` | `docx` / `pptx` / `xlsx` | 负责表达和结构 |
-| 论文 / 策略复现 | `investment-paper-replication` | `quant-develop` / `research-report-writer` | 先复现，再落地 |
+| 论文 / 策略复现 | 来源审读用 `investment-paper-replication`；新模型用 `ai-quant-development-router` | 来源方法作为辅助 | 避免两个项目总控 |
 
 ## 辅助分组
 
@@ -94,7 +126,7 @@
 2. 再沉淀：`fund-wiki`
 3. 再判断：`fund-wiki-research`
 4. 再表达：`research-report-writer`
-5. 再质检或交付：`quant-report-qa-interpreter`、`FOF_Risk_Report_Generator`、`docx`、`pptx`、`xlsx`
+5. 再质检或交付：`quant-report-qa-interpreter`、`fof-risk-report-generator`、`docx`、`pptx`、`xlsx`
 
 ## 最小路由规则
 

@@ -1,0 +1,200 @@
+stage_taxonomy:
+  assessment:
+    label: 当前状态判断
+  activation:
+    label: 条件启动
+  review:
+    label: 状态复核
+
+source_claims:
+  - claim_id: claim_001
+    title: 需求走弱时价格上行可持续性下降
+    source_type: report
+    source_title: 示例行业研究报告
+    source_author_or_org: Example Research
+    source_date: "2026-09-01"
+    locator:
+      page: 12
+      section: 核心判断
+      paragraph: 2
+    claim_text: 当终端需求走弱而价格仍高位运行时，后续上行持续性下降。
+    claim_role: logic
+    confidence_note: 单一来源，未给出明确统计检验。
+
+  - claim_id: claim_002
+    title: 库存去化速度可作为支持证据
+    source_type: report
+    source_title: 示例行业研究报告
+    source_author_or_org: Example Research
+    source_date: "2026-09-01"
+    locator:
+      page: 14
+      section: 指标观察
+      paragraph: 1
+    claim_text: 库存持续去化可支持价格韧性判断。
+    claim_role: formula
+    confidence_note: 仅给出方向性描述，无阈值。
+
+logic_cards:
+  - logic_id: inventory_price_resilience
+    display_name: 库存去化支撑价格韧性
+    proposition: 当库存持续去化且需求未显著恶化时，价格韧性更可能延续。
+    mechanism: 库存去化意味着现货紧平衡改善，若需求未恶化，价格回落压力下降。
+    implication: 若逻辑获支持，则当前价格韧性判断更稳；若被证伪，则需下调韧性判断。
+    applicability_boundary: 适用于库存和需求均可观察的阶段性监控。
+    failure_mode: 若需求明显走弱或库存统计口径发生变化，则逻辑解释力下降。
+    classification: observation_framework
+    primary_stage: assessment
+    covered_stages:
+      - assessment
+      - review
+    source_claim_ids:
+      - claim_001
+      - claim_002
+    evidence_evaluation:
+      state_vocabulary:
+        - supported
+        - falsified
+        - conflicted
+        - insufficient
+        - pending_manual
+        - not_evaluated
+      support_evidence_ids:
+        - inventory_change_rate
+      falsify_evidence_ids:
+        - demand_signal_proxy
+      context_evidence_ids: []
+      aggregation_policy: analyst_judgment
+      conflict_policy: conflicted_if_support_and_falsify_coexist
+      insufficient_data_policy: insufficient
+
+monitoring_rules:
+  - rule_id: rule_inventory_signal
+    logic_id: inventory_price_resilience
+    rule_type: observation_only
+    decision_direction: supportive_when_falling_inventory
+    aggregation_method: analyst_judgment
+    threshold_source: none
+    threshold_note: 原始资料未提供可执行阈值，仅描述方向性观察框架。
+    conditions: []
+    falsifiers:
+      - demand_weakening_evidence
+    manual_items:
+      - 需求恶化是否已经足以覆盖库存去化的支撑作用
+    state_mapping:
+      triggered: 观察支持
+      not_triggered: 观察未支持
+      pending_manual: 待人工确认
+      insufficient: 证据不足
+
+evidence_specs:
+  - evidence_id: inventory_change_rate
+    logic_id: inventory_price_resilience
+    linked_rule_ids:
+      - rule_inventory_signal
+    indicator_name: 库存变化率
+    evidence_role: supports
+    data_kind: derived_series
+    source_label: 行业库存周度数据
+    normalized_definition: 库存相对前期的变化率
+    transform: period_change
+    unit: "%"
+    frequency: weekly
+    required_date_semantics: 截至每周统计日
+    formula_source: source
+    implemented_formula_note: 若未来工程实现，需确认库存统计口径与发布日期延迟。
+    threshold_reference: 无明确阈值，主要看方向与持续性。
+    automation_status: semi_automated
+
+  - evidence_id: demand_signal_proxy
+    logic_id: inventory_price_resilience
+    linked_rule_ids:
+      - rule_inventory_signal
+    indicator_name: 需求代理指标
+    evidence_role: falsifies
+    data_kind: series
+    source_label: 高频代理指标
+    normalized_definition: 用于反映终端需求强弱的代理时间序列
+    transform: level
+    unit: index
+    frequency: weekly
+    required_date_semantics: 截至每周统计日
+    formula_source: engineering_proxy
+    implemented_formula_note: 原始资料未指定统一需求指标，当前仅允许代理口径候选。
+    threshold_reference: 无
+    automation_status: manual
+
+data_gaps:
+  - gap_id: gap_demand_exact_series
+    linked_object_type: evidence_spec
+    linked_object_id: demand_signal_proxy
+    definition_status: proxy
+    availability_status: unavailable
+    verification_status: verified
+    source_attempts:
+      - source: internal_exact_series
+        result: unavailable
+        reason: 内部无对应终端需求连续序列
+      - source: public_exact_series
+        result: unavailable
+        reason: 公开源仅能拿到零散月度片段，无法稳定更新
+    fallback:
+      type: proxy
+      replacement: 高频需求代理指标
+      interpretation_loss: 只能近似反映需求方向，不能完整替代原始终端需求定义。
+      user_decision_required: true
+    notes: 若用户不接受代理口径，则该逻辑只能保留为人工观察框架。
+
+logic_evidence_snapshots:
+  # 运行时槽位：静态契约阶段不推断实时判断，默认 not_evaluated。
+  # 下游监控运行时若 inventory_change_rate 与 demand_signal_proxy 方向冲突，
+  # 应置 current_evidence_state: conflicted 并填充 supporting / falsifying ids。
+  - logic_id: inventory_price_resilience
+    as_of_date: "2026-09-16"
+    current_evidence_state: not_evaluated
+    supporting_evidence_ids: []
+    falsifying_evidence_ids: []
+    unresolved_items: []
+
+handoff_contract:
+  downstream_owner: quant-develop
+  target_scope:
+    domain: macro
+    project_id: inventory-resilience-monitor
+  proposed_stage: monitor_only
+  output_type: status_alert
+  decision_use: internal_decision
+  cadence: weekly
+  required_entrypoints:
+    research: true
+    publish: false
+    monitor: true
+  deliverables:
+    - logic_card implementation scaffold
+    - evidence pipeline placeholders
+    - manual-review field support
+  implementation_constraints:
+    - 不得将代理指标标记为原始需求序列
+    - 不得为观察框架强行补阈值
+    - 阶段名称必须可配置
+  acceptance_checks:
+    - 逻辑对象可显示 proposition、mechanism、implication
+    - evidence role 支持 supports 与 falsifies 区分
+    - proxy 状态在页面或接口中可见
+    - unresolved items 不得丢失
+  deferred_fields:
+    - owner
+    - status
+    - data_dependencies
+    - input_contract
+    - output_contract
+    - consumers
+
+user_decisions_required:
+  - 是否接受 demand_signal_proxy 作为阶段性代理口径
+  - 是否接受需求代理指标进入正式监控
+
+unresolved_items:
+  - 需求恶化阈值缺失，当前仅能形成观察框架
+  - 终端需求原始序列尚未确认
+  - 需求恶化的可执行阈值缺失

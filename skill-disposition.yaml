@@ -2,7 +2,7 @@
 # SharedSKILLS 全库处置台账（第四阶段）。
 #
 # 用途：
-# 1. 对当前 62 个 SKILL.md 逐一给出处置结论（improved / audited_no_change / needs_update /
+# 1. 对当前 63 个 SKILL.md 逐一给出处置结论（improved / audited_no_change / needs_update /
 #    candidate_merge / candidate_split / deprecated_candidate / blocked_by_decision）。
 # 2. 区分“前三阶段已改进”与“仅审计未改”，避免把盘点误当成全部改进完成。
 # 3. 建立 Batch A–D 实施队列；本轮只做低风险文档性/结构性修改，其余进入后续批次或人工决策。
@@ -673,6 +673,22 @@ skills:
     target_batch: none
     status: completed
 
+  - id: research-monitor-contracting
+    path: research-monitor-contracting
+    category: domain
+    current_version: "1.0.0"
+    source_hash: e17d1aaa9ffa1f69
+    disposition: improved
+    priority: P1
+    reason: "正式登记为研究材料到监控合同的主入口，并声明合同确认后交接 ai-quant-development-router；不承担数据、代码或前端实现。"
+    required_changes: []
+    dependencies: []
+    conflicts: []
+    acceptance_checks: ["registry/inventory/release/versions 一致", "合同阶段可升级到 ai-quant-development-router"]
+    human_review_required: false
+    target_batch: none
+    status: completed
+
   - id: quant-project-review
     path: quant-project-review
     category: engineering
@@ -1010,8 +1026,8 @@ skills:
     status: completed
 
 summary:
-  total_skills: 62
-  improved: 23
+  total_skills: 63
+  improved: 24
   audited_no_change: 34
   needs_update: 4
   candidate_merge: 0

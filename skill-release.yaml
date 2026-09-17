@@ -1,9 +1,9 @@
 # skill-release.yaml
 # SharedSKILLS 发布清单；由 scripts/build_skill_release.py 生成。
 schema_version: "1.0"
-release_id: "working-tree-20260915"
+release_id: "working-tree-20260917"
 source_of_truth: "SharedSKILLS"
-source_revision: "c24de4065474fc533513d9d0cdcf5045eb8ba0c0"
+source_revision: "d8aeecd947fbd1ce7519ee378723a2383a20cca8"
 source_state: "dirty"
 generated_by: "scripts/build_skill_release.py"
 skills:
@@ -195,6 +195,10 @@ skills:
     path: "requesting-code-review"
     version: "1.0.0"
     sha256: "383fc823c8e143636d533f573a3b57eec6d6aa0fd078afd6679162b66195c94f"
+  - id: "research-monitor-contracting"
+    path: "research-monitor-contracting"
+    version: "1.0.0"
+    sha256: "e17d1aaa9ffa1f6952f06035c8c737534a6fe769c2c2825079596182d688d855"
   - id: "research-report-writer"
     path: "research-report-writer"
     version: "1.0.0"

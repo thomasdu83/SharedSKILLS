@@ -34,6 +34,15 @@ def test_source_review_and_new_model_have_distinct_valid_routes():
     assert validate(decision("ai-quant-development-router", ["investment-paper-replication"]), reg)["status"] == "pass"
 
 
+def test_monitor_contracting_hands_off_to_quant_development_router():
+    reg = load_registry(ROOT)
+    d = decision("research-monitor-contracting")
+    d["escalation"] = "ai-quant-development-router"
+    result = validate(d, reg)
+    assert result["status"] == "pass"
+    assert result["normalized_decision"]["escalation"] == "ai-quant-development-router"
+
+
 def test_reference_registration_does_not_promote_inventory_to_primary(tmp_path):
     folder = tmp_path / "helper"
     folder.mkdir()

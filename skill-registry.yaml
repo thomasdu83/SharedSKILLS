@@ -30,6 +30,7 @@ routing_policy:
   selection_order:
     - 先归一兼容别名；用户明确指定能力且与任务相符时遵从指定。
     - 按主交付物选择领域；研究、入库、预测、工程任务优先于附带的网页排版。
+    - 研究材料转监控合同由 research-monitor-contracting 负责；合同确认后交接 ai-quant-development-router。
     - 新建量化模型由 ai-quant-development-router 统筹；来源复现为辅助能力。
     - 仅审读来源和复现差距由 investment-paper-replication 负责。
     - 仅把已有结果排成页面由 frontend-page-router 负责；不启动研究重算。
@@ -417,6 +418,45 @@ skills:
     required_contracts: [shared-contracts/data-freshness.yaml, shared-contracts/evidence.yaml, shared-contracts/execution.yaml]
     outputs: [series_contract, source_url, fetched_at]
     aliases: [public-data]
+    version: "1.0.0"
+    status: active
+    role: primary
+    routable: true
+
+  - id: research-monitor-contracting
+    path: research-monitor-contracting
+    layer: domain
+    priority: 84
+    triggers:
+      - 将研究报告、论文或研究方案转换为可追溯的因子/指标监控合同
+      - 从研究主张提炼逻辑卡片、证据指标、监控规则和数据缺口
+      - 为后续 QuantSystem 因子监控项目准备结构化 handoff contract
+    excludes:
+      - quant-research-coding        # 不负责一次性计算或因子代码原型
+      - quant-develop                # 不负责正式项目工程实现
+      - ai-quant-development-router # 合同完成后交接，不与量化开发并列总控
+    escalates_to:
+      - ai-quant-development-router
+    supports: []
+    dependencies: []
+    required_contracts:
+      - shared-contracts/evidence.yaml
+      - shared-contracts/artifact.yaml
+      - shared-contracts/execution.yaml
+      - shared-contracts/route-decision.yaml
+    outputs:
+      - source_claims
+      - logic_cards
+      - monitoring_rules
+      - evidence_specs
+      - data_gaps
+      - logic_evidence_snapshots
+      - handoff_contract
+      - user_decisions_required
+      - unresolved_items
+    aliases:
+      - research-monitor
+      - monitor-contracting
     version: "1.0.0"
     status: active
     role: primary

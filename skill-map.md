@@ -10,6 +10,7 @@
 | 用户主要要什么 | 主入口 |
 |---|---|
 | 新建量化策略/模型，包括按论文实现 | `ai-quant-development-router`；论文方法为辅助 |
+| 研究材料转可追溯监控合同 | `research-monitor-contracting`；合同确认后交接 `ai-quant-development-router` |
 | 轻量取数/计算/研究验证 | `quant-research-coding` |
 | 原型正式化、共享定期运行 | `quant-develop` |
 | 产品要素/合同/净值事实 | `wisdom-manager-product-research` |
@@ -135,6 +136,7 @@
 - 具体技能优先于通用技能。
 - 入口越短，触发越稳。
 - 新建或实质扩展量化策略/模型时，自动先进入 `ai-quant-development-router`；有无前端均适用，前端再按页面任务继续路由。
+- 研究材料需要先转为监控合同时，先进入 `research-monitor-contracting`；合同确认后重新生成路由记录并交接 `ai-quant-development-router`。
 - 研究脚本先轻量验证，项目化信号出现后再上 `quant-develop`。
 - 历史回测优先静态 HTML 评审文档；定型后跟踪才优先交互式工作台。
 - `production` 表示输出建议权重/配置/信号；`monitor_only` 只表示状态、变化、告警和复核线索。

@@ -3,7 +3,7 @@
 # 本文件由 scripts/build_skill_inventory.py 生成，不负责授权或自动修改 Skill。
 schema_version: "1.0"
 inventory_scope: full
-skill_count: 62
+skill_count: 63
 skills:
   - path: "ai-quant-development-router"
     id: "ai-quant-development-router"
@@ -334,6 +334,13 @@ skills:
     source_of_truth: SharedSKILLS
     role: meta
     routable: false
+  - path: "research-monitor-contracting"
+    id: "research-monitor-contracting"
+    entry: SKILL.md
+    description: "Use when research reports, papers, or notes must be converted into a source-traceable monitoring specification before implementation."
+    source_of_truth: SharedSKILLS
+    role: primary
+    routable: true
   - path: "research-report-writer"
     id: "research-report-writer"
     entry: SKILL.md

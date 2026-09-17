@@ -54,6 +54,11 @@ This skill must not silently arbitrate major source disputes.
 If a monitoring contract is already confirmed and the user asks to build the system,
 route downstream instead of re-entering this skill.
 
+For a new QuantSystem factor-monitoring project, a confirmed contract hands off to
+`ai-quant-development-router`. That router decides whether the next implementation
+stage is lightweight research or formal `quant-develop` engineering. This skill does
+not create the project, collect data, implement factor code, or build the frontend.
+
 ## Core Method
 
 1. Extract verifiable claims first (`source_claim`).

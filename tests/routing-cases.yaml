@@ -30,6 +30,11 @@ positive_cases:
     input: 只审读论文并列出可复现性缺口，不写代码
     expected_primary: investment-paper-replication
     reason: 来源审读不启动新模型流程
+  - name: 研究材料转监控合同
+    input: 将研究报告提炼为可追溯的因子监控合同，并交给 QuantSystem 落地
+    expected_primary: research-monitor-contracting
+    expected_escalation: ai-quant-development-router
+    reason: 先完成研究合同，再交接量化开发路由
   - name: Kevin点名咨询
     input: Kevin怎么看港股
     expected_primary: cicc-research-analyst-kevin-skill
